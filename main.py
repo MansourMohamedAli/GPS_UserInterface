@@ -1,64 +1,44 @@
-from tkinter import *
-
-############################################################
-#
-#                 Base Window Properties
-#
-############################################################
-window = Tk()
-"""Window Title (Not Visible)"""
-window.title("GPS")
-"""Setting Size"""
-window.geometry("800x600")
-"""Setting Color"""
-window.configure(bg="#C8Ad7F")
-"""Prevent resizing of X and Y"""
-# window.resizable(False, False)
-"""Remove Border"""
-window.overrideredirect(False)
+import tkinter as tk
+from tkinter import ttk
 
 
-def exit_application():
-    """Exit Button"""
-    window.destroy()
+class App(tk.Tk):
+    def __init__(self, title, dimensions):
+        # main setup
+        super().__init__()
+        self.title(title)
+        self.geometry(f"{dimensions[0]}x{dimensions[1]}")
+        self.minsize(600, 600)
+
+        # Widgets
+        self.menu = Menu(self)
+
+        # Run
+        self.mainloop()
 
 
-"""Variables to store the mouse's initial position"""
-start_x = 0
-start_y = 0
+class Menu(ttk.Frame):
+    def __init__(self, parent):
+        super().__init__(parent)
+        ttk.Label(self, background='red').pack(expand=True, fill='both')
+        self.place(x=0, y=0, relwidth=0.3, relheight=1)
+
+        self.create_widgets()
+
+    def create_widgets(self):
+        # create the widgets
+        menu_button1 = ttk.Button(self, text='Button 1')
+        menu_button2 = ttk.Button(self, text='Button 2')
+        menu_button3 = ttk.Button(self, text='Button 3')
+
+        menu_slider1 = ttk.Scale(self, orient='vertical')
+        menu_slider2 = ttk.Scale(self, orient='vertical')
+
+        toggle_frame = ttk.Frame(self)
+        menu_toggle1 = ttk.Checkbutton(toggle_frame, text='check 1')
+        menu_toggle2 = ttk.Checkbutton(toggle_frame, text='check 2')
+
+        entry = ttk.Entry(self)
 
 
-def on_mouse_press(event):
-    """Function to handle the mouse button press event"""
-    global start_x, start_y
-    start_x = event.x
-    start_y = event.y
-
-
-def on_mouse_motion(event):
-    """Function to handle the mouse motion event"""
-    x = window.winfo_x() + (event.x - start_x)
-    y = window.winfo_y() + (event.y - start_y)
-    window.geometry(f"+{x}+{y}")
-
-
-"""Bind mouse button press and motion events to the window"""
-window.bind("<ButtonPress-1>", on_mouse_press)
-window.bind("<B1-Motion>", on_mouse_motion)
-
-############################################################
-#
-#                     PAGE 1
-#
-############################################################
-"""Initializing Frame Use same color as window."""
-page1_frame = Frame(window, bg=window["bg"])
-"""Show Page 1 and fill size of window"""
-page1_frame.pack(fill="both", expand=True)
-
-
-
-
-
-if __name__ == "__main__":
-    window.mainloop()
+App('Glass Panel Control', (600, 600))
