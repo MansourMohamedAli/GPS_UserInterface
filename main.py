@@ -83,8 +83,11 @@ class Configuration(tk.Toplevel):
         """Creating Tab 1"""
         tab1 = tk.Frame(tabs)
         text_list = [('label', 'button'), ('thing', 'click'), ('third', 'something'), ('label1', 'button'),
+                     ('label2', 'button'), ('label3', 'button'), ('label4', 'button'),
+                     ('label2', 'button'), ('label3', 'button'), ('label4', 'button'),
+                     ('label2', 'button'), ('label3', 'button'), ('label4', 'button'),
                      ('label2', 'button'), ('label3', 'button'), ('label4', 'button')]
-        ScrollFrame(tab1, text_list, 10)
+        ScrollFrame(tab1, text_list, 100)
 
         """Creating Tab 2"""
         tab2 = tk.Frame(tabs)
@@ -121,7 +124,7 @@ class ScrollFrame(ttk.Frame):
         # widget data
         self.text_data = text_data
         self.item_number = len(text_data)
-        self.list_height = (self.item_number * item_height) / 5  # Five items per row
+        self.list_height = (self.item_number * item_height)  # Five items per row
         #self.list_height = (20 * item_height) / 5  # Test of 20 items
 
         # canvas
@@ -138,7 +141,7 @@ class ScrollFrame(ttk.Frame):
                 row += 1  # Increment the row
                 column = 0  # Set column back to 0
             # self.create_item(index, item).pack(expand=True, fill='both', pady=4, padx=10, side='right')
-            self.create_item(column, item).grid(row=row, column=column, sticky='nsew')
+            self.create_item(column, item).grid(row=row, column=column, sticky='nsew',padx=5,pady=10)
             column += 1
 
         # scrollbar
