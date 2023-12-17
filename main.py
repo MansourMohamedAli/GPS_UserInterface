@@ -121,8 +121,8 @@ class ScrollFrame(ttk.Frame):
         # widget data
         self.text_data = text_data
         self.item_number = len(text_data)
-        # self.list_height = (self.item_number * item_height) / 5  # Five items per row
-        self.list_height = (20 * item_height) / 5  # Test of 20 items
+        self.list_height = (self.item_number * item_height) / 5  # Five items per row
+        #self.list_height = (20 * item_height) / 5  # Test of 20 items
 
         # canvas
         self.canvas = tk.Canvas(self, background='red', scrollregion=(0, 0, self.winfo_width(), self.list_height))
