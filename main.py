@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-
+from random import choice
 
 class App(tk.Tk):
     def __init__(self, title, dimensions):
@@ -100,8 +100,15 @@ class Configuration(tk.Toplevel):
         tabs.grid(sticky='nsew')
 
         """Side Bar Configuration"""
-        sideLabel = ttk.Label(sideBarFrame, text="Side Bar")
-        sideLabel.pack(expand=True)
+        sideBarFrame.rowconfigure((0, 1, 2), weight=1, uniform='a')
+        sideBarFrame.columnconfigure(0, weight=1, uniform='a')
+
+        midSideBarFrame = tk.Frame(sideBarFrame)
+        midSideBarFrame.grid(row=1)
+        computerList = tk.Listbox(midSideBarFrame, bg='red')
+        computerList.pack()
+
+        SideBarTree(sideBarFrame, "Command").grid(row=2)
 
         """top Bar Configuration"""
         topLabel = ttk.Label(topBarFrame, text="Top Bar")
@@ -125,7 +132,7 @@ class ScrollFrame(ttk.Frame):
         self.text_data = text_data
         self.item_number = len(text_data)
         self.list_height = (self.item_number * item_height)  # Five items per row
-        #self.list_height = (20 * item_height) / 5  # Test of 20 items
+        # self.list_height = (20 * item_height) / 5  # Test of 20 items
 
         # canvas
         self.canvas = tk.Canvas(self, background='red', scrollregion=(0, 0, self.winfo_width(), self.list_height))
@@ -140,8 +147,7 @@ class ScrollFrame(ttk.Frame):
             if column > 4:
                 row += 1  # Increment the row
                 column = 0  # Set column back to 0
-            # self.create_item(index, item).pack(expand=True, fill='both', pady=4, padx=10, side='right')
-            self.create_item(column, item).grid(row=row, column=column, sticky='nsew',padx=5,pady=10)
+            self.create_item(column, item).grid(row=row, column=column, sticky='nsew', padx=5, pady=10)
             column += 1
 
         # scrollbar
@@ -173,19 +179,20 @@ class ScrollFrame(ttk.Frame):
 
     def create_item(self, index, item):
         frame = ttk.Frame(self.frame)
-
-        # grid layout
-        # frame.rowconfigure(0, weight=1)
-        # frame.columnconfigure((0, 1, 2, 3, 4), weight=1, uniform='a')
-
-        # widgets
-        # tk.Listbox(frame, bg='red').grid(row=0, column=index)
         tk.Listbox(frame, bg='red').pack(expand=True, fill='both')
-        # ttk.Label(frame, text=f'#{index}').grid(row=0, column=0)
-        # ttk.Label(frame, text=f'{item[0]}').grid(row=0, column=1)
-        # ttk.Button(frame, text=f'{item[1]}').grid(row=0, column=2, columnspan=3, sticky='nsew')
-
         return frame
+
+
+class SideBarTree(ttk.Treeview):
+    def __init__(self, parent, *args):
+        super().__init__(master=parent, columns=args, show='headings')
+
+        for arg in args:
+            self.heading(arg, text=str(arg))
+
+
+
+
 
 
 App('Glass Panel Control', (600, 600))
