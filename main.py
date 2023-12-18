@@ -101,14 +101,15 @@ class Configuration(tk.Toplevel):
 
         """Side Bar Configuration"""
         sideBarFrame.rowconfigure((0, 1, 2), weight=1, uniform='a')
-        sideBarFrame.columnconfigure(0, weight=1, uniform='a')
+        sideBarFrame.columnconfigure((0,1), weight=1, uniform='a')
 
         midSideBarFrame = tk.Frame(sideBarFrame)
-        midSideBarFrame.grid(row=1)
-        computerList = tk.Listbox(midSideBarFrame, bg='red')
-        computerList.pack()
+        midSideBarFrame.grid(row=1,columnspan=2, padx=10, pady=10, sticky="nsew")
+        SideBarTree(midSideBarFrame, "Machine").pack(fill='both', expand = True)
 
-        SideBarTree(sideBarFrame, "Command").grid(row=2)
+        botSideBarFrame = tk.Frame(sideBarFrame)
+        botSideBarFrame.grid(row=2, columnspan=2, padx=10, pady=10, sticky="nsew")
+        SideBarTree(botSideBarFrame, "Command").pack(fill='both', expand = True)
 
         """top Bar Configuration"""
         topLabel = ttk.Label(topBarFrame, text="Top Bar")
@@ -143,11 +144,11 @@ class ScrollFrame(ttk.Frame):
 
         row = 0
         column = 0
-        for item in range(self.item_number):
+        for index, item in enumerate(range(self.item_number)):
             if column > 4:
                 row += 1  # Increment the row
                 column = 0  # Set column back to 0
-            self.create_item(column, item).grid(row=row, column=column, sticky='nsew', padx=5, pady=10)
+            self.create_item(index).grid(row=row, column=column, sticky='nsew', padx=5, pady=10)
             column += 1
 
         # scrollbar
@@ -177,9 +178,9 @@ class ScrollFrame(ttk.Frame):
             width=self.winfo_width(),
             height=height)
 
-    def create_item(self, index, item):
+    def create_item(self, index):
         frame = ttk.Frame(self.frame)
-        tk.Listbox(frame, bg='red').pack(expand=True, fill='both')
+        SideBarTree(frame, f'Machine {index + 1}').pack(expand=True, fill='both')
         return frame
 
 
@@ -189,10 +190,6 @@ class SideBarTree(ttk.Treeview):
 
         for arg in args:
             self.heading(arg, text=str(arg))
-
-
-
-
 
 
 App('Glass Panel Control', (600, 600))
