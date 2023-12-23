@@ -109,7 +109,13 @@ class Configuration(tk.Toplevel):
 
         botSideBarFrame = tk.Frame(sideBarFrame)
         botSideBarFrame.grid(row=2, columnspan=2, padx=10, pady=10, sticky="nsew")
-        SideBarTree(botSideBarFrame, "Command").pack(fill='both', expand = True)
+        commands = SideBarTree(botSideBarFrame, "Command")
+
+        commands.insert(parent = '', index=0, values=["test"])
+        commands.insert(parent = '', index=1, values=["sdfa"])
+        commands.insert(parent = '', index=2, values=["vxcvc"])
+        commands.pack(fill='both', expand = True)
+
 
         """top Bar Configuration"""
         topLabel = ttk.Label(topBarFrame, text="Top Bar")
@@ -180,7 +186,7 @@ class ScrollFrame(ttk.Frame):
 
     def create_item(self, index):
         frame = ttk.Frame(self.frame)
-        SideBarTree(frame, f'Machine {index + 1}').pack(expand=True, fill='both')
+        # SideBarTree(frame, f'Machine {index + 1}').pack(expand=True, fill='both')
         return frame
 
 
@@ -188,8 +194,24 @@ class SideBarTree(ttk.Treeview):
     def __init__(self, parent, *args):
         super().__init__(master=parent, columns=args, show='headings')
 
+        # events
+        def mouse_release(_):
+            print(mouse_store)
+
+
+        def item_select(_):
+            # print(self.selection())
+            for i in self.selection():
+                global mouse_store
+                mouse_store = self.item(i)['values']
+
         for arg in args:
             self.heading(arg, text=str(arg))
+
+
+        self.bind('<<TreeviewSelect>>', item_select)
+        self.bind('<ButtonRelease-1>', mouse_release)
+
 
 
 App('Glass Panel Control', (600, 600))
