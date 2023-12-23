@@ -190,14 +190,16 @@ class ScrollFrame(ttk.Frame):
         return frame
 
 
+# mouse_store = None
 class SideBarTree(ttk.Treeview):
     def __init__(self, parent, *args):
         super().__init__(master=parent, columns=args, show='headings')
 
         # events
         def mouse_release(_):
+            global mouse_store
             print(mouse_store)
-
+            mouse_store = None
 
         def item_select(_):
             # print(self.selection())
@@ -207,7 +209,6 @@ class SideBarTree(ttk.Treeview):
 
         for arg in args:
             self.heading(arg, text=str(arg))
-
 
         self.bind('<<TreeviewSelect>>', item_select)
         self.bind('<ButtonRelease-1>', mouse_release)
