@@ -198,8 +198,11 @@ class SideBarTree(ttk.Treeview):
         # events
         def mouse_release(_):
             global mouse_store
-            print(mouse_store)
-            mouse_store = None
+            try:
+                print(mouse_store)
+                mouse_store = None
+            except NameError:
+                print(None)
 
         def item_select(_):
             # print(self.selection())
