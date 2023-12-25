@@ -91,7 +91,6 @@ class Configuration(tk.Toplevel):
 
         """Creating Tab 2"""
         tab2 = tk.Frame(tabs)
-        # ScrollFrame(tab2, text_list, 100)
 
         """Adding tabs to Tab Notebook Frame"""
         tabs.add(tab1, text='First Tab')
@@ -129,6 +128,16 @@ class Configuration(tk.Toplevel):
         topBarFrame.grid(row=0, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
         botBarFrame.grid(row=2, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
 
+
+        def mouse_release(_):
+            global mouse_store
+            try:
+                print(mouse_store)
+                mouse_store = None
+            except NameError:
+                print(None)
+
+        self.bind('<ButtonRelease-1>', mouse_release)
 
 class ScrollFrame(ttk.Frame):
     def __init__(self, parent, text_data, item_height):
@@ -186,7 +195,7 @@ class ScrollFrame(ttk.Frame):
 
     def create_item(self, index):
         frame = ttk.Frame(self.frame)
-        # SideBarTree(frame, f'Machine {index + 1}').pack(expand=True, fill='both')
+        # TabBarTree(frame, f'Machine {index + 1}').pack(expand=True, fill='both')
         return frame
 
 
@@ -196,13 +205,13 @@ class SideBarTree(ttk.Treeview):
         super().__init__(master=parent, columns=args, show='headings')
 
         # events
-        def mouse_release(_):
-            global mouse_store
-            try:
-                print(mouse_store)
-                mouse_store = None
-            except NameError:
-                print(None)
+        # def mouse_release(_):
+        #     global mouse_store
+        #     try:
+        #         print(mouse_store)
+        #         mouse_store = None
+        #     except NameError:
+        #         print(None)
 
         def item_select(_):
             # print(self.selection())
@@ -214,8 +223,32 @@ class SideBarTree(ttk.Treeview):
             self.heading(arg, text=str(arg))
 
         self.bind('<<TreeviewSelect>>', item_select)
-        self.bind('<ButtonRelease-1>', mouse_release)
+        # self.bind('<ButtonRelease-1>', mouse_release)
 
+class TabBarTree(ttk.Treeview):
+    def __init__(self, parent, *args):
+        super().__init__(master=parent, columns=args, show='headings')
+
+        # events
+        # def mouse_release(_):
+        #     global mouse_store
+        #     try:
+        #         print(mouse_store)
+        #         mouse_store = None
+        #     except NameError:
+        #         print(None)
+
+        # def item_select(_):
+        #     # print(self.selection())
+        #     for i in self.selection():
+        #         global mouse_store
+        #         mouse_store = self.item(i)['values']
+
+        for arg in args:
+            self.heading(arg, text=str(arg))
+
+        # self.bind('<<TreeviewSelect>>', item_select)
+        # self.bind('<ButtonRelease-1>', mouse_release)
 
 
 App('Glass Panel Control', (600, 600))
