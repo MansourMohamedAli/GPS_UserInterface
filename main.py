@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from random import choice
 
+
 class App(tk.Tk):
     def __init__(self, title, dimensions):
         # main setup
@@ -53,13 +54,15 @@ class Menu(ttk.Frame):
         config_button.grid(row=3, column=0, sticky='nsew', columnspan=2, padx=(5, 10), pady=(10, 10))
 
 
+index = 0
+
+
 class Configuration(tk.Toplevel):
     def __init__(self):
         super().__init__()
         self.title('Configuration')
         self.geometry("800x600")
         self.minsize(400, 300)
-
         self.create_widgets()
 
     def create_widgets(self):
@@ -87,7 +90,7 @@ class Configuration(tk.Toplevel):
                      ('label2', 'button'), ('label3', 'button'), ('label4', 'button'),
                      ('label2', 'button'), ('label3', 'button'), ('label4', 'button'),
                      ('label2', 'button'), ('label3', 'button'), ('label4', 'button')]
-        ScrollFrame(tab1, text_list, 100)
+        scroll = ScrollFrame(tab1, 100)
 
         """Creating Tab 2"""
         tab2 = tk.Frame(tabs)
@@ -100,21 +103,20 @@ class Configuration(tk.Toplevel):
 
         """Side Bar Configuration"""
         sideBarFrame.rowconfigure((0, 1, 2), weight=1, uniform='a')
-        sideBarFrame.columnconfigure((0,1), weight=1, uniform='a')
+        sideBarFrame.columnconfigure((0, 1), weight=1, uniform='a')
 
         midSideBarFrame = tk.Frame(sideBarFrame)
-        midSideBarFrame.grid(row=1,columnspan=2, padx=10, pady=10, sticky="nsew")
-        SideBarTree(midSideBarFrame, "Machine").pack(fill='both', expand = True)
+        midSideBarFrame.grid(row=1, columnspan=2, padx=10, pady=10, sticky="nsew")
+        SideBarTree(midSideBarFrame, "Machine").pack(fill='both', expand=True)
 
         botSideBarFrame = tk.Frame(sideBarFrame)
         botSideBarFrame.grid(row=2, columnspan=2, padx=10, pady=10, sticky="nsew")
         commands = SideBarTree(botSideBarFrame, "Command")
 
-        commands.insert(parent = '', index=0, values=["test"])
-        commands.insert(parent = '', index=1, values=["sdfa"])
-        commands.insert(parent = '', index=2, values=["vxcvc"])
-        commands.pack(fill='both', expand = True)
-
+        commands.insert(parent='', index=0, values=["test"])
+        commands.insert(parent='', index=1, values=["sdfa"])
+        commands.insert(parent='', index=2, values=["vxcvc"])
+        commands.pack(fill='both', expand=True)
 
         """top Bar Configuration"""
         topLabel = ttk.Label(topBarFrame, text="Top Bar")
@@ -128,7 +130,6 @@ class Configuration(tk.Toplevel):
         topBarFrame.grid(row=0, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
         botBarFrame.grid(row=2, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
 
-
         def mouse_release(_):
             global mouse_store
             try:
@@ -140,7 +141,12 @@ class Configuration(tk.Toplevel):
 
                 print(f'{startx}, {starty}')
                 if 0 <= startx <= tabs.winfo_width() and 0 <= starty <= tabs.winfo_height():
-                    TabBarTree(tab1, f'Machine {mouse_store}').pack(expand=True, fill='both')
+                    # TabBarTree(tab1, f'Machine {mouse_store}').pack(expand=True, fill='both')
+                    if mouse_store != None:
+                        ScrollFrame.create_item(scroll).pack()
+                        global index
+                        index += 1
+
                     print(True)
                 else:
                     print(False)
@@ -151,15 +157,16 @@ class Configuration(tk.Toplevel):
 
         self.bind('<ButtonRelease-1>', mouse_release)
 
+
 class ScrollFrame(ttk.Frame):
-    def __init__(self, parent, text_data, item_height):
+    def __init__(self, parent, item_height):
         super().__init__(master=parent)
         self.pack(expand=True, fill='both')
 
         # widget data
-        self.text_data = text_data
-        self.item_number = len(text_data)
-        self.list_height = (self.item_number * item_height)  # Five items per row
+        global index
+        self.list_height = (index * item_height)  # Five items per row
+        print(f'scroll frame {index}')
         # self.list_height = (20 * item_height) / 5  # Test of 20 items
 
         # canvas
@@ -169,14 +176,14 @@ class ScrollFrame(ttk.Frame):
         # display frame
         self.frame = ttk.Frame(self)
 
-        row = 0
-        column = 0
-        for index, item in enumerate(range(self.item_number)):
-            if column > 4:
-                row += 1  # Increment the row
-                column = 0  # Set column back to 0
-            self.create_item(index).grid(row=row, column=column, sticky='nsew', padx=5, pady=10)
-            column += 1
+        # row = 0
+        # column = 0
+        # for index, item in enumerate(range(self.item_number)):
+        #     if column > 4:
+        #         row += 1  # Increment the row
+        #         column = 0  # Set column back to 0
+        #     self.create_item(index).grid(row=row, column=column, sticky='nsew', padx=5, pady=10)
+        #     column += 1
 
         # scrollbar
         self.scrollbar = ttk.Scrollbar(self, orient='vertical', command=self.canvas.yview)
@@ -205,9 +212,11 @@ class ScrollFrame(ttk.Frame):
             width=self.winfo_width(),
             height=height)
 
-    def create_item(self, index):
+    def create_item(self):
         frame = ttk.Frame(self.frame)
-        # TabBarTree(frame, f'Machine {index + 1}').pack(expand=True, fill='both')
+        global index
+        print(f'index = {index}')
+        TabBarTree(frame, f'Machine {index + 1}').pack(expand=True, fill='both')
         return frame
 
 
@@ -236,6 +245,7 @@ class SideBarTree(ttk.Treeview):
 
         self.bind('<<TreeviewSelect>>', item_select)
         # self.bind('<ButtonRelease-1>', mouse_release)
+
 
 class TabBarTree(ttk.Treeview):
     def __init__(self, parent, *args):
