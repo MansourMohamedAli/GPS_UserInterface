@@ -132,6 +132,18 @@ class Configuration(tk.Toplevel):
         def mouse_release(_):
             global mouse_store
             try:
+                print(tabs.index(tabs.select()))
+                # print(f'{tabs.winfo_width()}, {tabs.winfo_height()}')
+
+                startx = tabs.winfo_pointerx() - tabs.winfo_rootx()
+                starty = tabs.winfo_pointery() - tabs.winfo_rooty()
+
+                print(f'{startx}, {starty}')
+                if 0 <= startx <= tabs.winfo_width() and 0 <= starty <= tabs.winfo_height():
+                    TabBarTree(tab1, f'Machine {mouse_store}').pack(expand=True, fill='both')
+                    print(True)
+                else:
+                    print(False)
                 print(mouse_store)
                 mouse_store = None
             except NameError:
