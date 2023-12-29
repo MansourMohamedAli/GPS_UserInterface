@@ -54,9 +54,6 @@ class Menu(ttk.Frame):
         config_button.grid(row=3, column=0, sticky='nsew', columnspan=2, padx=(5, 10), pady=(10, 10))
 
 
-index = 0
-
-
 class Configuration(tk.Toplevel):
     def __init__(self):
         super().__init__()
@@ -90,7 +87,7 @@ class Configuration(tk.Toplevel):
                      ('label2', 'button'), ('label3', 'button'), ('label4', 'button'),
                      ('label2', 'button'), ('label3', 'button'), ('label4', 'button'),
                      ('label2', 'button'), ('label3', 'button'), ('label4', 'button')]
-        scroll = ScrollFrame(tab1, 100)
+        scroll = ScrollFrame(tab1, 100, 0)
 
         """Creating Tab 2"""
         tab2 = tk.Frame(tabs)
@@ -143,10 +140,7 @@ class Configuration(tk.Toplevel):
                 if 0 <= startx <= tabs.winfo_width() and 0 <= starty <= tabs.winfo_height():
                     # TabBarTree(tab1, f'Machine {mouse_store}').pack(expand=True, fill='both')
                     if mouse_store != None:
-                        ScrollFrame.create_item(scroll).pack()
-                        global index
-                        index += 1
-
+                        ScrollFrame.create_item(scroll)
                     print(True)
                 else:
                     print(False)
@@ -159,14 +153,15 @@ class Configuration(tk.Toplevel):
 
 
 class ScrollFrame(ttk.Frame):
-    def __init__(self, parent, item_height):
+    def __init__(self, parent, item_height, tree_index):
         super().__init__(master=parent)
         self.pack(expand=True, fill='both')
 
         # widget data
-        global index
-        self.list_height = (index * item_height)  # Five items per row
-        print(f'scroll frame {index}')
+        self.tree_index = tree_index
+        self.item_height = item_height
+        self.list_height = (self.tree_index * item_height)  # Five items per row
+        print(f'initial tree index {self.tree_index}')
         # self.list_height = (20 * item_height) / 5  # Test of 20 items
 
         # canvas
@@ -176,14 +171,14 @@ class ScrollFrame(ttk.Frame):
         # display frame
         self.frame = ttk.Frame(self)
 
-        # row = 0
-        # column = 0
-        # for index, item in enumerate(range(self.item_number)):
-        #     if column > 4:
-        #         row += 1  # Increment the row
-        #         column = 0  # Set column back to 0
-        #     self.create_item(index).grid(row=row, column=column, sticky='nsew', padx=5, pady=10)
-        #     column += 1
+        row = 0
+        column = 0
+        for index, item in enumerate(range(tree_index)):
+            if column > 4:
+                row += 1  # Increment the row
+                column = 0  # Set column back to 0
+            self.create_item().grid(row=row, column=column, sticky='nsew', padx=5, pady=10)
+            column += 1
 
         # scrollbar
         self.scrollbar = ttk.Scrollbar(self, orient='vertical', command=self.canvas.yview)
@@ -192,9 +187,9 @@ class ScrollFrame(ttk.Frame):
 
         # events
         self.canvas.bind_all('<MouseWheel>', lambda event: self.canvas.yview_scroll(-int(event.delta / 60), "units"))
-        self.bind('<Configure>', self.update_size)
+        self.bind('<Configure>', self.update_size_event)
 
-    def update_size(self, event):
+    def update_size_event(self, event):
         if self.list_height >= self.winfo_height():
             height = self.list_height
             self.canvas.bind_all('<MouseWheel>',
@@ -212,11 +207,34 @@ class ScrollFrame(ttk.Frame):
             width=self.winfo_width(),
             height=height)
 
+    def update_size_new_item(self, new_height, current_height):
+        # print(f'new height = {new_height}')
+        print(f'Window height = {current_height}')
+        if new_height >= current_height:
+            height = new_height
+            print(f'height = {height}')
+            self.canvas.bind_all('<MouseWheel>',
+                                 lambda event: self.canvas.yview_scroll(-int(event.delta / 60), "units"))
+            self.scrollbar.place(relx=1, rely=0, relheight=1, anchor='ne')
+        else:
+            height = current_height
+            self.canvas.unbind_all('<MouseWheel>')
+            self.scrollbar.place_forget()
+
+        self.canvas.create_window(
+            (0, 0),
+            window=self.frame,
+            anchor='nw',
+            width=self.winfo_width(),
+            height=height)
+
     def create_item(self):
+        self.tree_index += 1
+        print(f'tree index = {self.tree_index}')
         frame = ttk.Frame(self.frame)
-        global index
-        print(f'index = {index}')
-        TabBarTree(frame, f'Machine {index + 1}').pack(expand=True, fill='both')
+        TabBarTree(frame, f'Machine {self.tree_index}').pack(expand=True, fill='both')
+        self.list_height = (self.tree_index * self.item_height)
+        self.update_size_new_item(self.list_height, self.winfo_height())
         return frame
 
 
@@ -224,15 +242,6 @@ class ScrollFrame(ttk.Frame):
 class SideBarTree(ttk.Treeview):
     def __init__(self, parent, *args):
         super().__init__(master=parent, columns=args, show='headings')
-
-        # events
-        # def mouse_release(_):
-        #     global mouse_store
-        #     try:
-        #         print(mouse_store)
-        #         mouse_store = None
-        #     except NameError:
-        #         print(None)
 
         def item_select(_):
             # print(self.selection())
@@ -244,28 +253,10 @@ class SideBarTree(ttk.Treeview):
             self.heading(arg, text=str(arg))
 
         self.bind('<<TreeviewSelect>>', item_select)
-        # self.bind('<ButtonRelease-1>', mouse_release)
-
 
 class TabBarTree(ttk.Treeview):
     def __init__(self, parent, *args):
         super().__init__(master=parent, columns=args, show='headings')
-
-        # events
-        # def mouse_release(_):
-        #     global mouse_store
-        #     try:
-        #         print(mouse_store)
-        #         mouse_store = None
-        #     except NameError:
-        #         print(None)
-
-        # def item_select(_):
-        #     # print(self.selection())
-        #     for i in self.selection():
-        #         global mouse_store
-        #         mouse_store = self.item(i)['values']
-
         for arg in args:
             self.heading(arg, text=str(arg))
 
