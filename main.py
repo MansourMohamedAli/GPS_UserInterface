@@ -127,24 +127,37 @@ class Configuration(tk.Toplevel):
         topBarFrame.grid(row=0, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
         botBarFrame.grid(row=2, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
 
+        self.tree_index = 0
+        self.prev_height = 0
         def mouse_release(_):
             global mouse_store
             try:
-                print(tabs.index(tabs.select()))
+                # print(tabs.index(tabs.select()))
                 # print(f'{tabs.winfo_width()}, {tabs.winfo_height()}')
 
                 startx = tabs.winfo_pointerx() - tabs.winfo_rootx()
                 starty = tabs.winfo_pointery() - tabs.winfo_rooty()
 
-                print(f'{startx}, {starty}')
+                # print(f'{startx}, {starty}')
                 if 0 <= startx <= tabs.winfo_width() and 0 <= starty <= tabs.winfo_height():
                     # TabBarTree(tab1, f'Machine {mouse_store}').pack(expand=True, fill='both')
                     if mouse_store != None:
-                        ScrollFrame.create_item(scroll)
-                    print(True)
+                        self.tree_index += 1
+                        new_item = scroll.create_item(self.tree_index)
+                        new_item.pack()
+                        self.update_idletasks()
+                        print(f'tree frame height  = {new_item.winfo_height()}')
+                        updated_height = 226 * self.tree_index
+                        print(f'Previous Height = {self.prev_height}')
+                        print(f'New Height = {updated_height}')
+                        scroll.update_size_new_item(updated_height, self.prev_height)
+                        print(f'Scroll Height = {updated_height}')
+                        self.prev_height = updated_height
+                    # print(True)
                 else:
-                    print(False)
-                print(mouse_store)
+                    # print(False)
+                    pass
+                # print(mouse_store)
                 mouse_store = None
             except NameError:
                 print(None)
@@ -161,7 +174,7 @@ class ScrollFrame(ttk.Frame):
         self.tree_index = tree_index
         self.item_height = item_height
         self.list_height = (self.tree_index * item_height)  # Five items per row
-        print(f'initial tree index {self.tree_index}')
+        # print(f'initial tree index {self.tree_index}')
         # self.list_height = (20 * item_height) / 5  # Test of 20 items
 
         # canvas
@@ -170,15 +183,6 @@ class ScrollFrame(ttk.Frame):
 
         # display frame
         self.frame = ttk.Frame(self)
-
-        row = 0
-        column = 0
-        for index, item in enumerate(range(tree_index)):
-            if column > 4:
-                row += 1  # Increment the row
-                column = 0  # Set column back to 0
-            self.create_item().grid(row=row, column=column, sticky='nsew', padx=5, pady=10)
-            column += 1
 
         # scrollbar
         self.scrollbar = ttk.Scrollbar(self, orient='vertical', command=self.canvas.yview)
@@ -208,11 +212,10 @@ class ScrollFrame(ttk.Frame):
             height=height)
 
     def update_size_new_item(self, new_height, current_height):
-        # print(f'new height = {new_height}')
-        print(f'Window height = {current_height}')
+        # print(f'Window height = {current_height}')
         if new_height >= current_height:
             height = new_height
-            print(f'height = {height}')
+            # print(f'height = {height}')
             self.canvas.bind_all('<MouseWheel>',
                                  lambda event: self.canvas.yview_scroll(-int(event.delta / 60), "units"))
             self.scrollbar.place(relx=1, rely=0, relheight=1, anchor='ne')
@@ -228,13 +231,11 @@ class ScrollFrame(ttk.Frame):
             width=self.winfo_width(),
             height=height)
 
-    def create_item(self):
-        self.tree_index += 1
-        print(f'tree index = {self.tree_index}')
+    def create_item(self, index):
+        # self.tree_index += 1
+        # print(f'tree index = {index}')
         frame = ttk.Frame(self.frame)
-        TabBarTree(frame, f'Machine {self.tree_index}').pack(expand=True, fill='both')
-        self.list_height = (self.tree_index * self.item_height)
-        self.update_size_new_item(self.list_height, self.winfo_height())
+        TabBarTree(frame, f'Machine {index}').pack(expand=True, fill='both')
         return frame
 
 
@@ -259,6 +260,7 @@ class TabBarTree(ttk.Treeview):
         super().__init__(master=parent, columns=args, show='headings')
         for arg in args:
             self.heading(arg, text=str(arg))
+        # print(f'Tree Height = {self.winfo_height()}')
 
         # self.bind('<<TreeviewSelect>>', item_select)
         # self.bind('<ButtonRelease-1>', mouse_release)
