@@ -127,26 +127,23 @@ class Configuration(tk.Toplevel):
         topBarFrame.grid(row=0, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
         botBarFrame.grid(row=2, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
 
-        self.prev_height = 0
         def mouse_release(_):
             global mouse_store
             try:
-                startx = tabs.winfo_pointerx() - tabs.winfo_rootx()
-                starty = tabs.winfo_pointery() - tabs.winfo_rooty()
-
-                # print(f'{startx}, {starty}')
-                if 0 <= startx <= tabs.winfo_width() and 0 <= starty <= tabs.winfo_height():
-                    # TabBarTree(tab1, f'Machine {mouse_store}').pack(expand=True, fill='both')
+                start_x = tabs.winfo_pointerx() - tabs.winfo_rootx()
+                start_y = tabs.winfo_pointery() - tabs.winfo_rooty()
+                if 0 <= start_x <= tabs.winfo_width() and 0 <= start_y <= tabs.winfo_height():
                     if mouse_store != None:
                         new_item = scroll.create_item()
                         new_item.pack()
                         self.update_idletasks()
-                        print(f'new Item height = {new_item.winfo_height()}')
-                        print(f'Scroll Tree Index = {scroll.tree_index - 1}')
-                        print(f'new Item height * scroll tree index = {new_item.winfo_height() * (scroll.tree_index - 1)}')
-                        updated_height = new_item.winfo_height() * (scroll.tree_index - 1)
-                        scroll.update_size_new_item(updated_height)
-                        self.prev_height = updated_height
+                        if (scroll.tree_index - 1) == 1:
+                            print(f'scroll tree index = {scroll.tree_index - 1}')
+                            height = 340
+                        else:
+                            height = 226 * (scroll.tree_index - 1)
+                            print(f'scroll tree index = {scroll.tree_index - 1}')
+                        scroll.update_size_new_item(height)
                 else:
                     pass
                 mouse_store = None
@@ -165,12 +162,11 @@ class ScrollFrame(ttk.Frame):
         self.tree_index = tree_index
         self.item_height = item_height
         self.list_height = (self.tree_index * item_height)  # Five items per row
-        # print(f'initial tree index {self.tree_index}')
-        # self.list_height = (20 * item_height) / 5  # Test of 20 items
 
         # canvas
         self.canvas = tk.Canvas(self, background='red', scrollregion=(0, 0, self.winfo_width(), self.list_height))
         self.canvas.pack(expand=True, fill='both')
+        print(f'Canvas height = {self.list_height}')
         print(f'Canvas height = {self.canvas.winfo_height()}')
 
         # display frame
@@ -254,10 +250,6 @@ class TabBarTree(ttk.Treeview):
         super().__init__(master=parent, columns=args, show='headings')
         for arg in args:
             self.heading(arg, text=str(arg))
-        # print(f'Tree Height = {self.winfo_height()}')
-
-        # self.bind('<<TreeviewSelect>>', item_select)
-        # self.bind('<ButtonRelease-1>', mouse_release)
 
 
 App('Glass Panel Control', (600, 600))
