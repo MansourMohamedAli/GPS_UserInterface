@@ -141,9 +141,8 @@ class Configuration(tk.Toplevel):
                 start_y = tabs.winfo_pointery() - tabs.winfo_rooty()
                 if 0 <= start_x <= tabs.winfo_width() and 0 <= start_y <= tabs.winfo_height():
                     if mouse_store != None:
-                        # print(f'length of mouse store = {len(mouse_store)}')
-                        for item in mouse_store:
-                            # print(item)
+                        for i in range(mouse_store):
+                            print(i)
                             new_item = scroll.create_item(mouse_store)
                             new_item.grid(row=self.tree_row, column=self.tree_column)
                         self.update_idletasks()
@@ -251,10 +250,9 @@ class ClientListTree(ttk.Treeview):
         def item_select(_):
             self.tree_selection = list()
             for i in self.selection():
-                self.tree_selection.append(self.item(i)['values'])
+                self.tree_selection.append(self.item(i)['values'][0])
             global mouse_store
             mouse_store = self.tree_selection
-            print(self.tree_selection)
 
         for arg in args:
             self.heading(arg, text=str(arg))
