@@ -140,19 +140,20 @@ class Configuration(tk.Toplevel):
                 start_x = tabs.winfo_pointerx() - tabs.winfo_rootx()
                 start_y = tabs.winfo_pointery() - tabs.winfo_rooty()
                 if 0 <= start_x <= tabs.winfo_width() and 0 <= start_y <= tabs.winfo_height():
+                    print(mouse_store)
                     if mouse_store != None:
-                        for i in range(mouse_store):
-                            print(i)
-                            new_item = scroll.create_item(mouse_store)
+                        for item in mouse_store:
+                            new_item = scroll.create_item(item)
                             new_item.grid(row=self.tree_row, column=self.tree_column)
+                            self.tree_row, self.tree_column = update_row_column(scroll.tree_index,
+                                                                                self.tree_row,
+                                                                                self.tree_column)
                         self.update_idletasks()
                         if (scroll.tree_index - 1) == 1:
                             height = 340
                         else:
                             height = 226 * (scroll.tree_index - 1)
                         scroll.update_size_new_item(height)
-                        self.tree_row, self.tree_column = update_row_column(scroll.tree_index, self.tree_row,
-                                                                            self.tree_column)
                 else:
                     pass
                 mouse_store = None
@@ -238,7 +239,7 @@ class ScrollFrame(ttk.Frame):
 
     def create_item(self, store):
         frame = ttk.Frame(self.frame)
-        TabBarTree(frame, f'{store[0]}').pack(expand=True, fill='both')
+        TabBarTree(frame, f'{store}').pack(expand=True, fill='both')
         self.tree_index += 1
         return frame
 
