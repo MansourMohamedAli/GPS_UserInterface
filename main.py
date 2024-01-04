@@ -113,10 +113,10 @@ class Configuration(tk.Toplevel):
 
         botSideBarFrame = tk.Frame(sideBarFrame)
         botSideBarFrame.grid(row=2, columnspan=2, padx=10, pady=10, sticky="nsew")
-        commands = ClientListTree(botSideBarFrame, "Command")
-        # commands.insert(parent='', index=0, values=["test"])
-        # commands.insert(parent='', index=1, values=["sdfa"])
-        # commands.insert(parent='', index=2, values=["vxcvc"])
+        commands = CommandListTree(botSideBarFrame, "Command")
+        commands.insert(parent='', index=0, values=["test"])
+        commands.insert(parent='', index=1, values=["sdfa"])
+        commands.insert(parent='', index=2, values=["vxcvc"])
         commands.pack(fill='both', expand=True)
 
         """top Bar Configuration"""
@@ -135,14 +135,13 @@ class Configuration(tk.Toplevel):
         self.tree_column = 0
 
         def mouse_release(_):
-            global mouse_store
+            global client_store
             try:
                 start_x = tabs.winfo_pointerx() - tabs.winfo_rootx()
                 start_y = tabs.winfo_pointery() - tabs.winfo_rooty()
                 if 0 <= start_x <= tabs.winfo_width() and 0 <= start_y <= tabs.winfo_height():
-                    print(mouse_store)
-                    if mouse_store != None:
-                        for item in mouse_store:
+                    if client_store != None:
+                        for item in client_store:
                             new_item = scroll.create_item(item)
                             new_item.grid(row=self.tree_row, column=self.tree_column)
                             self.tree_row, self.tree_column = update_row_column(scroll.tree_index,
@@ -156,7 +155,7 @@ class Configuration(tk.Toplevel):
                         scroll.update_size_new_item(height)
                 else:
                     pass
-                mouse_store = None
+                client_store = None
             except NameError:
                 print(None)
 
@@ -170,7 +169,6 @@ class Configuration(tk.Toplevel):
             return row, column
 
         self.bind('<ButtonRelease-1>', mouse_release)
-
 
 class ScrollFrame(ttk.Frame):
     def __init__(self, parent, item_height, tree_index):
@@ -243,6 +241,22 @@ class ScrollFrame(ttk.Frame):
         self.tree_index += 1
         return frame
 
+class CommandListTree(ttk.Treeview):
+    def __init__(self, parent, *args):
+        super().__init__(master=parent, columns=args, show='headings')
+
+        def item_select(_):
+            self.tree_selection = list()
+            for i in self.selection():
+                self.tree_selection.append(self.item(i)['values'][0])
+            global command_store
+            command_store = self.tree_selection
+
+        for arg in args:
+            self.heading(arg, text=str(arg))
+
+        self.bind('<<TreeviewSelect>>', item_select)
+
 
 class ClientListTree(ttk.Treeview):
     def __init__(self, parent, *args):
@@ -252,20 +266,62 @@ class ClientListTree(ttk.Treeview):
             self.tree_selection = list()
             for i in self.selection():
                 self.tree_selection.append(self.item(i)['values'][0])
-            global mouse_store
-            mouse_store = self.tree_selection
+            global client_store
+            client_store = self.tree_selection
 
         for arg in args:
             self.heading(arg, text=str(arg))
 
         self.bind('<<TreeviewSelect>>', item_select)
 
-
 class TabBarTree(ttk.Treeview):
     def __init__(self, parent, *args):
         super().__init__(master=parent, columns=args, show='headings')
+
         for arg in args:
             self.heading(arg, text=str(arg))
 
+        def mouse_release(_):
+            global command_store
+            # start_x = self.winfo_pointerx() - self.winfo_rootx()
+            # start_y = self.winfo_pointery() - self.winfo_rooty()
+            # print(f'start x{start_x}, start y {start_y}')
+            try:
+                start_x = self.winfo_pointerx() - self.winfo_rootx()
+                start_y = self.winfo_pointery() - self.winfo_rooty()
+
+                # print(f'start x{start_x}, start y {start_y}')
+                if 0 <= start_x <= self.winfo_width() and 0 <= start_y <= self.winfo_height():
+                    if command_store != None:
+                        print(command_store)
+                        # print(command_store)
+                    #     for item in command_store:
+                    #         new_item = self.create_item(item)
+                    #         new_item.grid(row=self.tree_row, column=self.tree_column)
+                    #         self.tree_row, self.tree_column = update_row_column(self.tree_index,
+                    #                                                             self.tree_row,
+                    #                                                             self.tree_column)
+                    #     self.update_idletasks()
+                    #     if (scroll.tree_index - 1) == 1:
+                    #         height = 340
+                    #     else:
+                    #         height = 226 * (scroll.tree_index - 1)
+                    #     scroll.update_size_new_item(height)
+                else:
+                    pass
+                command_store = None
+            except NameError:
+                print(None)
+
+        def update_row_column(tree_index, row, column):
+            if tree_index < 6:
+                row = 0
+                column += 1
+            else:
+                row += 1
+                column = 0
+            return row, column
+
+        self.bind('<ButtonRelease-1>', mouse_release)
 
 App('Glass Panel Control', (200, 200))
