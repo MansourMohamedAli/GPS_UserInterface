@@ -275,24 +275,25 @@ class ClientListTree(ttk.Treeview):
         self.bind('<<TreeviewSelect>>', item_select)
 
 class TabBarTree(ttk.Treeview):
+    index = 0
     def __init__(self, parent, *args):
         super().__init__(master=parent, columns=args, show='headings')
+        TabBarTree.index += 1
 
         for arg in args:
             self.heading(arg, text=str(arg))
 
         def command_release(_):
             global command_store
-            # start_x = self.winfo_pointerx() - self.winfo_rootx()
-            # start_y = self.winfo_pointery() - self.winfo_rooty()
-            # print(f'start x{start_x}, start y {start_y}')
             try:
-                start_x = self.winfo_pointerx() - self.winfo_rootx()
+                start_x = (self.winfo_pointerx() - self.winfo_rootx())
                 start_y = self.winfo_pointery() - self.winfo_rooty()
-
-                # print(f'start x{start_x}, start y {start_y}')
-                if 0 <= start_x <= self.winfo_width() and 0 <= start_y <= self.winfo_height():
+                print(f'pointer x {self.winfo_pointerx()}, root x {self.winfo_rootx()}')
+                print(f'start x{start_x}, start y {start_y}')
+                if 0 <= start_x <= (self.winfo_width()) and 0 <= start_y <= (self.winfo_height()):
+                    print(f'tree width = {self.winfo_width()}, tree height ={self.winfo_height()}')
                     if command_store != None:
+                        print(TabBarTree.index)
                         print(command_store)
                         # print(command_store)
                     #     for item in command_store:
