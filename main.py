@@ -281,7 +281,7 @@ class TabBarTree(ttk.Treeview):
         for arg in args:
             self.heading(arg, text=str(arg))
 
-        def mouse_release(_):
+        def command_release(_):
             global command_store
             # start_x = self.winfo_pointerx() - self.winfo_rootx()
             # start_y = self.winfo_pointery() - self.winfo_rooty()
@@ -322,6 +322,6 @@ class TabBarTree(ttk.Treeview):
                 column = 0
             return row, column
 
-        self.bind('<ButtonRelease-1>', mouse_release)
+        self.bind_all('<ButtonRelease-1>', command_release)
 
 App('Glass Panel Control', (200, 200))
