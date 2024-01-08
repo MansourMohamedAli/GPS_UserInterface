@@ -57,6 +57,10 @@ class Menu(ttk.Frame):
 class Configuration(tk.Toplevel):
     def __init__(self):
         super().__init__()
+        self.tree_column = None
+        self.tree_row = None
+        self.tree_index = None
+        self.scroll = None
         self.title('Configuration')
         self.geometry("1300x600")
         self.minsize(400, 300)
@@ -87,7 +91,7 @@ class Configuration(tk.Toplevel):
                      ('label2', 'button'), ('label3', 'button'), ('label4', 'button'),
                      ('label2', 'button'), ('label3', 'button'), ('label4', 'button'),
                      ('label2', 'button'), ('label3', 'button'), ('label4', 'button')]
-        scroll = ScrollFrame(tab1, 100, 1)
+        self.scroll = ScrollFrame(tab1, 100, 1)
 
         """Creating Tab 2"""
         tab2 = tk.Frame(tabs)
@@ -131,44 +135,9 @@ class Configuration(tk.Toplevel):
         topBarFrame.grid(row=0, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
         botBarFrame.grid(row=2, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
 
-        self.tree_row = 0
-        self.tree_column = 0
+        # self.tree_row = 0
+        # self.tree_column = 0
 
-        def mouse_release(_):
-            global client_store
-            try:
-                start_x = tabs.winfo_pointerx() - tabs.winfo_rootx()
-                start_y = tabs.winfo_pointery() - tabs.winfo_rooty()
-                if 0 <= start_x <= tabs.winfo_width() and 0 <= start_y <= tabs.winfo_height():
-                    if client_store != None:
-                        for item in client_store:
-                            new_item = scroll.create_item(item)
-                            new_item.grid(row=self.tree_row, column=self.tree_column)
-                            self.tree_row, self.tree_column = update_row_column(scroll.tree_index,
-                                                                                self.tree_row,
-                                                                                self.tree_column)
-                        self.update_idletasks()
-                        if (scroll.tree_index - 1) == 1:
-                            height = 340
-                        else:
-                            height = 226 * (scroll.tree_index - 1)
-                        scroll.update_size_new_item(height)
-                else:
-                    pass
-                client_store = None
-            except NameError:
-                print(None)
-
-        def update_row_column(tree_index, row, column):
-            if tree_index < 6:
-                row = 0
-                column += 1
-            else:
-                row += 1
-                column = 0
-            return row, column
-
-        self.bind('<ButtonRelease-1>', mouse_release)
 
 class ScrollFrame(ttk.Frame):
     def __init__(self, parent, item_height, tree_index):
@@ -177,6 +146,8 @@ class ScrollFrame(ttk.Frame):
 
         # widget data
         self.tree_index = tree_index
+        self.tree_row = 0
+        self.tree_col = 0
         self.item_height = item_height
         self.list_height = (self.tree_index * item_height)  # Five items per row
 
@@ -195,6 +166,7 @@ class ScrollFrame(ttk.Frame):
         # events
         self.canvas.bind_all('<MouseWheel>', lambda event: self.canvas.yview_scroll(-int(event.delta / 60), "units"))
         self.bind('<Configure>', self.update_size_event)
+        self.bind_all('<ButtonRelease-1>', self.mouse_release)
 
     def update_size_event(self, event):
         if self.list_height >= self.winfo_height():
@@ -241,6 +213,43 @@ class ScrollFrame(ttk.Frame):
         self.tree_index += 1
         return frame
 
+    def mouse_release(self, event):
+        global client_store
+        try:
+            start_x = self.winfo_pointerx() - self.winfo_rootx()
+            start_y = self.winfo_pointery() - self.winfo_rooty()
+            # print(f'start {start_x}')
+            if 0 <= start_x <= self.winfo_width() and 0 <= start_y <= self.winfo_height():
+                if client_store != None:
+                    for item in client_store:
+                        new_item = self.create_item(item)
+                        new_item.grid(row=self.tree_row, column=self.tree_col)
+                        self.tree_row, self.tree_col = self.update_row_column(self.tree_index,
+                                                                              self.tree_row,
+                                                                              self.tree_col)
+                        print(f'tree row {self.tree_row}, tree column {self.tree_col}')
+                    self.update_idletasks()
+                    if (self.tree_index - 1) == 1:
+                        height = 340
+                    else:
+                        height = 226 * (self.tree_index - 1)
+                    self.update_size_new_item(height)
+            else:
+                pass
+            client_store = None
+        except NameError:
+            print(None)
+
+    def update_row_column(self, tree_index, row, column):
+        if tree_index < 6:
+            row = 0
+            column += 1
+        else:
+            row += 1
+            column = 0
+        return row, column
+
+
 class CommandListTree(ttk.Treeview):
     def __init__(self, parent, *args):
         super().__init__(master=parent, columns=args, show='headings')
@@ -274,8 +283,10 @@ class ClientListTree(ttk.Treeview):
 
         self.bind('<<TreeviewSelect>>', item_select)
 
+
 class TabBarTree(ttk.Treeview):
     index = 0
+
     def __init__(self, parent, *args):
         super().__init__(master=parent, columns=args, show='headings')
         TabBarTree.index += 1
@@ -283,46 +294,12 @@ class TabBarTree(ttk.Treeview):
         for arg in args:
             self.heading(arg, text=str(arg))
 
-        def command_release(_):
-            global command_store
-            try:
-                start_x = (self.winfo_pointerx() - self.winfo_rootx())
-                start_y = self.winfo_pointery() - self.winfo_rooty()
-                print(f'pointer x {self.winfo_pointerx()}, root x {self.winfo_rootx()}')
-                print(f'start x{start_x}, start y {start_y}')
-                if 0 <= start_x <= (self.winfo_width()) and 0 <= start_y <= (self.winfo_height()):
-                    print(f'tree width = {self.winfo_width()}, tree height ={self.winfo_height()}')
-                    if command_store != None:
-                        print(TabBarTree.index)
-                        print(command_store)
-                        # print(command_store)
-                    #     for item in command_store:
-                    #         new_item = self.create_item(item)
-                    #         new_item.grid(row=self.tree_row, column=self.tree_column)
-                    #         self.tree_row, self.tree_column = update_row_column(self.tree_index,
-                    #                                                             self.tree_row,
-                    #                                                             self.tree_column)
-                    #     self.update_idletasks()
-                    #     if (scroll.tree_index - 1) == 1:
-                    #         height = 340
-                    #     else:
-                    #         height = 226 * (scroll.tree_index - 1)
-                    #     scroll.update_size_new_item(height)
-                else:
-                    pass
-                command_store = None
-            except NameError:
-                print(None)
+        self.bind_all('<ButtonRelease-1>', self.command_release)
 
-        def update_row_column(tree_index, row, column):
-            if tree_index < 6:
-                row = 0
-                column += 1
-            else:
-                row += 1
-                column = 0
-            return row, column
+    def command_release(self, event):
+        global command_store
+        print(command_store)
+        command_store = None
 
-        self.bind_all('<ButtonRelease-1>', command_release)
 
 App('Glass Panel Control', (200, 200))
