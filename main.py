@@ -66,6 +66,7 @@ class Configuration(tk.Toplevel):
         self.minsize(400, 300)
         self.create_widgets()
 
+
     def create_widgets(self):
         """All Frames that make up Configuration Window"""
         tabFrame = ttk.Frame(self, relief=tk.GROOVE)
@@ -253,35 +254,42 @@ class ScrollFrame(ttk.Frame):
 class CommandListTree(ttk.Treeview):
     def __init__(self, parent, *args):
         super().__init__(master=parent, columns=args, show='headings')
+        self.args = args
+        self.parent = parent
+        self.get_tree_headings()
+        self.bind('<<TreeviewSelect>>', self.item_select)
 
-        def item_select(_):
-            self.tree_selection = list()
-            for i in self.selection():
-                self.tree_selection.append(self.item(i)['values'][0])
-            global command_store
-            command_store = self.tree_selection
+    def item_select(self, event):
+        tree_selection = list()
+        for i in self.selection():
+            tree_selection.append(self.item(i)['values'][0])
+        global command_store
+        command_store = tree_selection
 
-        for arg in args:
+    def get_tree_headings(self):
+        for arg in self.args:
             self.heading(arg, text=str(arg))
-
-        self.bind('<<TreeviewSelect>>', item_select)
 
 
 class ClientListTree(ttk.Treeview):
     def __init__(self, parent, *args):
         super().__init__(master=parent, columns=args, show='headings')
+        self.args = args
+        self.parent = parent
+        self.get_tree_headings()
+        self.bind('<<TreeviewSelect>>', self.item_select)
+    def item_select(self, event):
+        tree_selection = list()
+        for i in self.selection():
+            tree_selection.append(self.item(i)['values'][0])
+        global client_store
+        client_store = tree_selection
 
-        def item_select(_):
-            self.tree_selection = list()
-            for i in self.selection():
-                self.tree_selection.append(self.item(i)['values'][0])
-            global client_store
-            client_store = self.tree_selection
-
-        for arg in args:
+    def get_tree_headings(self):
+        for arg in self.args:
             self.heading(arg, text=str(arg))
 
-        self.bind('<<TreeviewSelect>>', item_select)
+
 
 
 class TabBarTree(ttk.Treeview):
@@ -290,11 +298,14 @@ class TabBarTree(ttk.Treeview):
     def __init__(self, parent, *args):
         super().__init__(master=parent, columns=args, show='headings')
         TabBarTree.index += 1
+        self.args = args
+        self.parent = parent
+        self.get_tree_headings()
+        self.bind('<ButtonRelease-1>', self.command_release)
 
-        for arg in args:
+    def get_tree_headings(self):
+        for arg in self.args:
             self.heading(arg, text=str(arg))
-
-        self.bind_all('<ButtonRelease-1>', self.command_release)
 
     def command_release(self, event):
         global command_store
