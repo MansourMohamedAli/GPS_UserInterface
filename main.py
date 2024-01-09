@@ -2,6 +2,8 @@ import tkinter as tk
 from tkinter import ttk
 from random import choice
 
+global command_store
+command_store = None
 
 class App(tk.Tk):
     def __init__(self, title, dimensions):
@@ -65,6 +67,8 @@ class Configuration(tk.Toplevel):
         self.geometry("1300x600")
         self.minsize(400, 300)
         self.create_widgets()
+        self.bind('<ButtonRelease-1>', self.command_release)
+
 
 
     def create_widgets(self):
@@ -136,9 +140,16 @@ class Configuration(tk.Toplevel):
         topBarFrame.grid(row=0, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
         botBarFrame.grid(row=2, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
 
-        # self.tree_row = 0
-        # self.tree_column = 0
+    def command_release(self, event):
+        global command_store
 
+        if command_store != None:
+            caller = event.widget
+            print(caller)
+            print(command_store)
+            command_store = None
+        else:
+            command_store = None
 
 class ScrollFrame(ttk.Frame):
     def __init__(self, parent, item_height, tree_index):
@@ -301,16 +312,22 @@ class TabBarTree(ttk.Treeview):
         self.args = args
         self.parent = parent
         self.get_tree_headings()
-        self.bind('<ButtonRelease-1>', self.command_release)
+        # self.bind('<ButtonRelease-1>', self.command_release)
 
     def get_tree_headings(self):
         for arg in self.args:
             self.heading(arg, text=str(arg))
 
-    def command_release(self, event):
-        global command_store
-        print(command_store)
-        command_store = None
+    def add_item(self):
+        pass
+
+
+
+
+    # def command_release(self, event):
+    #     global command_store
+    #     print(command_store)
+    #     command_store = None
 
 
 App('Glass Panel Control', (200, 200))
