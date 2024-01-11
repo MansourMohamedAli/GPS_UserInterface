@@ -1,6 +1,5 @@
 import tkinter as tk
 from tkinter import ttk
-from random import choice
 
 global command_store
 command_store = None
@@ -67,16 +66,16 @@ class Configuration(tk.Toplevel):
         self.geometry("1300x600")
         self.minsize(400, 300)
         self.create_widgets()
-        self.bind('<ButtonRelease-1>', self.command_release)
+        self.bind('<ButtonRelease-1>', self.command_release, add="+")
 
 
 
     def create_widgets(self):
         """All Frames that make up Configuration Window"""
-        tabFrame = ttk.Frame(self, relief=tk.GROOVE)
-        sideBarFrame = ttk.Frame(self, relief=tk.GROOVE)
-        topBarFrame = ttk.Frame(self, relief=tk.GROOVE)
-        botBarFrame = ttk.Frame(self, relief=tk.GROOVE)
+        tab_frame = ttk.Frame(self, relief=tk.GROOVE)
+        side_bar_frame = ttk.Frame(self, relief=tk.GROOVE)
+        top_bar_frame = ttk.Frame(self, relief=tk.GROOVE)
+        bot_bar_frame = ttk.Frame(self, relief=tk.GROOVE)
 
         self.rowconfigure(0, weight=1)
         self.rowconfigure(1, weight=5)
@@ -85,9 +84,9 @@ class Configuration(tk.Toplevel):
         self.columnconfigure(1, weight=5)
 
         """Tab Frame configuration"""
-        tabs = ttk.Notebook(tabFrame, width=202 * 5, height=tabFrame.winfo_height())
-        tabFrame.rowconfigure(0, weight=1)
-        tabFrame.columnconfigure(0, weight=1)
+        tabs = ttk.Notebook(tab_frame, width=202 * 5, height=tab_frame.winfo_height())
+        tab_frame.rowconfigure(0, weight=1)
+        tab_frame.columnconfigure(0, weight=1)
 
         """Creating Tab 1"""
         tab1 = tk.Frame(tabs)
@@ -108,44 +107,44 @@ class Configuration(tk.Toplevel):
         tabs.grid(sticky='nsew')
 
         """Side Bar Configuration"""
-        sideBarFrame.rowconfigure((0, 1, 2), weight=1, uniform='a')
-        sideBarFrame.columnconfigure((0, 1), weight=1, uniform='a')
+        side_bar_frame.rowconfigure((0, 1, 2), weight=1, uniform='a')
+        side_bar_frame.columnconfigure((0, 1), weight=1, uniform='a')
 
-        midSideBarFrame = tk.Frame(sideBarFrame)
-        midSideBarFrame.grid(row=1, columnspan=2, padx=10, pady=10, sticky="nsew")
-        # ClientListTree(midSideBarFrame, "Machine").pack(fill='both', expand=True)
-        clients = ClientListTree(midSideBarFrame, "Clients")
+        mid_side_bar_frame = tk.Frame(side_bar_frame)
+        mid_side_bar_frame.grid(row=1, columnspan=2, padx=10, pady=10, sticky="nsew")
+        # ClientListTree(mid_side_bar_frame, "Machine").pack(fill='both', expand=True)
+        clients = ClientListTree(mid_side_bar_frame, "Clients")
         clients.insert(parent='', index=0, values=["VB1"])
         clients.insert(parent='', index=1, values=["VB2"])
         clients.insert(parent='', index=2, values=["VB3"])
         clients.pack(fill='both', expand=True)
 
-        botSideBarFrame = tk.Frame(sideBarFrame)
-        botSideBarFrame.grid(row=2, columnspan=2, padx=10, pady=10, sticky="nsew")
-        commands = CommandListTree(botSideBarFrame, "Command")
+        bot_side_bar_frame = tk.Frame(side_bar_frame)
+        bot_side_bar_frame.grid(row=2, columnspan=2, padx=10, pady=10, sticky="nsew")
+        commands = CommandListTree(bot_side_bar_frame, "Command")
         commands.insert(parent='', index=0, values=["test"])
         commands.insert(parent='', index=1, values=["sdfa"])
         commands.insert(parent='', index=2, values=["vxcvc"])
         commands.pack(fill='both', expand=True)
 
         """top Bar Configuration"""
-        topLabel = ttk.Label(topBarFrame, text="Top Bar")
-        topLabel.pack(expand=True)
+        top_label = ttk.Label(top_bar_frame, text="Top Bar")
+        top_label.pack(expand=True)
         """bot Bar Configuration"""
-        botLabel = ttk.Label(botBarFrame, text="Bottom Bar")
-        botLabel.pack(expand=True)
+        bot_label = ttk.Label(bot_bar_frame, text="Bottom Bar")
+        bot_label.pack(expand=True)
 
-        tabFrame.grid(row=1, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
-        sideBarFrame.grid(row=0, column=0, sticky='nsew', rowspan=3, padx=(10, 5), pady=(10, 10))
-        topBarFrame.grid(row=0, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
-        botBarFrame.grid(row=2, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
+        tab_frame.grid(row=1, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
+        side_bar_frame.grid(row=0, column=0, sticky='nsew', rowspan=3, padx=(10, 5), pady=(10, 10))
+        top_bar_frame.grid(row=0, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
+        bot_bar_frame.grid(row=2, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
 
     def command_release(self, event):
         global command_store
-
+        caller = event.widget
+        # print(caller)
+        print('MOUSE UP 2')
         if command_store != None:
-            caller = event.widget
-            print(caller)
             print(command_store)
             command_store = None
         else:
@@ -178,7 +177,7 @@ class ScrollFrame(ttk.Frame):
         # events
         self.canvas.bind_all('<MouseWheel>', lambda event: self.canvas.yview_scroll(-int(event.delta / 60), "units"))
         self.bind('<Configure>', self.update_size_event)
-        self.bind_all('<ButtonRelease-1>', self.mouse_release)
+        self.bind_all('<ButtonRelease-1>', self.mouse_release, add="+")
 
     def update_size_event(self, event):
         if self.list_height >= self.winfo_height():
@@ -227,10 +226,10 @@ class ScrollFrame(ttk.Frame):
 
     def mouse_release(self, event):
         global client_store
+        print('MOUSE UP 1')
         try:
             start_x = self.winfo_pointerx() - self.winfo_rootx()
             start_y = self.winfo_pointery() - self.winfo_rooty()
-            # print(f'start {start_x}')
             if 0 <= start_x <= self.winfo_width() and 0 <= start_y <= self.winfo_height():
                 if client_store != None:
                     for item in client_store:
@@ -239,7 +238,7 @@ class ScrollFrame(ttk.Frame):
                         self.tree_row, self.tree_col = self.update_row_column(self.tree_index,
                                                                               self.tree_row,
                                                                               self.tree_col)
-                        print(f'tree row {self.tree_row}, tree column {self.tree_col}')
+                        # print(f'tree row {self.tree_row}, tree column {self.tree_col}')
                     self.update_idletasks()
                     if (self.tree_index - 1) == 1:
                         height = 340
@@ -301,18 +300,14 @@ class ClientListTree(ttk.Treeview):
             self.heading(arg, text=str(arg))
 
 
-
-
 class TabBarTree(ttk.Treeview):
     index = 0
-
     def __init__(self, parent, *args):
         super().__init__(master=parent, columns=args, show='headings')
         TabBarTree.index += 1
         self.args = args
         self.parent = parent
         self.get_tree_headings()
-        # self.bind('<ButtonRelease-1>', self.command_release)
 
     def get_tree_headings(self):
         for arg in self.args:
@@ -320,14 +315,6 @@ class TabBarTree(ttk.Treeview):
 
     def add_item(self):
         pass
-
-
-
-
-    # def command_release(self, event):
-    #     global command_store
-    #     print(command_store)
-    #     command_store = None
 
 
 App('Glass Panel Control', (200, 200))
