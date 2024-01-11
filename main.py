@@ -4,6 +4,7 @@ from tkinter import ttk
 global command_store
 command_store = None
 
+
 class App(tk.Tk):
     def __init__(self, title, dimensions):
         # main setup
@@ -66,9 +67,7 @@ class Configuration(tk.Toplevel):
         self.geometry("1300x600")
         self.minsize(400, 300)
         self.create_widgets()
-        self.bind('<ButtonRelease-1>', self.command_release, add="+")
-
-
+        # self.bind('<ButtonRelease-1>', self.command_release, add="+")
 
     def create_widgets(self):
         """All Frames that make up Configuration Window"""
@@ -139,16 +138,17 @@ class Configuration(tk.Toplevel):
         top_bar_frame.grid(row=0, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
         bot_bar_frame.grid(row=2, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
 
-    def command_release(self, event):
-        global command_store
-        caller = event.widget
-        # print(caller)
-        print('MOUSE UP 2')
-        if command_store != None:
-            print(command_store)
-            command_store = None
-        else:
-            command_store = None
+    # def command_release(self, event):
+    #     global command_store
+    #     caller = event.widget
+    #     # print(caller)
+    #     print('MOUSE UP 2')
+    #     if command_store != None:
+    #         print(command_store)
+    #         command_store = None
+    #     else:
+    #         command_store = None
+
 
 class ScrollFrame(ttk.Frame):
     def __init__(self, parent, item_height, tree_index):
@@ -177,7 +177,7 @@ class ScrollFrame(ttk.Frame):
         # events
         self.canvas.bind_all('<MouseWheel>', lambda event: self.canvas.yview_scroll(-int(event.delta / 60), "units"))
         self.bind('<Configure>', self.update_size_event)
-        self.bind_all('<ButtonRelease-1>', self.mouse_release, add="+")
+        self.bind_all('<ButtonRelease-1>', self.client_release, add="+")
 
     def update_size_event(self, event):
         if self.list_height >= self.winfo_height():
@@ -224,9 +224,8 @@ class ScrollFrame(ttk.Frame):
         self.tree_index += 1
         return frame
 
-    def mouse_release(self, event):
+    def client_release(self, event):
         global client_store
-        print('MOUSE UP 1')
         try:
             start_x = self.winfo_pointerx() - self.winfo_rootx()
             start_y = self.winfo_pointery() - self.winfo_rooty()
@@ -268,6 +267,7 @@ class CommandListTree(ttk.Treeview):
         self.parent = parent
         self.get_tree_headings()
         self.bind('<<TreeviewSelect>>', self.item_select)
+        self.bind('<ButtonRelease-1>', self.command_release)
 
     def item_select(self, event):
         tree_selection = list()
@@ -280,6 +280,9 @@ class CommandListTree(ttk.Treeview):
         for arg in self.args:
             self.heading(arg, text=str(arg))
 
+    def command_release(self, event):
+        global command_store
+
 
 class ClientListTree(ttk.Treeview):
     def __init__(self, parent, *args):
@@ -288,6 +291,7 @@ class ClientListTree(ttk.Treeview):
         self.parent = parent
         self.get_tree_headings()
         self.bind('<<TreeviewSelect>>', self.item_select)
+
     def item_select(self, event):
         tree_selection = list()
         for i in self.selection():
@@ -302,19 +306,37 @@ class ClientListTree(ttk.Treeview):
 
 class TabBarTree(ttk.Treeview):
     index = 0
+
     def __init__(self, parent, *args):
         super().__init__(master=parent, columns=args, show='headings')
         TabBarTree.index += 1
         self.args = args
         self.parent = parent
         self.get_tree_headings()
+        self.bind('<ButtonRelease-1>', self.command_release)
 
     def get_tree_headings(self):
         for arg in self.args:
             self.heading(arg, text=str(arg))
 
-    def add_item(self):
-        pass
+    def command_release(self, event):
+        global command_store
+        caller = event.widget
+        # print(caller)
+        start_x = self.winfo_pointerx() - self.winfo_rootx()
+        start_y = self.winfo_pointery() - self.winfo_rooty()
+        width = self.winfo_width()
+        height = self.winfo_height()
+        print(f'start_x {start_x}')
+        print(f'start_y {start_y}')
+        print(f'tree width {width}')
+        print(f'tree height {height}')
+        if command_store != None:
+            if 0 <= start_x <= self.winfo_width() and 0 <= start_y <= self.winfo_height():
+                print(command_store)
+                command_store = None
+            else:
+                command_store = None
 
 
 App('Glass Panel Control', (200, 200))
