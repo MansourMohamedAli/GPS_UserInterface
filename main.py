@@ -314,6 +314,7 @@ class TabBarTree(ttk.Treeview):
         self.parent = parent
         self.get_tree_headings()
         self.bind('<ButtonRelease-1>', self.command_release)
+        new_tags = self.bindtags() + (f"tabtree{str(TabBarTree.index)}",)
 
     def get_tree_headings(self):
         for arg in self.args:
@@ -327,6 +328,7 @@ class TabBarTree(ttk.Treeview):
         start_y = self.winfo_pointery() - self.winfo_rooty()
         width = self.winfo_width()
         height = self.winfo_height()
+        print(f'{self.args}')
         print(f'start_x {start_x}')
         print(f'start_y {start_y}')
         print(f'tree width {width}')
