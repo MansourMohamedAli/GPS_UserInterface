@@ -67,7 +67,6 @@ class Configuration(tk.Toplevel):
         self.geometry("1300x600")
         self.minsize(400, 300)
         self.create_widgets()
-        # self.bind('<ButtonRelease-1>', self.command_release, add="+")
 
     def create_widgets(self):
         """All Frames that make up Configuration Window"""
@@ -138,16 +137,6 @@ class Configuration(tk.Toplevel):
         top_bar_frame.grid(row=0, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
         bot_bar_frame.grid(row=2, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
 
-    # def command_release(self, event):
-    #     global command_store
-    #     caller = event.widget
-    #     # print(caller)
-    #     print('MOUSE UP 2')
-    #     if command_store != None:
-    #         print(command_store)
-    #         command_store = None
-    #     else:
-    #         command_store = None
 
 
 class ScrollFrame(ttk.Frame):
@@ -220,7 +209,8 @@ class ScrollFrame(ttk.Frame):
 
     def create_item(self, store):
         frame = ttk.Frame(self.frame)
-        TabBarTree(frame, f'{store}').pack(expand=True, fill='both')
+        item = TabBarTree(frame, f'{store}')
+        item.pack(expand=True, fill='both')
         self.tree_index += 1
         return frame
 
@@ -266,23 +256,21 @@ class CommandListTree(ttk.Treeview):
         self.args = args
         self.parent = parent
         self.get_tree_headings()
-        self.bind('<<TreeviewSelect>>', self.item_select)
-        self.bind('<ButtonRelease-1>', self.command_release)
+        tags = self.bindtags() + ("commands",)
+        self.bindtags(tags)
+        self.bind_class('commands', '<<TreeviewSelect>>', self.item_select)
 
     def item_select(self, event):
         tree_selection = list()
         for i in self.selection():
             tree_selection.append(self.item(i)['values'][0])
+        print(f'item selected{tree_selection}')
         global command_store
         command_store = tree_selection
 
     def get_tree_headings(self):
         for arg in self.args:
             self.heading(arg, text=str(arg))
-
-    def command_release(self, event):
-        global command_store
-
 
 class ClientListTree(ttk.Treeview):
     def __init__(self, parent, *args):
@@ -313,8 +301,10 @@ class TabBarTree(ttk.Treeview):
         self.args = args
         self.parent = parent
         self.get_tree_headings()
-        self.bind('<ButtonRelease-1>', self.command_release)
-        new_tags = self.bindtags() + (f"tabtree{str(TabBarTree.index)}",)
+        tags = self.bindtags() + ("commands",)
+        self.bindtags(tags)
+        self.update_idletasks()
+        self.bind_class('commands', '<ButtonRelease-1>', self.command_release)
 
     def get_tree_headings(self):
         for arg in self.args:
