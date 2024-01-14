@@ -249,29 +249,6 @@ class ScrollFrame(ttk.Frame):
             column = 0
         return row, column
 
-
-class CommandListTree(ttk.Treeview):
-    def __init__(self, parent, *args):
-        super().__init__(master=parent, columns=args, show='headings')
-        self.args = args
-        self.parent = parent
-        self.get_tree_headings()
-        tags = self.bindtags() + ("commands",)
-        self.bindtags(tags)
-        self.bind_class('commands', '<<TreeviewSelect>>', self.item_select)
-
-    def item_select(self, event):
-        tree_selection = list()
-        for i in self.selection():
-            tree_selection.append(self.item(i)['values'][0])
-        print(f'item selected{tree_selection}')
-        global command_store
-        command_store = tree_selection
-
-    def get_tree_headings(self):
-        for arg in self.args:
-            self.heading(arg, text=str(arg))
-
 class ClientListTree(ttk.Treeview):
     def __init__(self, parent, *args):
         super().__init__(master=parent, columns=args, show='headings')
@@ -292,6 +269,29 @@ class ClientListTree(ttk.Treeview):
             self.heading(arg, text=str(arg))
 
 
+class CommandListTree(ttk.Treeview):
+    def __init__(self, parent, *args):
+        super().__init__(master=parent, columns=args, show='headings')
+        self.args = args
+        self.parent = parent
+        self.get_tree_headings()
+        tags = self.bindtags() + ("commands",)
+        self.bindtags(tags)
+        self.bind('<<TreeviewSelect>>', self.item_select)
+
+    def item_select(self, event):
+        tree_selection = list()
+        for i in self.selection():
+            tree_selection.append(self.item(i)['values'][0])
+        print(f'item selected{tree_selection}')
+        global command_store
+        command_store = tree_selection
+
+    def get_tree_headings(self):
+        for arg in self.args:
+            self.heading(arg, text=str(arg))
+
+
 class TabBarTree(ttk.Treeview):
     index = 0
 
@@ -301,10 +301,7 @@ class TabBarTree(ttk.Treeview):
         self.args = args
         self.parent = parent
         self.get_tree_headings()
-        tags = self.bindtags() + ("commands",)
-        self.bindtags(tags)
-        self.update_idletasks()
-        self.bind_class('commands', '<ButtonRelease-1>', self.command_release)
+        self.bind('<ButtonRelease-1>', self.command_release)
 
     def get_tree_headings(self):
         for arg in self.args:
@@ -312,19 +309,20 @@ class TabBarTree(ttk.Treeview):
 
     def command_release(self, event):
         global command_store
-        caller = event.widget
+        # caller = event.widget
         # print(caller)
         start_x = self.winfo_pointerx() - self.winfo_rootx()
         start_y = self.winfo_pointery() - self.winfo_rooty()
         width = self.winfo_width()
         height = self.winfo_height()
-        print(f'{self.args}')
-        print(f'start_x {start_x}')
-        print(f'start_y {start_y}')
-        print(f'tree width {width}')
-        print(f'tree height {height}')
-        if command_store != None:
+        print(f'{self.args[0]}')
+        # print(f'start_x {start_x}')
+        # print(f'start_y {start_y}')
+        # print(f'tree width {width}')
+        # print(f'tree height {height}')
+        if command_store:
             if 0 <= start_x <= self.winfo_width() and 0 <= start_y <= self.winfo_height():
+                self.insert(parent='', index=tk.END, values=(command_store))
                 print(command_store)
                 command_store = None
             else:
