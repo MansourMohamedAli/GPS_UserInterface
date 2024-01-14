@@ -67,7 +67,12 @@ class Configuration(tk.Toplevel):
         self.geometry("1300x600")
         self.minsize(400, 300)
         self.create_widgets()
+        self.bind('<ButtonPress-1>', self.mouse_down)
 
+    def mouse_down(self, event):
+        caller = event.widget
+        print(type(caller))
+        # print('clicked')
     def create_widgets(self):
         """All Frames that make up Configuration Window"""
         tab_frame = ttk.Frame(self, relief=tk.GROOVE)
@@ -138,7 +143,6 @@ class Configuration(tk.Toplevel):
         bot_bar_frame.grid(row=2, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
 
 
-
 class ScrollFrame(ttk.Frame):
     def __init__(self, parent, item_height, tree_index):
         super().__init__(master=parent)
@@ -158,20 +162,26 @@ class ScrollFrame(ttk.Frame):
         # display frame
         self.frame = ttk.Frame(self)
 
+        #Adding new tag for frame to allow scroll only when not on treeview
+        new_tags = self.frame.bindtags() + ("scroll_frame_bg",)
+        self.frame.bindtags(new_tags)
+        print(self.frame.bindtags())
+
         # scrollbar
         self.scrollbar = ttk.Scrollbar(self, orient='vertical', command=self.canvas.yview)
         self.canvas.configure(yscrollcommand=self.scrollbar.set)
         self.scrollbar.place(relx=1, rely=0, relheight=1, anchor='ne')
 
+
         # events
-        self.canvas.bind_all('<MouseWheel>', lambda event: self.canvas.yview_scroll(-int(event.delta / 60), "units"))
+        self.canvas.bind_class('scroll_frame_bg', '<MouseWheel>', lambda event: self.canvas.yview_scroll(-int(event.delta / 60), "units"))
         self.bind('<Configure>', self.update_size_event)
-        self.bind_all('<ButtonRelease-1>', self.client_release, add="+")
+        self.bind_all('<ButtonRelease-1>', self.client_release)
 
     def update_size_event(self, event):
         if self.list_height >= self.winfo_height():
             height = self.list_height
-            self.canvas.bind_all('<MouseWheel>',
+            self.canvas.bind_class('scroll_frame_bg', '<MouseWheel>',
                                  lambda event: self.canvas.yview_scroll(-int(event.delta / 60), "units"))
             self.scrollbar.place(relx=1, rely=0, relheight=1, anchor='ne')
         else:
@@ -189,7 +199,7 @@ class ScrollFrame(ttk.Frame):
     def update_size_new_item(self, new_height):
         if new_height >= self.list_height:
             height = new_height
-            self.canvas.bind_all('<MouseWheel>',
+            self.canvas.bind_class('scroll_frame_bg', '<MouseWheel>',
                                  lambda event: self.canvas.yview_scroll(-int(event.delta / 60), "units"))
             self.scrollbar.place(relx=1, rely=0, relheight=1, anchor='ne')
         else:
@@ -220,14 +230,13 @@ class ScrollFrame(ttk.Frame):
             start_x = self.winfo_pointerx() - self.winfo_rootx()
             start_y = self.winfo_pointery() - self.winfo_rooty()
             if 0 <= start_x <= self.winfo_width() and 0 <= start_y <= self.winfo_height():
-                if client_store != None:
+                if client_store:
                     for item in client_store:
                         new_item = self.create_item(item)
                         new_item.grid(row=self.tree_row, column=self.tree_col)
                         self.tree_row, self.tree_col = self.update_row_column(self.tree_index,
                                                                               self.tree_row,
                                                                               self.tree_col)
-                        # print(f'tree row {self.tree_row}, tree column {self.tree_col}')
                     self.update_idletasks()
                     if (self.tree_index - 1) == 1:
                         height = 340
@@ -248,6 +257,7 @@ class ScrollFrame(ttk.Frame):
             row += 1
             column = 0
         return row, column
+
 
 class ClientListTree(ttk.Treeview):
     def __init__(self, parent, *args):
@@ -322,8 +332,9 @@ class TabBarTree(ttk.Treeview):
         # print(f'tree height {height}')
         if command_store:
             if 0 <= start_x <= self.winfo_width() and 0 <= start_y <= self.winfo_height():
-                self.insert(parent='', index=tk.END, values=(command_store))
-                print(command_store)
+                for index, _ in enumerate(command_store):
+                    self.insert(parent='', index=tk.END, values=(command_store[index]))
+                print(type(command_store))
                 command_store = None
             else:
                 command_store = None
