@@ -250,12 +250,16 @@ class ScrollFrame(ttk.Frame):
             print(None)
 
     def update_row_column(self, tree_index, row, column):
-        if tree_index < 6:
-            row = 0
-            column += 1
-        else:
+        print(f'row = {row}, column = {column}')
+        if column > 3:
             row += 1
             column = 0
+            # column += 1
+
+            # column += 1
+        else:
+            column += 1
+            # print(f'row = {row}, column = {column}')
         return row, column
 
 
@@ -303,11 +307,8 @@ class CommandListTree(ttk.Treeview):
 
 
 class TabBarTree(ttk.Treeview):
-    index = 0
-
     def __init__(self, parent, *args):
         super().__init__(master=parent, columns=args, show='headings')
-        TabBarTree.index += 1
         self.args = args
         self.parent = parent
         self.get_tree_headings()
