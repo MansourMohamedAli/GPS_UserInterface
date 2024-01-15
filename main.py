@@ -21,17 +21,17 @@ class App(tk.Tk):
         self.mainloop()
 
 
+
+
 class Menu(ttk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
         self.place(x=0, y=0, relwidth=1, relheight=1)
-
-        global open_config
-
-        def open_config():
-            Configuration()
-
         self.create_widgets()
+
+    @staticmethod
+    def open_config():
+        Configuration()
 
     def create_widgets(self):
         menu_button1 = ttk.Button(self, text='Button 1')
@@ -40,7 +40,7 @@ class Menu(ttk.Frame):
         menu_button4 = ttk.Button(self, text='Button 4')
         menu_button5 = ttk.Button(self, text='Button 5')
         menu_button6 = ttk.Button(self, text='Button 6')
-        config_button = ttk.Button(self, text='Configuration', command=open_config)
+        config_button = ttk.Button(self, text='Configuration', command=Menu.open_config)
 
         # create the grid
         self.columnconfigure((0, 1), weight=1, uniform='a')
@@ -73,6 +73,7 @@ class Configuration(tk.Toplevel):
         caller = event.widget
         print(type(caller))
         # print('clicked')
+
     def create_widgets(self):
         """All Frames that make up Configuration Window"""
         tab_frame = ttk.Frame(self, relief=tk.GROOVE)
@@ -162,7 +163,7 @@ class ScrollFrame(ttk.Frame):
         # display frame
         self.frame = ttk.Frame(self)
 
-        #Adding new tag for frame to allow scroll only when not on treeview
+        # Adding new tag for frame to allow scroll only when not on treeview
         new_tags = self.frame.bindtags() + ("scroll_frame_bg",)
         self.frame.bindtags(new_tags)
         print(self.frame.bindtags())
@@ -172,9 +173,9 @@ class ScrollFrame(ttk.Frame):
         self.canvas.configure(yscrollcommand=self.scrollbar.set)
         self.scrollbar.place(relx=1, rely=0, relheight=1, anchor='ne')
 
-
         # events
-        self.canvas.bind_class('scroll_frame_bg', '<MouseWheel>', lambda event: self.canvas.yview_scroll(-int(event.delta / 60), "units"))
+        self.canvas.bind_class('scroll_frame_bg', '<MouseWheel>',
+                               lambda event: self.canvas.yview_scroll(-int(event.delta / 60), "units"))
         self.bind('<Configure>', self.update_size_event)
         self.bind_all('<ButtonRelease-1>', self.client_release)
 
@@ -182,7 +183,7 @@ class ScrollFrame(ttk.Frame):
         if self.list_height >= self.winfo_height():
             height = self.list_height
             self.canvas.bind_class('scroll_frame_bg', '<MouseWheel>',
-                                 lambda event: self.canvas.yview_scroll(-int(event.delta / 60), "units"))
+                                   lambda event: self.canvas.yview_scroll(-int(event.delta / 60), "units"))
             self.scrollbar.place(relx=1, rely=0, relheight=1, anchor='ne')
         else:
             height = self.winfo_height()
@@ -201,7 +202,7 @@ class ScrollFrame(ttk.Frame):
         if new_height >= self.winfo_height():
             height = new_height
             self.canvas.bind_class('scroll_frame_bg', '<MouseWheel>',
-                                 lambda event: self.canvas.yview_scroll(-int(event.delta / 60), "units"))
+                                   lambda event: self.canvas.yview_scroll(-int(event.delta / 60), "units"))
             self.scrollbar.place(relx=1, rely=0, relheight=1, anchor='ne')
         else:
             height = self.winfo_height()
@@ -236,25 +237,23 @@ class ScrollFrame(ttk.Frame):
                         new_item = self.create_item(item)
                         new_item.grid(row=self.tree_row, column=self.tree_col)
                         self.update_idletasks()
+                        # Adjusting height
                         if self.tree_row == 0:
                             height = 340
                         else:
                             height = new_item.winfo_height() * (self.tree_row + 1)
-                        # print(f'tree row= {self.tree_row}')
-                        # print(new_item.winfo_height())
                         self.update_size_new_item(height)
-
+                        # updating row, col numbers
                         self.tree_row, self.tree_col = self.update_row_column(self.tree_row,
                                                                               self.tree_col)
-                    # self.update_idletasks()
-
             else:
                 pass
             client_store = None
         except NameError:
             print(None)
 
-    def update_row_column(self, row, column):
+    @staticmethod
+    def update_row_column(row, column):
         if column >= 4:
             row += 1
             column = 0
@@ -297,7 +296,6 @@ class CommandListTree(ttk.Treeview):
         tree_selection = list()
         for i in self.selection():
             tree_selection.append(self.item(i)['values'][0])
-        # print(f'item selected{tree_selection}')
         global command_store
         command_store = tree_selection
 
