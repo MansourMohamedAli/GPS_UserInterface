@@ -197,13 +197,14 @@ class ScrollFrame(ttk.Frame):
             height=height)
 
     def update_size_new_item(self, new_height):
-        if new_height >= self.list_height:
+        print(f'scroll frame height = {self.winfo_height()}')
+        if new_height >= self.winfo_height():
             height = new_height
             self.canvas.bind_class('scroll_frame_bg', '<MouseWheel>',
                                  lambda event: self.canvas.yview_scroll(-int(event.delta / 60), "units"))
             self.scrollbar.place(relx=1, rely=0, relheight=1, anchor='ne')
         else:
-            height = self.list_height
+            height = self.winfo_height()
             self.canvas.unbind_all('<MouseWheel>')
             self.scrollbar.place_forget()
 
@@ -234,17 +235,18 @@ class ScrollFrame(ttk.Frame):
                     for item in client_store:
                         new_item = self.create_item(item)
                         new_item.grid(row=self.tree_row, column=self.tree_col)
-
+                        self.update_idletasks()
                         if self.tree_row == 0:
                             height = 340
                         else:
-                            height = 226 * self.tree_row
-                        print(f'tree row= {self.tree_row}')
+                            height = new_item.winfo_height() * (self.tree_row + 1)
+                        # print(f'tree row= {self.tree_row}')
+                        # print(new_item.winfo_height())
                         self.update_size_new_item(height)
 
                         self.tree_row, self.tree_col = self.update_row_column(self.tree_row,
                                                                               self.tree_col)
-                    self.update_idletasks()
+                    # self.update_idletasks()
 
             else:
                 pass
