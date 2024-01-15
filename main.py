@@ -67,7 +67,7 @@ class Configuration(tk.Toplevel):
         self.geometry("1300x600")
         self.minsize(400, 300)
         self.create_widgets()
-        self.bind('<ButtonPress-1>', self.mouse_down)
+        # self.bind('<ButtonPress-1>', self.mouse_down)
 
     def mouse_down(self, event):
         caller = event.widget
@@ -234,32 +234,30 @@ class ScrollFrame(ttk.Frame):
                     for item in client_store:
                         new_item = self.create_item(item)
                         new_item.grid(row=self.tree_row, column=self.tree_col)
-                        self.tree_row, self.tree_col = self.update_row_column(self.tree_index,
-                                                                              self.tree_row,
+
+                        if self.tree_row == 0:
+                            height = 340
+                        else:
+                            height = 226 * self.tree_row
+                        print(f'tree row= {self.tree_row}')
+                        self.update_size_new_item(height)
+
+                        self.tree_row, self.tree_col = self.update_row_column(self.tree_row,
                                                                               self.tree_col)
                     self.update_idletasks()
-                    if (self.tree_index - 1) == 1:
-                        height = 340
-                    else:
-                        height = 226 * (self.tree_index - 1)
-                    self.update_size_new_item(height)
+
             else:
                 pass
             client_store = None
         except NameError:
             print(None)
 
-    def update_row_column(self, tree_index, row, column):
-        print(f'row = {row}, column = {column}')
-        if column > 3:
+    def update_row_column(self, row, column):
+        if column >= 4:
             row += 1
             column = 0
-            # column += 1
-
-            # column += 1
         else:
             column += 1
-            # print(f'row = {row}, column = {column}')
         return row, column
 
 
@@ -297,7 +295,7 @@ class CommandListTree(ttk.Treeview):
         tree_selection = list()
         for i in self.selection():
             tree_selection.append(self.item(i)['values'][0])
-        print(f'item selected{tree_selection}')
+        # print(f'item selected{tree_selection}')
         global command_store
         command_store = tree_selection
 
@@ -326,7 +324,7 @@ class TabBarTree(ttk.Treeview):
         start_y = self.winfo_pointery() - self.winfo_rooty()
         width = self.winfo_width()
         height = self.winfo_height()
-        print(f'{self.args[0]}')
+        # print(f'{self.args[0]}')
         # print(f'start_x {start_x}')
         # print(f'start_y {start_y}')
         # print(f'tree width {width}')
