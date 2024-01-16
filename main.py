@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
 
-global command_store
 command_store = None
 
 
@@ -66,20 +65,11 @@ class Configuration(tk.Toplevel):
         self.title('Configuration')
         self.geometry("1300x600")
         self.minsize(400, 300)
-        self.create_widgets()
-        # self.bind('<ButtonPress-1>', self.mouse_down)
 
-    def mouse_down(self, event):
-        caller = event.widget
-        print(type(caller))
-        # print('clicked')
-
-    def create_widgets(self):
-        """All Frames that make up Configuration Window"""
-        tab_frame = ttk.Frame(self, relief=tk.GROOVE)
-        side_bar_frame = ttk.Frame(self, relief=tk.GROOVE)
-        top_bar_frame = ttk.Frame(self, relief=tk.GROOVE)
-        bot_bar_frame = ttk.Frame(self, relief=tk.GROOVE)
+        self.tab_frame = ttk.Frame(self, relief=tk.GROOVE)
+        self.side_bar_frame = ttk.Frame(self, relief=tk.GROOVE)
+        self.top_bar_frame = ttk.Frame(self, relief=tk.GROOVE)
+        self.bot_bar_frame = ttk.Frame(self, relief=tk.GROOVE)
 
         self.rowconfigure(0, weight=1)
         self.rowconfigure(1, weight=5)
@@ -88,60 +78,138 @@ class Configuration(tk.Toplevel):
         self.columnconfigure(1, weight=5)
 
         """Tab Frame configuration"""
-        tabs = ttk.Notebook(tab_frame, width=202 * 5, height=tab_frame.winfo_height())
-        tab_frame.rowconfigure(0, weight=1)
-        tab_frame.columnconfigure(0, weight=1)
+        self.tabs = ttk.Notebook(self.tab_frame, width=202 * 5, height=self.tab_frame.winfo_height())
+        self.tab_frame.rowconfigure(0, weight=1)
+        self.tab_frame.columnconfigure(0, weight=1)
 
         """Creating Tab 1"""
-        tab1 = tk.Frame(tabs)
-        text_list = [('label', 'button'), ('thing', 'click'), ('third', 'something'), ('label1', 'button'),
-                     ('label2', 'button'), ('label3', 'button'), ('label4', 'button'),
-                     ('label2', 'button'), ('label3', 'button'), ('label4', 'button'),
-                     ('label2', 'button'), ('label3', 'button'), ('label4', 'button'),
-                     ('label2', 'button'), ('label3', 'button'), ('label4', 'button')]
-        self.scroll = ScrollFrame(tab1, 100, 1)
+        self.tab1 = tk.Frame(self.tabs)
+        self.scroll = ScrollFrame(self.tab1, 100, 1)
 
         """Creating Tab 2"""
-        tab2 = tk.Frame(tabs)
+        self.tab2 = tk.Frame(self.tabs)
 
         """Adding tabs to Tab Notebook Frame"""
-        tabs.add(tab1, text='First Tab')
-        tabs.add(tab2, text='Second Tab')
+        self.tabs.add(self.tab1, text='First Tab')
+        self.tabs.add(self.tab2, text='Second Tab')
 
-        tabs.grid(sticky='nsew')
+        self.tabs.grid(sticky='nsew')
 
         """Side Bar Configuration"""
-        side_bar_frame.rowconfigure((0, 1, 2), weight=1, uniform='a')
-        side_bar_frame.columnconfigure((0, 1), weight=1, uniform='a')
+        self.side_bar_frame.rowconfigure((0, 1, 2), weight=1, uniform='a')
+        self.side_bar_frame.columnconfigure((0, 1), weight=1, uniform='a')
 
-        mid_side_bar_frame = tk.Frame(side_bar_frame)
-        mid_side_bar_frame.grid(row=1, columnspan=2, padx=10, pady=10, sticky="nsew")
-        # ClientListTree(mid_side_bar_frame, "Machine").pack(fill='both', expand=True)
-        clients = ClientListTree(mid_side_bar_frame, "Clients")
-        clients.insert(parent='', index=0, values=["VB1"])
-        clients.insert(parent='', index=1, values=["VB2"])
-        clients.insert(parent='', index=2, values=["VB3"])
-        clients.pack(fill='both', expand=True)
+        self.mid_side_bar_frame = tk.Frame(self.side_bar_frame)
+        self.mid_side_bar_frame.grid(row=1, columnspan=2, padx=10, pady=10, sticky="nsew")
+        self.clients = ClientListTree(self.mid_side_bar_frame, "Clients")
+        self.clients.insert(parent='', index=0, values=["VB1"])
+        self.clients.insert(parent='', index=1, values=["VB2"])
+        self.clients.insert(parent='', index=2, values=["VB3"])
+        self.clients.pack(fill='both', expand=True)
 
-        bot_side_bar_frame = tk.Frame(side_bar_frame)
-        bot_side_bar_frame.grid(row=2, columnspan=2, padx=10, pady=10, sticky="nsew")
-        commands = CommandListTree(bot_side_bar_frame, "Command")
-        commands.insert(parent='', index=0, values=["test"])
-        commands.insert(parent='', index=1, values=["sdfa"])
-        commands.insert(parent='', index=2, values=["vxcvc"])
-        commands.pack(fill='both', expand=True)
+        self.bot_side_bar_frame = tk.Frame(self.side_bar_frame)
+        self.bot_side_bar_frame.grid(row=2, columnspan=2, padx=10, pady=10, sticky="nsew")
+        self.commands = CommandListTree(self.bot_side_bar_frame, "Command")
+        self.commands.insert(parent='', index=0, values=["test"])
+        self.commands.insert(parent='', index=1, values=["sdfa"])
+        self.commands.insert(parent='', index=2, values=["vxcvc"])
+        self.commands.pack(fill='both', expand=True)
+        # commands.pack(side="top")
+        # commands.grid(row=0)
+
+        self.new_command = ttk.Button(self.bot_side_bar_frame, text="TEST")
+        self.new_command.pack(side="bottom")
 
         """top Bar Configuration"""
-        top_label = ttk.Label(top_bar_frame, text="Top Bar")
-        top_label.pack(expand=True)
+        self.top_label = ttk.Label(self.top_bar_frame, text="Top Bar")
+        self.top_label.pack(expand=True)
         """bot Bar Configuration"""
-        bot_label = ttk.Label(bot_bar_frame, text="Bottom Bar")
-        bot_label.pack(expand=True)
+        self.bot_label = ttk.Label(self.bot_bar_frame, text="Bottom Bar")
+        self.bot_label.pack(expand=True)
 
-        tab_frame.grid(row=1, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
-        side_bar_frame.grid(row=0, column=0, sticky='nsew', rowspan=3, padx=(10, 5), pady=(10, 10))
-        top_bar_frame.grid(row=0, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
-        bot_bar_frame.grid(row=2, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
+        self.tab_frame.grid(row=1, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
+        self.side_bar_frame.grid(row=0, column=0, sticky='nsew', rowspan=3, padx=(10, 5), pady=(10, 10))
+        self.top_bar_frame.grid(row=0, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
+        self.bot_bar_frame.grid(row=2, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
+
+
+
+
+
+
+
+    def mouse_down(self, event):
+        caller = event.widget
+        print(type(caller))
+        # print('clicked')
+
+    # def create_widgets(self):
+    #     """All Frames that make up Configuration Window"""
+    #     tab_frame = ttk.Frame(self, relief=tk.GROOVE)
+    #     side_bar_frame = ttk.Frame(self, relief=tk.GROOVE)
+    #     top_bar_frame = ttk.Frame(self, relief=tk.GROOVE)
+    #     bot_bar_frame = ttk.Frame(self, relief=tk.GROOVE)
+    #
+    #     self.rowconfigure(0, weight=1)
+    #     self.rowconfigure(1, weight=5)
+    #     self.rowconfigure(2, weight=1)
+    #     self.columnconfigure(0, weight=1)
+    #     self.columnconfigure(1, weight=5)
+    #
+    #     """Tab Frame configuration"""
+    #     tabs = ttk.Notebook(tab_frame, width=202 * 5, height=tab_frame.winfo_height())
+    #     tab_frame.rowconfigure(0, weight=1)
+    #     tab_frame.columnconfigure(0, weight=1)
+    #
+    #     """Creating Tab 1"""
+    #     tab1 = tk.Frame(tabs)
+    #     self.scroll = ScrollFrame(tab1, 100, 1)
+    #
+    #     """Creating Tab 2"""
+    #     tab2 = tk.Frame(tabs)
+    #
+    #     """Adding tabs to Tab Notebook Frame"""
+    #     tabs.add(tab1, text='First Tab')
+    #     tabs.add(tab2, text='Second Tab')
+    #
+    #     tabs.grid(sticky='nsew')
+    #
+    #     """Side Bar Configuration"""
+    #     side_bar_frame.rowconfigure((0, 1, 2), weight=1, uniform='a')
+    #     side_bar_frame.columnconfigure((0, 1), weight=1, uniform='a')
+    #
+    #     mid_side_bar_frame = tk.Frame(side_bar_frame)
+    #     mid_side_bar_frame.grid(row=1, columnspan=2, padx=10, pady=10, sticky="nsew")
+    #     clients = ClientListTree(mid_side_bar_frame, "Clients")
+    #     clients.insert(parent='', index=0, values=["VB1"])
+    #     clients.insert(parent='', index=1, values=["VB2"])
+    #     clients.insert(parent='', index=2, values=["VB3"])
+    #     clients.pack(fill='both', expand=True)
+    #
+    #     bot_side_bar_frame = tk.Frame(side_bar_frame)
+    #     bot_side_bar_frame.grid(row=2, columnspan=2, padx=10, pady=10, sticky="nsew")
+    #     commands = CommandListTree(bot_side_bar_frame, "Command")
+    #     commands.insert(parent='', index=0, values=["test"])
+    #     commands.insert(parent='', index=1, values=["sdfa"])
+    #     commands.insert(parent='', index=2, values=["vxcvc"])
+    #     commands.pack(fill='both', expand=True)
+    #     # commands.pack(side="top")
+    #     # commands.grid(row=0)
+    #
+    #     new_command = ttk.Button(bot_side_bar_frame, text="TEST")
+    #     new_command.pack(side="bottom")
+    #
+    #     """top Bar Configuration"""
+    #     top_label = ttk.Label(top_bar_frame, text="Top Bar")
+    #     top_label.pack(expand=True)
+    #     """bot Bar Configuration"""
+    #     bot_label = ttk.Label(bot_bar_frame, text="Bottom Bar")
+    #     bot_label.pack(expand=True)
+    #
+    #     tab_frame.grid(row=1, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
+    #     side_bar_frame.grid(row=0, column=0, sticky='nsew', rowspan=3, padx=(10, 5), pady=(10, 10))
+    #     top_bar_frame.grid(row=0, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
+    #     bot_bar_frame.grid(row=2, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
 
 
 class ScrollFrame(ttk.Frame):
@@ -166,7 +234,6 @@ class ScrollFrame(ttk.Frame):
         # Adding new tag for frame to allow scroll only when not on treeview
         new_tags = self.frame.bindtags() + ("scroll_frame_bg",)
         self.frame.bindtags(new_tags)
-        print(self.frame.bindtags())
 
         # scrollbar
         self.scrollbar = ttk.Scrollbar(self, orient='vertical', command=self.canvas.yview)
@@ -198,7 +265,6 @@ class ScrollFrame(ttk.Frame):
             height=height)
 
     def update_size_new_item(self, new_height):
-        print(f'scroll frame height = {self.winfo_height()}')
         if new_height >= self.winfo_height():
             height = new_height
             self.canvas.bind_class('scroll_frame_bg', '<MouseWheel>',
@@ -318,17 +384,8 @@ class TabBarTree(ttk.Treeview):
 
     def command_release(self, event):
         global command_store
-        # caller = event.widget
-        # print(caller)
         start_x = self.winfo_pointerx() - self.winfo_rootx()
         start_y = self.winfo_pointery() - self.winfo_rooty()
-        width = self.winfo_width()
-        height = self.winfo_height()
-        # print(f'{self.args[0]}')
-        # print(f'start_x {start_x}')
-        # print(f'start_y {start_y}')
-        # print(f'tree width {width}')
-        # print(f'tree height {height}')
         if command_store:
             if 0 <= start_x <= self.winfo_width() and 0 <= start_y <= self.winfo_height():
                 for index, _ in enumerate(command_store):
