@@ -42,7 +42,6 @@ class Menu(ttk.Frame):
         self.rowconfigure(2, weight=1, uniform='a')
         self.rowconfigure(3, weight=1, uniform='a')
 
-
         # place the widgets
         self.menu_button_1.grid(row=0, column=0, sticky='nsew', columnspan=1, padx=(10, 5), pady=(10, 10))
         self.menu_button_2.grid(row=0, column=1, sticky='nsew', columnspan=1, padx=(5, 10), pady=(10, 10))
@@ -61,8 +60,9 @@ class Configuration(tk.Toplevel):
         self.tree_index = None
         self.scroll = None
         self.title('Configuration')
-        self.geometry("1300x600")
-        self.minsize(400, 300)
+        self.geometry("1000x600")
+        self.resizable(False, False)
+        # self.minsize(400, 300)
 
         self.tab_frame = ttk.Frame(self, relief=tk.GROOVE)
         self.side_bar_frame = ttk.Frame(self, relief=tk.GROOVE)
@@ -76,7 +76,7 @@ class Configuration(tk.Toplevel):
         self.columnconfigure(1, weight=5)
 
         # Tab Frame configuration
-        self.tabs = ttk.Notebook(self.tab_frame, width=202 * 5, height=self.tab_frame.winfo_height())
+        self.tabs = ttk.Notebook(self.tab_frame, width=700, height=self.tab_frame.winfo_height())
         self.tab_frame.rowconfigure(0, weight=1)
         self.tab_frame.columnconfigure(0, weight=1)
 
@@ -95,13 +95,13 @@ class Configuration(tk.Toplevel):
 
         # Side Bar Configuration
         self.side_bar_frame.rowconfigure(0, weight=1, uniform='a')
-        self.side_bar_frame.rowconfigure(1, weight=10, uniform='a')
-        self.side_bar_frame.rowconfigure(2, weight=10, uniform='a')
+        self.side_bar_frame.rowconfigure(1, weight=1, uniform='a')
+        # self.side_bar_frame.rowconfigure(2, weight=10, uniform='a')
         self.side_bar_frame.columnconfigure(0, weight=1, uniform='a')
         self.side_bar_frame.columnconfigure(1, weight=1, uniform='a')
 
         self.mid_side_bar_frame = tk.Frame(self.side_bar_frame)
-        self.mid_side_bar_frame.grid(row=1, columnspan=2, padx=10, pady=10, sticky="nsew")
+        self.mid_side_bar_frame.grid(row=0, columnspan=2, padx=10, pady=10, sticky="nsew")
 
         self.client_frame = tk.Frame(self.mid_side_bar_frame)
         self.client_frame.columnconfigure(0, weight=1, uniform='a')
@@ -129,7 +129,7 @@ class Configuration(tk.Toplevel):
         self.delete_client_button.grid(row=1, column=1, padx=5, pady=5)
 
         self.bot_side_bar_frame = tk.Frame(self.side_bar_frame)
-        self.bot_side_bar_frame.grid(row=2, columnspan=2, padx=10, pady=10, sticky="nsew")
+        self.bot_side_bar_frame.grid(row=1, columnspan=2, padx=10, pady=10, sticky="nsew")
         self.command_frame = tk.Frame(self.bot_side_bar_frame)
         self.command_frame.columnconfigure(0, weight=1, uniform='a')
         self.command_frame.columnconfigure(1, weight=1, uniform='a')
@@ -175,7 +175,6 @@ class Configuration(tk.Toplevel):
         self.top_bar_frame.grid(row=0, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
         self.bot_bar_frame.grid(row=2, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
 
-
     @staticmethod
     def insert_row(tree_list):
         tree_list.insert(parent='', index=tk.END, values='TEST')
@@ -191,15 +190,14 @@ class Configuration(tk.Toplevel):
         print(type(caller))
         # print('clicked')
 
+
 class CommandWindow(tk.Toplevel):
     def __init__(self):
         super().__init__()
-        self.tree_column = None
-        self.tree_row = None
-        self.tree_index = None
-        self.scroll = None
         self.title('Configuration')
-        self.geometry("1300x600")
+        self.geometry("600x300")
+        self.resizable(False, False)
+
 
 class ScrollFrame(ttk.Frame):
     def __init__(self, parent, item_height, tree_index):
@@ -305,7 +303,7 @@ class ScrollFrame(ttk.Frame):
                 pass
             client_store = None
         except NameError:
-            print(None)
+            return None
 
     @staticmethod
     def update_row_column(row, column):
@@ -341,8 +339,6 @@ class ClientListTree(ttk.Treeview):
         selected_items = self.selection()
         for item in selected_items:
             self.delete(item)
-
-
 
 
 class CommandListTree(ttk.Treeview):
@@ -394,7 +390,6 @@ class TabBarTree(ttk.Treeview):
             if 0 <= start_x <= self.winfo_width() and 0 <= start_y <= self.winfo_height():
                 for index, _ in enumerate(command_store):
                     self.insert(parent='', index=tk.END, values=(command_store[index]))
-                print(type(command_store))
                 command_store = None
             else:
                 command_store = None
@@ -403,5 +398,6 @@ class TabBarTree(ttk.Treeview):
         selected_items = self.selection()
         for item in selected_items:
             self.delete(item)
+
 
 App('Glass Panel Control', (200, 200))
