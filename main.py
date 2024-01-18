@@ -137,14 +137,9 @@ class Configuration(tk.Toplevel):
 
         # Command List Tree
         self.commands = CommandListTree(self.command_frame, "Command")
-        self.commands.insert(parent='', index=0, values=["test"])
-        self.commands.insert(parent='', index=1, values=["sdfa"])
-        self.commands.insert(parent='', index=2, values=["vxcvc"])
-
-        # New Command Button
-        # self.new_command_button = ttk.Button(self.command_frame,
-        #                                      text="New",
-        #                                      command=lambda: self.insert_row(self.commands))
+        self.commands.insert(parent='', index=0, values=["Load VB1"])
+        self.commands.insert(parent='', index=1, values=["Load VB2"])
+        self.commands.insert(parent='', index=2, values=["Load VB3"])
 
         self.new_command_button = ttk.Button(self.command_frame,
                                              text="New",
@@ -155,7 +150,7 @@ class Configuration(tk.Toplevel):
                                                 text="Delete",
                                                 command=lambda: self.delete_row(self.commands))
 
-        # Adding command section to side bar.
+        # Adding command section to sidebar.
         self.commands.grid(row=0, columnspan=2)
         self.new_command_button.grid(row=1, column=0, padx=5, pady=5)
         self.delete_command_button.grid(row=1, column=1, padx=5, pady=5)
@@ -196,7 +191,42 @@ class CommandWindow(tk.Toplevel):
         super().__init__()
         self.title('Configuration')
         self.geometry("600x300")
-        self.resizable(False, False)
+        # self.resizable(False, False)
+
+        # Command Name Label
+        self.command_name_label = ttk.Label(self, text="Command Name")
+
+        # Command Name Label
+        self.command_text_label = ttk.Label(self, text="Command")
+
+        # Text box for commands.
+        self.command_name_entry = tk.Entry(self)
+
+        # Text box for commands.
+        self.command_text_box = tk.Text(self, width=30, height=10)
+
+        # Done
+        self.done_button = tk.Button(self, text="Done")
+
+        # Add Another
+        self.add_another_button = tk.Button(self, text="Add Another")
+
+
+
+        self.rowconfigure(0, weight=1)
+        self.rowconfigure(1, weight=1)
+        self.rowconfigure(2, weight=1)
+        self.columnconfigure(0, weight=1)
+        self.columnconfigure(1, weight=1)
+        self.columnconfigure(2, weight=1)
+
+        self.command_name_label.grid(row=0, column=0)
+        self.command_text_label.grid(row=1, column=0)
+        self.command_name_entry.grid(row=0, column=1, columnspan=2)
+        self.command_text_box.grid(row=1, column=1, columnspan=2)
+        self.done_button.grid(row=2, column=1, sticky="w")
+        self.add_another_button.grid(row=2, column=1, sticky="e")
+
 
 
 class ScrollFrame(ttk.Frame):
@@ -388,8 +418,13 @@ class TabBarTree(ttk.Treeview):
         start_y = self.winfo_pointery() - self.winfo_rooty()
         if command_store:
             if 0 <= start_x <= self.winfo_width() and 0 <= start_y <= self.winfo_height():
-                for index, _ in enumerate(command_store):
-                    self.insert(parent='', index=tk.END, values=(command_store[index]))
+                # for index, _ in enumerate(command_store):
+                #     self.insert(parent='', index=tk.END, values=(command_store[index]))
+                item_index = 0
+                while item_index < len(command_store):
+                    print(command_store[item_index])
+                    self.insert(parent='', index=tk.END, values=[(command_store[item_index])])
+                    item_index += 1
                 command_store = None
             else:
                 command_store = None
