@@ -180,10 +180,11 @@ class Configuration(tk.Toplevel):
         for item in selected_items:
             tree_list.delete(item)
 
-    def mouse_down(self, event):
-        caller = event.widget
-        print(type(caller))
-        # print('clicked')
+    # @staticmethod
+    # def mouse_down(event):
+    #     caller = event.widget
+    #     print(type(caller))
+    #     # print('clicked')
 
 
 class CommandWindow(tk.Toplevel):
@@ -193,11 +194,7 @@ class CommandWindow(tk.Toplevel):
         self.geometry("600x300")
         # self.resizable(False, False)
 
-        # Command Name Label
-        self.command_name_label = ttk.Label(self, text="Command Name")
 
-        # Command Name Label
-        self.command_text_label = ttk.Label(self, text="Command")
 
         # Text box for commands.
         self.command_name_entry = tk.Entry(self)
@@ -211,6 +208,14 @@ class CommandWindow(tk.Toplevel):
         # Add Another
         self.add_another_button = tk.Button(self, text="Add Another")
 
+        # Frame for left text
+        self.labels_frame = tk.Frame(self, width=100, bg='red')
+
+        # Command Name Label
+        self.command_name_label = ttk.Label(self.labels_frame, text="Command Name")
+
+        # Command Name Label
+        self.command_text_label = ttk.Label(self.labels_frame, text="Command")
 
 
         self.rowconfigure(0, weight=1)
@@ -220,12 +225,12 @@ class CommandWindow(tk.Toplevel):
         self.columnconfigure(1, weight=1)
         self.columnconfigure(2, weight=1)
 
+        self.labels_frame.grid(row=0, column=0, rowspan=3, sticky='nsw')
         self.command_name_label.grid(row=0, column=0)
         self.command_text_label.grid(row=1, column=0)
-        self.command_name_entry.grid(row=0, column=1, columnspan=2)
-        self.command_text_box.grid(row=1, column=1, columnspan=2)
-        self.done_button.grid(row=2, column=1, sticky="w")
-        self.add_another_button.grid(row=2, column=1, sticky="e")
+        # self.command_text_box.grid(row=1, column=1, columnspan=2)
+        # self.done_button.grid(row=2, column=1, sticky="w")
+        # self.add_another_button.grid(row=2, column=1, sticky="e")
 
 
 
