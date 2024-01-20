@@ -61,7 +61,7 @@ class Configuration(tk.Toplevel):
         self.scroll = None
         self.title('Configuration')
         self.geometry("1000x600")
-        self.resizable(False, False)
+        # self.resizable(False, False)
         # self.minsize(400, 300)
 
         self.tab_frame = ttk.Frame(self, relief=tk.GROOVE)
@@ -166,9 +166,12 @@ class Configuration(tk.Toplevel):
         self.bot_label.pack(expand=True)
 
         self.tab_frame.grid(row=1, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
-        self.side_bar_frame.grid(row=0, column=0, sticky='nsew', rowspan=3, padx=(10, 5), pady=(10, 10))
+        self.side_bar_frame.grid(row=0, column=0, sticky='nsw', rowspan=3, padx=(10, 5), pady=(10, 10))
         self.top_bar_frame.grid(row=0, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
         self.bot_bar_frame.grid(row=2, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
+
+        # self.update()
+        # print(self.side_bar_frame.winfo_width())
 
     @staticmethod
     def insert_row(tree_list):
@@ -191,44 +194,52 @@ class CommandWindow(tk.Toplevel):
     def __init__(self):
         super().__init__()
         self.title('Configuration')
-        self.geometry("600x300")
-        # self.resizable(False, False)
+        self.geometry("500x300")
+        self.resizable(False, False)
 
-
-
-        # Text box for commands.
-        self.command_name_entry = tk.Entry(self)
-
-        # Text box for commands.
-        self.command_text_box = tk.Text(self, width=30, height=10)
-
-        # Done
-        self.done_button = tk.Button(self, text="Done")
-
-        # Add Another
-        self.add_another_button = tk.Button(self, text="Add Another")
 
         # Frame for left text
-        self.labels_frame = tk.Frame(self, width=100, bg='red')
-
+        self.labels_frame = ttk.Frame(self)
         # Command Name Label
-        self.command_name_label = ttk.Label(self.labels_frame, text="Command Name")
-
+        self.command_name_label = ttk.Label(self.labels_frame, text="Command Name:")
         # Command Name Label
-        self.command_text_label = ttk.Label(self.labels_frame, text="Command")
+        self.command_text_label = ttk.Label(self.labels_frame, text="Command:")
+        # Placing Labels
+        self.command_name_label.place(relx=0.1, rely=0.25)
+        self.command_text_label.place(relx=0.1, rely=0.50)
 
 
+        self.text_frame = ttk.Frame(self)
+        # Text box for commands
+        self.command_name_entry = tk.Entry(self.text_frame, width=50)
+        # Text box for commands
+        self.command_text_box = tk.Text(self.text_frame, width=40, height=5)
+        # Placing Text Boxes
+        self.command_name_entry.place(relx=0, rely=0.25)
+        self.command_text_box.place(relx=0, rely=0.50)
+
+        # Button Frame
+        self.buttons_frame = ttk.Frame(self)
+        # Done button
+        self.done_button = ttk.Button(self.buttons_frame, text="Done")
+        # Add Another Button
+        self.add_another_button = ttk.Button(self.buttons_frame, text="Add Another")
+        # Placing Buttons
+        self.done_button.place(relx=0.125, rely=0.25)
+        self.add_another_button.place(relx=0.45, rely=0.25)
+
+        # Configuring Grid
         self.rowconfigure(0, weight=1)
         self.rowconfigure(1, weight=1)
         self.rowconfigure(2, weight=1)
         self.columnconfigure(0, weight=1)
-        self.columnconfigure(1, weight=1)
-        self.columnconfigure(2, weight=1)
+        self.columnconfigure(1, weight=3)
 
-        self.labels_frame.grid(row=0, column=0, rowspan=3, sticky='nsw')
-        self.command_name_label.grid(row=0, column=0)
-        self.command_text_label.grid(row=1, column=0)
-        # self.command_text_box.grid(row=1, column=1, columnspan=2)
+        # Placing frames in grid
+        self.labels_frame.grid(row=0, column=0, rowspan=2, sticky='nsew')
+        self.text_frame.grid(row=0, column=1, rowspan=2, sticky='nsew')
+        self.buttons_frame.grid(row=2, column=1, sticky='nsew')
+
         # self.done_button.grid(row=2, column=1, sticky="w")
         # self.add_another_button.grid(row=2, column=1, sticky="e")
 
