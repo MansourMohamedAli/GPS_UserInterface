@@ -100,10 +100,10 @@ class Configuration(tk.Toplevel):
         self.side_bar_frame.columnconfigure(0, weight=1, uniform='a')
         self.side_bar_frame.columnconfigure(1, weight=1, uniform='a')
 
-        self.mid_side_bar_frame = tk.Frame(self.side_bar_frame)
+        self.mid_side_bar_frame = ttk.Frame(self.side_bar_frame)
         self.mid_side_bar_frame.grid(row=0, columnspan=2, padx=10, pady=10, sticky="nsew")
 
-        self.client_frame = tk.Frame(self.mid_side_bar_frame)
+        self.client_frame = ttk.Frame(self.mid_side_bar_frame)
         self.client_frame.columnconfigure(0, weight=1, uniform='a')
         self.client_frame.columnconfigure(1, weight=1, uniform='a')
         self.client_frame.pack(fill='both', expand=True)
@@ -128,18 +128,18 @@ class Configuration(tk.Toplevel):
         self.new_client_button.grid(row=1, column=0, padx=5, pady=5)
         self.delete_client_button.grid(row=1, column=1, padx=5, pady=5)
 
-        self.bot_side_bar_frame = tk.Frame(self.side_bar_frame)
+        self.bot_side_bar_frame = ttk.Frame(self.side_bar_frame)
         self.bot_side_bar_frame.grid(row=1, columnspan=2, padx=10, pady=10, sticky="nsew")
-        self.command_frame = tk.Frame(self.bot_side_bar_frame)
+        self.command_frame = ttk.Frame(self.bot_side_bar_frame)
         self.command_frame.columnconfigure(0, weight=1, uniform='a')
         self.command_frame.columnconfigure(1, weight=1, uniform='a')
         self.command_frame.pack(fill='both', expand=True)
 
         # Command List Tree
-        self.commands = CommandListTree(self.command_frame, "Command")
-        self.commands.insert(parent='', index=0, values=["Load VB1"])
-        self.commands.insert(parent='', index=1, values=["Load VB2"])
-        self.commands.insert(parent='', index=2, values=["Load VB3"])
+        self.commands_tree = CommandListTree(self.command_frame, "Commands")
+        self.commands_tree.insert(parent='', index=0, values=["Load VB1"])
+        self.commands_tree.insert(parent='', index=1, values=["Load VB2"])
+        self.commands_tree.insert(parent='', index=2, values=["Load VB3"])
 
         self.new_command_button = ttk.Button(self.command_frame,
                                              text="New",
@@ -148,14 +148,14 @@ class Configuration(tk.Toplevel):
         # Delete Command Button
         self.delete_command_button = ttk.Button(self.command_frame,
                                                 text="Delete",
-                                                command=lambda: self.delete_row(self.commands))
+                                                command=lambda: self.delete_row(self.commands_tree))
 
         # Adding command section to sidebar.
-        self.commands.grid(row=0, columnspan=2)
+        self.commands_tree.grid(row=0, columnspan=2)
         self.new_command_button.grid(row=1, column=0, padx=5, pady=5)
         self.delete_command_button.grid(row=1, column=1, padx=5, pady=5)
 
-        # self.commands.pack(fill='both', expand=True)
+        # self.commands_tree.pack(fill='both', expand=True)
         # self.new_command_button.pack(side="bottom")
 
         # Top Bar Configuration
@@ -194,7 +194,7 @@ class CommandWindow(tk.Toplevel):
     def __init__(self):
         super().__init__()
         self.title('Configuration')
-        self.geometry("500x300")
+        self.geometry("500x200")
         self.resizable(False, False)
 
 
@@ -205,43 +205,58 @@ class CommandWindow(tk.Toplevel):
         # Command Name Label
         self.command_text_label = ttk.Label(self.labels_frame, text="Command:")
         # Placing Labels
-        self.command_name_label.place(relx=0.1, rely=0.25)
-        self.command_text_label.place(relx=0.1, rely=0.50)
-
-
+        self.command_name_label.place(relx=0.1, rely=0.1)
+        self.command_text_label.place(relx=0.1, rely=0.30)
+        # Frame for text entries
         self.text_frame = ttk.Frame(self)
         # Text box for commands
-        self.command_name_entry = tk.Entry(self.text_frame, width=50)
+        self.command_name_entry = tk.Entry(self.text_frame, width=53)
         # Text box for commands
         self.command_text_box = tk.Text(self.text_frame, width=40, height=5)
         # Placing Text Boxes
-        self.command_name_entry.place(relx=0, rely=0.25)
-        self.command_text_box.place(relx=0, rely=0.50)
+        self.command_name_entry.place(relx=0, rely=0.1)
+        self.command_text_box.place(relx=0, rely=0.30)
 
         # Button Frame
         self.buttons_frame = ttk.Frame(self)
         # Done button
-        self.done_button = ttk.Button(self.buttons_frame, text="Done")
+
+
+
+        self.done_button = ttk.Button(self.buttons_frame,
+                                      text="Done",
+                                      command=lambda: done_press())
         # Add Another Button
-        self.add_another_button = ttk.Button(self.buttons_frame, text="Add Another")
+        self.add_another_button = ttk.Button(self.buttons_frame,
+                                             text="Add Another",
+                                             command=lambda: add_another_press())
         # Placing Buttons
-        self.done_button.place(relx=0.125, rely=0.25)
-        self.add_another_button.place(relx=0.45, rely=0.25)
+        self.done_button.place(relx=0.125, rely=0)
+        self.add_another_button.place(relx=0.45, rely=0)
 
         # Configuring Grid
-        self.rowconfigure(0, weight=1)
+        self.rowconfigure(0, weight=5)
         self.rowconfigure(1, weight=1)
-        self.rowconfigure(2, weight=1)
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=3)
 
         # Placing frames in grid
         self.labels_frame.grid(row=0, column=0, rowspan=2, sticky='nsew')
         self.text_frame.grid(row=0, column=1, rowspan=2, sticky='nsew')
-        self.buttons_frame.grid(row=2, column=1, sticky='nsew')
+        self.buttons_frame.grid(row=1, column=1, sticky='nsew')
 
-        # self.done_button.grid(row=2, column=1, sticky="w")
-        # self.add_another_button.grid(row=2, column=1, sticky="e")
+        def done_press():
+            stored_entry = self.command_name_entry.get()
+            stored_text = self.command_text_box.get('1.0', 'end')
+            # Configuration.commands.insert(parent='', index=tk.END, values='TEST')
+            print(f'Command Name = {stored_entry}, Command Text = {stored_text}')
+
+        # @staticmethod
+        # def insert_row(tree_list):
+        #     tree_list.insert(parent='', index=tk.END, values='TEST')
+        def add_another_press():
+            pass
+
 
 
 
