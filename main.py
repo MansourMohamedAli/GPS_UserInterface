@@ -157,12 +157,10 @@ class Configuration(tk.Toplevel):
         self.new_command_button.grid(row=1, column=0, padx=5, pady=5)
         self.delete_command_button.grid(row=1, column=1, padx=5, pady=5)
 
-        # self.commands_tree.pack(fill='both', expand=True)
-        # self.new_command_button.pack(side="bottom")
-
         # Top Bar Configuration
         self.top_label = ttk.Label(self.top_bar_frame, text="Top Bar")
         self.top_label.pack(expand=True)
+
         # Bottom Bar Configuration
         self.bot_label = ttk.Label(self.bot_bar_frame, text="Bottom Bar")
         self.bot_label.pack(expand=True)
@@ -172,11 +170,10 @@ class Configuration(tk.Toplevel):
         self.top_bar_frame.grid(row=0, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
         self.bot_bar_frame.grid(row=2, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
 
-        # self.update()
-        # print(self.side_bar_frame.winfo_width())
-
-    def insert_command(self, new_command):
+    def insert_command(self, window_instance, new_command):
         self.commands_tree.insert(parent='', index=tk.END, values=new_command)
+        return window_instance.destroy()
+
 
     def insert_client(self):
         pass
@@ -192,74 +189,6 @@ class Configuration(tk.Toplevel):
     #     caller = event.widget
     #     print(type(caller))
     #     # print('clicked')
-
-
-# class CommandWindow(tk.Toplevel):
-#     def __init__(self):
-#         super().__init__()
-#         self.title('Configuration')
-#         self.geometry("500x200")
-#         self.resizable(False, False)
-#
-#
-#         # Frame for left text
-#         self.labels_frame = ttk.Frame(self)
-#         # Command Name Label
-#         self.command_name_label = ttk.Label(self.labels_frame, text="Command Name:")
-#         # Command Name Label
-#         self.command_text_label = ttk.Label(self.labels_frame, text="Command:")
-#         # Placing Labels
-#         self.command_name_label.place(relx=0.1, rely=0.1)
-#         self.command_text_label.place(relx=0.1, rely=0.30)
-#         # Frame for text entries
-#         self.text_frame = ttk.Frame(self)
-#         # Text box for commands
-#         self.command_name_entry = tk.Entry(self.text_frame, width=53)
-#         # Text box for commands
-#         self.command_text_box = tk.Text(self.text_frame, width=40, height=5)
-#         # Placing Text Boxes
-#         self.command_name_entry.place(relx=0, rely=0.1)
-#         self.command_text_box.place(relx=0, rely=0.30)
-#
-#         # Button Frame
-#         self.buttons_frame = ttk.Frame(self)
-#         # Done button
-#
-#
-#
-#         self.done_button = ttk.Button(self.buttons_frame,
-#                                       text="Done",
-#                                       command=lambda: done_press())
-#         # Add Another Button
-#         self.add_another_button = ttk.Button(self.buttons_frame,
-#                                              text="Add Another",
-#                                              command=lambda: add_another_press())
-#         # Placing Buttons
-#         self.done_button.place(relx=0.125, rely=0)
-#         self.add_another_button.place(relx=0.45, rely=0)
-#
-#         # Configuring Grid
-#         self.rowconfigure(0, weight=5)
-#         self.rowconfigure(1, weight=1)
-#         self.columnconfigure(0, weight=1)
-#         self.columnconfigure(1, weight=3)
-#
-#         # Placing frames in grid
-#         self.labels_frame.grid(row=0, column=0, rowspan=2, sticky='nsew')
-#         self.text_frame.grid(row=0, column=1, rowspan=2, sticky='nsew')
-#         self.buttons_frame.grid(row=1, column=1, sticky='nsew')
-#
-#         def done_press():
-#             stored_entry = self.command_name_entry.get()
-#             stored_text = self.command_text_box.get('1.0', 'end')
-#             # Configuration.commands.insert(parent='', index=tk.END, values='TEST')
-#             print(f'Command Name = {stored_entry}, Command Text = {stored_text}')
-#
-#         # @staticmethod
-#         # def insert_row(tree_list):
-#         #     tree_list.insert(parent='', index=tk.END, values='TEST')
-#         def add_another_press():
-#             pass
 
 
 class ScrollFrame(ttk.Frame):

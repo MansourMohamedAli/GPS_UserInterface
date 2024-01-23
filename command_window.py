@@ -35,7 +35,7 @@ class CommandWindow(tk.Toplevel):
         #
         self.done_button = ttk.Button(self.buttons_frame,
                                       text="Done",
-                                      command=lambda: m_update_tree(self.command_name_entry.get()))
+                                      command=lambda: m_update_tree(self, self.command_name_entry.get()))
         # Add Another Button
         self.add_another_button = ttk.Button(self.buttons_frame,
                                              text="Add Another",
