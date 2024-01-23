@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from command_window import CommandWindow
+from client_window import ClientWindow
 
 command_store = None
 
@@ -109,23 +110,24 @@ class Configuration(tk.Toplevel):
         self.client_frame.columnconfigure(1, weight=1, uniform='a')
         self.client_frame.pack(fill='both', expand=True)
 
-        self.clients = ClientListTree(self.client_frame, "Clients")
-        self.clients.insert(parent='', index=0, values=["VB1"])
-        self.clients.insert(parent='', index=1, values=["VB2"])
-        self.clients.insert(parent='', index=2, values=["VB3"])
+        self.clients_tree = ClientListTree(self.client_frame, "Clients")
+        self.clients_tree.insert(parent='', index=0, values=["VB1"])
+        self.clients_tree.insert(parent='', index=1, values=["VB2"])
+        self.clients_tree.insert(parent='', index=2, values=["VB3"])
 
         # New Command Button
         self.new_client_button = ttk.Button(self.client_frame,
                                             text="New",
-                                            command=lambda: self.insert_client())
+                                            command=lambda: ClientWindow(self.insert_client,
+                                                                         self.insert_another_client))
 
         # Delete Command Button
         self.delete_client_button = ttk.Button(self.client_frame,
                                                text="Delete",
-                                               command=lambda: self.delete_row(self.clients))
+                                               command=lambda: self.delete_row(self.clients_tree))
 
         # Adding command section to sidebar.
-        self.clients.grid(row=0, columnspan=2)
+        self.clients_tree.grid(row=0, columnspan=2)
         self.new_client_button.grid(row=1, column=0, padx=5, pady=5)
         self.delete_client_button.grid(row=1, column=1, padx=5, pady=5)
 
@@ -146,7 +148,6 @@ class Configuration(tk.Toplevel):
                                              text="New",
                                              command=lambda: CommandWindow(self.insert_command,
                                                                            self.insert_another_command))
-
 
         # Delete Command Button
         self.delete_command_button = ttk.Button(self.command_frame,
@@ -172,15 +173,22 @@ class Configuration(tk.Toplevel):
         self.bot_bar_frame.grid(row=2, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
 
     def insert_command(self, window_instance, new_command):
-        self.commands_tree.insert(parent='', index=tk.END, values=new_command)
+        if new_command:
+            self.commands_tree.insert(parent='', index=tk.END, values=new_command)
         window_instance.destroy()
 
     def insert_another_command(self, new_command):
-        self.commands_tree.insert(parent='', index=tk.END, values=new_command)
+        if new_command:
+            self.commands_tree.insert(parent='', index=tk.END, values=new_command)
 
     def insert_client(self, window_instance, new_client):
-        self.commands_tree.insert(parent='', index=tk.END, values=new_client)
+        if new_client:
+            self.clients_tree.insert(parent='', index=tk.END, values=new_client)
         window_instance.destroy()
+
+    def insert_another_client(self, new_client):
+        if new_client:
+            self.clients_tree.insert(parent='', index=tk.END, values=new_client)
 
     @staticmethod
     def delete_row(tree_list):

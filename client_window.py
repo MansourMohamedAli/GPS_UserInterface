@@ -2,33 +2,30 @@ import tkinter as tk
 from tkinter import ttk
 
 
-class CommandWindow(tk.Toplevel):
-    def __init__(self, m_insert_command, m_insert_another_command):
+class ClientWindow(tk.Toplevel):
+    def __init__(self, m_insert_client, m_insert_another_client):
         super().__init__()
-        self.m_insert_command = m_insert_command
-        self.m_insert_another_command = m_insert_another_command
-        self.title('Command Configuration')
+        self.m_insert_client = m_insert_client
+        self.m_insert_another_client = m_insert_another_client
+        self.title('Client Configuration')
         self.geometry("500x200")
         self.resizable(False, False)
 
         # Frame for left text
         self.labels_frame = ttk.Frame(self)
         # Command Name Label
-        self.command_name_label = ttk.Label(self.labels_frame, text="Command Name:")
+        self.client_name_label = ttk.Label(self.labels_frame, text="Client Name:")
         # Command Name Label
-        self.command_text_label = ttk.Label(self.labels_frame, text="Command:")
+        self.ip_address = ttk.Label(self.labels_frame, text="IP Address:")
         # Placing Labels
-        self.command_name_label.place(relx=0.1, rely=0.1)
-        self.command_text_label.place(relx=0.1, rely=0.30)
+        self.client_name_label.place(relx=0.1, rely=0.1)
+        self.ip_address.place(relx=0.1, rely=0.30)
         # Frame for text entries
         self.text_frame = ttk.Frame(self)
         # Text box for commands
-        self.command_name_entry = tk.Entry(self.text_frame, width=53)
-        # Text box for commands
-        self.command_text_box = tk.Text(self.text_frame, width=40, height=5)
+        self.client_name_entry = tk.Entry(self.text_frame, width=53)
         # Placing Text Boxes
-        self.command_name_entry.place(relx=0, rely=0.1)
-        self.command_text_box.place(relx=0, rely=0.30)
+        self.client_name_entry.place(relx=0, rely=0.1)
 
         # Button Frame
         self.buttons_frame = ttk.Frame(self)
@@ -37,11 +34,12 @@ class CommandWindow(tk.Toplevel):
         #
         self.done_button = ttk.Button(self.buttons_frame,
                                       text="Done",
-                                      command=lambda: self.m_insert_command(self, self.command_name_entry.get()))
+                                      command=lambda: self.m_insert_client(self, self.client_name_entry.get()))
         # Add Another Button
         self.add_another_button = ttk.Button(self.buttons_frame,
                                              text="Add Another",
-                                             command=lambda: self.m_insert_another_command(self.command_name_entry.get()))
+                                             command=lambda: self.m_insert_another_client(
+                                                 self.client_name_entry.get()))
         # Placing Buttons
         self.done_button.place(relx=0.125, rely=0)
         self.add_another_button.place(relx=0.45, rely=0)
@@ -56,3 +54,4 @@ class CommandWindow(tk.Toplevel):
         self.labels_frame.grid(row=0, column=0, rowspan=2, sticky='nsew')
         self.text_frame.grid(row=0, column=1, rowspan=2, sticky='nsew')
         self.buttons_frame.grid(row=1, column=1, sticky='nsew')
+
