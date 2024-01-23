@@ -3,7 +3,7 @@ from tkinter import ttk
 
 
 class CommandWindow(tk.Toplevel):
-    def __init__(self, m_update_tree):
+    def __init__(self, m_insert_command, m_insert_another_command):
         super().__init__()
         self.title('Configuration')
         self.geometry("500x200")
@@ -35,11 +35,11 @@ class CommandWindow(tk.Toplevel):
         #
         self.done_button = ttk.Button(self.buttons_frame,
                                       text="Done",
-                                      command=lambda: m_update_tree(self, self.command_name_entry.get()))
+                                      command=lambda: m_insert_command(self, self.command_name_entry.get()))
         # Add Another Button
         self.add_another_button = ttk.Button(self.buttons_frame,
                                              text="Add Another",
-                                             command=lambda: self.add_another_press())
+                                             command=lambda: m_insert_another_command(self.command_name_entry.get()))
         # Placing Buttons
         self.done_button.place(relx=0.125, rely=0)
         self.add_another_button.place(relx=0.45, rely=0)
@@ -54,6 +54,3 @@ class CommandWindow(tk.Toplevel):
         self.labels_frame.grid(row=0, column=0, rowspan=2, sticky='nsew')
         self.text_frame.grid(row=0, column=1, rowspan=2, sticky='nsew')
         self.buttons_frame.grid(row=1, column=1, sticky='nsew')
-
-    def add_another_press(self):
-        pass

@@ -2,7 +2,6 @@ import tkinter as tk
 from tkinter import ttk
 from command_window import CommandWindow
 
-
 command_store = None
 
 
@@ -145,7 +144,9 @@ class Configuration(tk.Toplevel):
 
         self.new_command_button = ttk.Button(self.command_frame,
                                              text="New",
-                                             command=lambda: CommandWindow(self.insert_command))
+                                             command=lambda: CommandWindow(self.insert_command,
+                                                                           self.insert_another_command))
+
 
         # Delete Command Button
         self.delete_command_button = ttk.Button(self.command_frame,
@@ -172,11 +173,14 @@ class Configuration(tk.Toplevel):
 
     def insert_command(self, window_instance, new_command):
         self.commands_tree.insert(parent='', index=tk.END, values=new_command)
-        return window_instance.destroy()
+        window_instance.destroy()
 
+    def insert_another_command(self, new_command):
+        self.commands_tree.insert(parent='', index=tk.END, values=new_command)
 
-    def insert_client(self):
-        pass
+    def insert_client(self, window_instance, new_client):
+        self.commands_tree.insert(parent='', index=tk.END, values=new_client)
+        window_instance.destroy()
 
     @staticmethod
     def delete_row(tree_list):
