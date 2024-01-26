@@ -60,7 +60,7 @@ class Configuration(tk.Toplevel):
         self.tree_column = None
         self.tree_row = None
         self.tree_index = None
-        self.scroll = None
+        # self.scroll = None
         self.title('Configuration')
         self.geometry("1000x600")
         # self.resizable(False, False)
@@ -84,7 +84,8 @@ class Configuration(tk.Toplevel):
 
         # Creating Tab 1
         self.tab1 = tk.Frame(self.tabs)
-        self.scroll = ScrollFrame(self.tab1, 100, 1)
+        self.tab1_dict = dict()
+        self.tab1_scroll = ScrollFrame(self.tab1, 100, 1, self.tab1_dict)
 
         # Creating Tab 2
         self.tab2 = tk.Frame(self.tabs)
@@ -98,6 +99,7 @@ class Configuration(tk.Toplevel):
         # Side Bar Configuration
         self.side_bar_frame.rowconfigure(0, weight=1, uniform='a')
         self.side_bar_frame.rowconfigure(1, weight=1, uniform='a')
+
         # self.side_bar_frame.rowconfigure(2, weight=10, uniform='a')
         self.side_bar_frame.columnconfigure(0, weight=1, uniform='a')
         self.side_bar_frame.columnconfigure(1, weight=1, uniform='a')
@@ -204,7 +206,7 @@ class Configuration(tk.Toplevel):
 
 
 class ScrollFrame(ttk.Frame):
-    def __init__(self, parent, item_height, tree_index):
+    def __init__(self, parent, item_height, tree_index, tab_dict):
         super().__init__(master=parent)
         self.pack(expand=True, fill='both')
 
@@ -214,6 +216,7 @@ class ScrollFrame(ttk.Frame):
         self.tree_col = 0
         self.item_height = item_height
         self.list_height = (self.tree_index * item_height)  # Five items per row
+        self.tab_dict = tab_dict
 
         # canvas
         self.canvas = tk.Canvas(self, background='red', scrollregion=(0, 0, self.winfo_width(), self.list_height))
@@ -278,7 +281,7 @@ class ScrollFrame(ttk.Frame):
 
     def create_item(self, store):
         frame = ttk.Frame(self.frame)
-        item = TabBarTree(frame, f'{store}')
+        item = TabBarTree(frame, self.tree_index, self.tab_dict, f'{store}')
         item.pack(expand=True, fill='both')
         self.tree_index += 1
         return frame
@@ -291,8 +294,10 @@ class ScrollFrame(ttk.Frame):
             if 0 <= start_x <= self.winfo_width() and 0 <= start_y <= self.winfo_height():
                 if client_store:
                     for item in client_store:
+                        self.tab_dict[self.tree_index] = item
                         new_item = self.create_item(item)
                         new_item.grid(row=self.tree_row, column=self.tree_col)
+                        print(self.tab_dict)
                         self.update_idletasks()
                         # Adjusting height
                         if self.tree_row == 0:
@@ -374,13 +379,15 @@ class CommandListTree(ttk.Treeview):
 
 
 class TabBarTree(ttk.Treeview):
-    def __init__(self, parent, *args):
+    def __init__(self, parent, index, tab_dict, *args):
         super().__init__(master=parent, columns=args, show='headings')
         self.args = args
         self.parent = parent
         self.get_tree_headings()
         self.bind('<ButtonRelease-1>', self.command_release)
         self.bind('<Delete>', self.delete_row)
+        self.index = index
+        self.tab_dict = tab_dict
 
     def get_tree_headings(self):
         for arg in self.args:
@@ -398,6 +405,12 @@ class TabBarTree(ttk.Treeview):
                 while item_index < len(command_store):
                     print(command_store[item_index])
                     self.insert(parent='', index=tk.END, values=[(command_store[item_index])])
+
+                    # key = self.index
+                    # self.tab_dict.setdefault(key, [])
+                    # self.tab_dict[key].append('test')
+                    self.tab_dict[self.index] = [self.tab_dict[self.index]].append("test")
+                    print(self.tab_dict)
                     item_index += 1
                 command_store = None
             else:
