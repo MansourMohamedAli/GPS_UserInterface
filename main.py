@@ -54,6 +54,58 @@ class Menu(ttk.Frame):
         self.config_button.grid(row=3, column=0, sticky='nsew', columnspan=2, padx=(5, 10), pady=(10, 10))
 
 
+# class DragManager():
+#     def add_dragable(self, widget):
+#         widget.bind('<ButtonRelease-1>', self.on_drop)
+#
+#     def on_drop(self, event):
+#         # find the widget under the cursor
+#         x, y = event.widget.winfo_pointerxy()
+#         print(x, y)
+#         target = event.widget.winfo_containing(x,y)
+#         try:
+#             target.insert(parent='', index=tk.END, values="test")
+#         except:
+#             pass
+
+class DragManager():
+    def __init__(self):
+        self.command_name = None
+        self.widget = None
+
+    def add_dragable(self, widget):
+        self.widget = widget
+        widget.bind("<ButtonPress-1>", self.on_start)
+        widget.bind("<B1-Motion>", self.on_drag)
+        widget.bind("<ButtonRelease-1>", self.on_drop)
+        widget.configure(cursor="hand1")
+
+    def on_start(self, event):
+        tree_selection = list()
+        for i in self.widget.selection():
+            tree_selection.append(self.widget.item(i)['values'][0])
+        print(tree_selection)
+
+        # you could use this method to create a floating window
+        # that represents what is being dragged.
+
+        pass
+
+    def on_drag(self, event):
+        # you could use this method to move a floating window that
+        # represents what you're dragging
+        pass
+
+    def on_drop(self, event):
+        # find the widget under the cursor
+        x, y = event.widget.winfo_pointerxy()
+        target = event.widget.winfo_containing(x, y)
+        try:
+            target.insert(parent='', index=tk.END, values="test")
+        except:
+            pass
+
+
 class Configuration(tk.Toplevel):
     def __init__(self):
         super().__init__()
@@ -174,6 +226,9 @@ class Configuration(tk.Toplevel):
         self.top_bar_frame.grid(row=0, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
         self.bot_bar_frame.grid(row=2, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
 
+        dnd = DragManager()
+        dnd.add_dragable(self.commands_tree)
+
     def insert_command(self, window_instance, new_command):
         if new_command:
             self.commands_tree.insert(parent='', index=tk.END, values=new_command)
@@ -197,12 +252,6 @@ class Configuration(tk.Toplevel):
         selected_items = tree_list.selection()
         for item in selected_items:
             tree_list.delete(item)
-
-    # @staticmethod
-    # def mouse_down(event):
-    #     caller = event.widget
-    #     print(type(caller))
-    #     # print('clicked')
 
 
 class ScrollFrame(ttk.Frame):
@@ -384,7 +433,7 @@ class TabBarTree(ttk.Treeview):
         self.args = args
         self.parent = parent
         self.get_tree_headings()
-        self.bind('<ButtonRelease-1>', self.command_release)
+        # self.bind('<ButtonRelease-1>', self.command_release)
         self.bind('<Delete>', self.delete_row)
         self.index = index
         self.tab_dict = tab_dict
@@ -393,28 +442,28 @@ class TabBarTree(ttk.Treeview):
         for arg in self.args:
             self.heading(arg, text=str(arg))
 
-    def command_release(self, event):
-        global command_store
-        start_x = self.winfo_pointerx() - self.winfo_rootx()
-        start_y = self.winfo_pointery() - self.winfo_rooty()
-        if command_store:
-            if 0 <= start_x <= self.winfo_width() and 0 <= start_y <= self.winfo_height():
-                # for index, _ in enumerate(command_store):
-                #     self.insert(parent='', index=tk.END, values=(command_store[index]))
-                item_index = 0
-                while item_index < len(command_store):
-                    print(command_store[item_index])
-                    self.insert(parent='', index=tk.END, values=[(command_store[item_index])])
-
-                    # key = self.index
-                    # self.tab_dict.setdefault(key, [])
-                    # self.tab_dict[key].append('test')
-                    self.tab_dict[self.index] = [self.tab_dict[self.index]].append("test")
-                    print(self.tab_dict)
-                    item_index += 1
-                command_store = None
-            else:
-                command_store = None
+    # def command_release(self, event):
+    #     global command_store
+    #     start_x = self.winfo_pointerx() - self.winfo_rootx()
+    #     start_y = self.winfo_pointery() - self.winfo_rooty()
+    #     if command_store:
+    #         if 0 <= start_x <= self.winfo_width() and 0 <= start_y <= self.winfo_height():
+    #             # for index, _ in enumerate(command_store):
+    #             #     self.insert(parent='', index=tk.END, values=(command_store[index]))
+    #             item_index = 0
+    #             while item_index < len(command_store):
+    #                 print(command_store[item_index])
+    #                 self.insert(parent='', index=tk.END, values=[(command_store[item_index])])
+    #
+    #                 # key = self.index
+    #                 # self.tab_dict.setdefault(key, [])
+    #                 # self.tab_dict[key].append('test')
+    #                 self.tab_dict[self.index] = [self.tab_dict[self.index]].append("test")
+    #                 print(self.tab_dict)
+    #                 item_index += 1
+    #             command_store = None
+    #         else:
+    #             command_store = None
 
     def delete_row(self, event):
         selected_items = self.selection()
