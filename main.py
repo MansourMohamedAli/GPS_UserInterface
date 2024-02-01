@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from command_window import CommandWindow
 from client_window import ClientWindow
+from drag_and_drop import CommandDragManager
 
 command_store = None
 
@@ -52,46 +53,6 @@ class Menu(ttk.Frame):
         self.menu_button_5.grid(row=2, column=0, sticky='nsew', columnspan=1, padx=(10, 5), pady=(10, 10))
         self.menu_button_6.grid(row=2, column=1, sticky='nsew', columnspan=1, padx=(5, 10), pady=(10, 10))
         self.config_button.grid(row=3, column=0, sticky='nsew', columnspan=2, padx=(5, 10), pady=(10, 10))
-
-
-class CommandDragManager:
-    def __init__(self):
-        self.command_name = None
-        self.widget = None
-        self.tree_selection = list()
-
-    def add_dragable(self, widget):
-        self.widget = widget
-        widget.bind('<<TreeviewSelect>>', self.on_start)
-        # widget.bind("<B1-Motion>", self.on_drag)
-        widget.bind("<ButtonRelease-1>", self.on_drop)
-        widget.configure(cursor="hand1")
-
-    def on_start(self, event):
-        for i in self.widget.selection():
-            self.tree_selection.append(self.widget.item(i)['values'][0])
-
-        # you could use this method to create a floating window
-        # that represents what is being dragged.
-
-
-    def on_drag(self, event):
-        # you could use this method to move a floating window that
-        # represents what you're dragging
-        pass
-
-    def on_drop(self, event):
-        # find the widget under the cursor
-        x, y = event.widget.winfo_pointerxy()
-        target = event.widget.winfo_containing(x, y)
-        try:
-            if target.tree_name == "tab_tree":
-                for item in self.tree_selection:
-                    target.insert(parent='', index=tk.END, values=[item])
-                print(self.tree_selection)
-        except:
-            pass
-        self.tree_selection.clear()
 
 
 class Configuration(tk.Toplevel):
@@ -214,8 +175,8 @@ class Configuration(tk.Toplevel):
         self.top_bar_frame.grid(row=0, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
         self.bot_bar_frame.grid(row=2, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
 
-        dnd = CommandDragManager()
-        dnd.add_dragable(self.commands_tree)
+        command_dnd = CommandDragManager()
+        command_dnd.add_dragable(self.commands_tree)
 
     def insert_command(self, window_instance, new_command):
         if new_command:
