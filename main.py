@@ -178,6 +178,9 @@ class Configuration(tk.Toplevel):
         command_dnd = CommandDragManager()
         command_dnd.add_dragable(self.commands_tree)
 
+        # client_dnd = CommandDragManager()
+        # client_dnd.add_dragable(self.clients_tree)
+
     def insert_command(self, window_instance, new_command):
         if new_command:
             self.commands_tree.insert(parent='', index=tk.END, values=new_command)
@@ -277,9 +280,9 @@ class ScrollFrame(ttk.Frame):
         self.canvas.configure(scrollregion=(0, 0, self.winfo_width(), height))
         self.list_height = height
 
-    def create_item(self, store):
+    def create_item(self, clients):
         frame = ttk.Frame(self.frame)
-        item = TabBarTree(frame, self.tree_index, self.tab_dict, f'{store}')
+        item = TabBarTree(frame, self.tree_index, self.tab_dict, f'{clients}')
         item.pack(expand=True, fill='both')
         self.tree_index += 1
         return frame

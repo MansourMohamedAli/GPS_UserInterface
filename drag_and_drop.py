@@ -1,9 +1,9 @@
 import tkinter as tk
 from tkinter import ttk
 
+
 class ClientDragManager:
     def __init__(self):
-        self.command_name = None
         self.widget = None
         self.tree_selection = list()
 
@@ -31,10 +31,8 @@ class ClientDragManager:
         x, y = event.widget.winfo_pointerxy()
         target = event.widget.winfo_containing(x, y)
         try:
-            if target.tree_name == "tab_tree":
-                for item in self.tree_selection:
-                    target.insert(parent='', index=tk.END, values=[item])
-                print(self.tree_selection)
+            for item in self.tree_selection:
+                target.create_item(item)
         except:
             pass
         self.tree_selection.clear()
@@ -42,7 +40,6 @@ class ClientDragManager:
 
 class CommandDragManager:
     def __init__(self):
-        self.command_name = None
         self.widget = None
         self.tree_selection = list()
 
