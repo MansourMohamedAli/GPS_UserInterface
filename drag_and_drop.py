@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from Tree_Widgets import TabBarTree
 
 
 class ClientDragManager:
@@ -30,12 +31,15 @@ class ClientDragManager:
         # find the widget under the cursor
         x, y = event.widget.winfo_pointerxy()
         target = event.widget.winfo_containing(x, y)
-        try:
-            for item in self.tree_selection:
-                target.create_item(item)
-        except:
-            pass
-        self.tree_selection.clear()
+        # item = TabBarTree(target, self.tree_index, self.tab_dict, f'{clients}')
+        item = TabBarTree(target, 0, f'test')
+        item.pack(expand=True, fill='both')
+        # try:
+        #     for item in self.tree_selection:
+        #         target.create_item(item)
+        # except:
+        #     pass
+        # self.tree_selection.clear()
 
 
 class CommandDragManager:

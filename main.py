@@ -2,7 +2,8 @@ import tkinter as tk
 from tkinter import ttk
 from command_window import CommandWindow
 from client_window import ClientWindow
-from drag_and_drop import CommandDragManager
+from drag_and_drop import CommandDragManager, ClientDragManager
+from Tree_Widgets import ClientListTree, CommandListTree, TabBarTree
 
 command_store = None
 
@@ -178,8 +179,8 @@ class Configuration(tk.Toplevel):
         command_dnd = CommandDragManager()
         command_dnd.add_dragable(self.commands_tree)
 
-        # client_dnd = CommandDragManager()
-        # client_dnd.add_dragable(self.clients_tree)
+        client_dnd = ClientDragManager()
+        client_dnd.add_dragable(self.clients_tree)
 
     def insert_command(self, window_instance, new_command):
         if new_command:
@@ -323,74 +324,6 @@ class ScrollFrame(ttk.Frame):
         else:
             column += 1
         return row, column
-
-
-class ClientListTree(ttk.Treeview):
-    def __init__(self, parent, *args):
-        super().__init__(master=parent, columns=args, show='headings')
-        self.args = args
-        self.parent = parent
-        self.get_tree_headings()
-        self.bind('<<TreeviewSelect>>', self.item_select)
-        self.bind('<Delete>', self.delete_row)
-
-    def item_select(self, event):
-        tree_selection = list()
-        for i in self.selection():
-            tree_selection.append(self.item(i)['values'][0])
-        global client_store
-        client_store = tree_selection
-
-    def get_tree_headings(self):
-        for arg in self.args:
-            self.heading(arg, text=str(arg))
-
-    def delete_row(self, event):
-        selected_items = self.selection()
-        for item in selected_items:
-            self.delete(item)
-
-
-class CommandListTree(ttk.Treeview):
-    def __init__(self, parent, *args):
-        super().__init__(master=parent, columns=args, show='headings')
-        self.args = args
-        self.parent = parent
-        self.get_tree_headings()
-        tags = self.bindtags() + ("commands",)
-        self.bindtags(tags)
-        self.bind('<Delete>', self.delete_row)
-        self.tree_name = "command_tree"
-
-    def get_tree_headings(self):
-        for arg in self.args:
-            self.heading(arg, text=str(arg))
-
-    def delete_row(self, event):
-        selected_items = self.selection()
-        for item in selected_items:
-            self.delete(item)
-
-
-class TabBarTree(ttk.Treeview):
-    def __init__(self, parent, index, tab_dict, *args):
-        super().__init__(master=parent, columns=args, show='headings')
-        self.args = args
-        self.parent = parent
-        self.get_tree_headings()
-        self.bind('<Delete>', self.delete_row)
-        self.index = index
-        self.tab_dict = tab_dict
-        self.tree_name = "tab_tree"
-
-    def get_tree_headings(self):
-        for arg in self.args:
-            self.heading(arg, text=str(arg))
-
-    def delete_row(self, event):
-        selected_items = self.selection()
-        for item in selected_items:
-            self.delete(item)
 
 
 App('Glass Panel Control', (200, 200))
