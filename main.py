@@ -2,10 +2,10 @@ import tkinter as tk
 from tkinter import ttk
 from command_window import CommandWindow
 from client_window import ClientWindow
-from drag_and_drop import CommandDragManager, ClientDragManager
-from Tree_Widgets import ClientListTree, CommandListTree, TabBarTree
-
-command_store = None
+from drag_and_drop import (CommandDragManager,
+                           ClientDragManager)
+from Tree_Widgets import (ClientListTree,
+                          CommandListTree)
 
 
 class App(tk.Tk):
@@ -62,7 +62,6 @@ class Configuration(tk.Toplevel):
         self.tree_column = None
         self.tree_row = None
         self.tree_index = None
-        # self.scroll = None
         self.title('Configuration')
         self.geometry("1000x600")
         # self.resizable(False, False)
@@ -116,25 +115,6 @@ class Configuration(tk.Toplevel):
         self.new_client_button.grid(row=1, column=0, padx=5, pady=5)
         self.delete_client_button.grid(row=1, column=1, padx=5, pady=5)
 
-        # Tab Frame configuration
-        self.tabs = ttk.Notebook(self.tab_frame, width=700, height=self.tab_frame.winfo_height())
-        self.tab_frame.rowconfigure(0, weight=1)
-        self.tab_frame.columnconfigure(0, weight=1)
-
-        # Creating Tab 1
-        self.tab1 = tk.Frame(self.tabs)
-        self.tab1_dict = dict()
-        self.tab1_scroll = ScrollFrame(self.tab1, 100, 1, self.clients_tree)
-
-        # Creating Tab 2
-        self.tab2 = tk.Frame(self.tabs)
-
-        # Adding tabs to Tab Notebook Frame
-        self.tabs.add(self.tab1, text='First Tab')
-        self.tabs.add(self.tab2, text='Second Tab')
-
-        self.tabs.grid(sticky='nsew')
-
         self.bot_side_bar_frame = ttk.Frame(self.side_bar_frame)
         self.bot_side_bar_frame.grid(row=1, columnspan=2, padx=10, pady=10, sticky="nsew")
         self.command_frame = ttk.Frame(self.bot_side_bar_frame)
@@ -163,6 +143,25 @@ class Configuration(tk.Toplevel):
         self.new_command_button.grid(row=1, column=0, padx=5, pady=5)
         self.delete_command_button.grid(row=1, column=1, padx=5, pady=5)
 
+        # Tab Frame configuration
+        self.tabs = ttk.Notebook(self.tab_frame, width=700, height=self.tab_frame.winfo_height())
+        self.tab_frame.rowconfigure(0, weight=1)
+        self.tab_frame.columnconfigure(0, weight=1)
+
+        # Creating Tab 1
+        self.tab1 = tk.Frame(self.tabs)
+        self.tab1_dict = dict()
+        self.tab1_scroll = ScrollFrame(self.tab1, 100, 1, self.clients_tree, self.commands_tree)
+
+        # Creating Tab 2
+        self.tab2 = tk.Frame(self.tabs)
+
+        # Adding tabs to Tab Notebook Frame
+        self.tabs.add(self.tab1, text='First Tab')
+        self.tabs.add(self.tab2, text='Second Tab')
+
+        self.tabs.grid(sticky='nsew')
+
         # Top Bar Configuration
         self.top_label = ttk.Label(self.top_bar_frame, text="Top Bar")
         self.top_label.pack(expand=True)
@@ -175,12 +174,6 @@ class Configuration(tk.Toplevel):
         self.side_bar_frame.grid(row=0, column=0, sticky='nsw', rowspan=3, padx=(10, 5), pady=(10, 10))
         self.top_bar_frame.grid(row=0, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
         self.bot_bar_frame.grid(row=2, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
-
-        command_dnd = CommandDragManager()
-        command_dnd.add_dragable(self.commands_tree)
-
-        # client_dnd = ClientDragManager(ScrollFrame.update_size_new_item)
-        # client_dnd.add_dragable(self.clients_tree)
 
     def insert_command(self, window_instance, new_command):
         if new_command:
@@ -208,7 +201,7 @@ class Configuration(tk.Toplevel):
 
 
 class ScrollFrame(ttk.Frame):
-    def __init__(self, parent, item_height, tree_index, clients_tree):
+    def __init__(self, parent, item_height, tree_index, clients_tree, commands_tree):
         super().__init__(master=parent)
         self.pack(expand=True, fill='both')
 
@@ -219,6 +212,7 @@ class ScrollFrame(ttk.Frame):
         self.item_height = item_height
         self.list_height = (self.tree_index * item_height)  # Five items per row
         self.clients_tree = clients_tree
+        self.commands_tree = commands_tree
 
         # canvas
         self.canvas = tk.Canvas(self, background='red', scrollregion=(0, 0, self.winfo_width(), self.list_height))
@@ -240,10 +234,12 @@ class ScrollFrame(ttk.Frame):
         self.canvas.bind_class('scroll_frame_bg', '<MouseWheel>',
                                lambda event: self.canvas.yview_scroll(-int(event.delta / 60), "units"))
         self.bind('<Configure>', self.update_size_event)
-        # self.bind_all('<ButtonRelease-1>', self.client_release)
 
         client_dnd = ClientDragManager(self.update_size_new_item, self.frame)
         client_dnd.add_dragable(self.clients_tree)
+
+        command_dnd = CommandDragManager()
+        command_dnd.add_dragable(self.commands_tree)
 
     def update_size_event(self, event):
         if self.list_height >= self.winfo_height():

@@ -41,7 +41,7 @@ class ClientDragManager:
                 client_frame = ttk.Frame(target)
                 tree = TabBarTree(client_frame, 0, item)
                 tree.pack(expand=True, fill='both')
-                client_frame.grid(row=self.tree_row, column=self.tree_col, padx=10, pady=10)
+                client_frame.grid(row=self.tree_row, column=self.tree_col, padx=10,pady=10)
                 target.update_idletasks()
                 if self.tree_row == 0:
                     height = 340
