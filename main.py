@@ -242,7 +242,7 @@ class ScrollFrame(ttk.Frame):
         self.bind('<Configure>', self.update_size_event)
         # self.bind_all('<ButtonRelease-1>', self.client_release)
 
-        client_dnd = ClientDragManager(self.update_size_new_item)
+        client_dnd = ClientDragManager(self.update_size_new_item, self.frame)
         client_dnd.add_dragable(self.clients_tree)
 
     def update_size_event(self, event):
@@ -265,7 +265,6 @@ class ScrollFrame(ttk.Frame):
 
     def update_size_new_item(self, new_height):
         if new_height >= self.winfo_height():
-            print(self.winfo_height())
             height = new_height
             self.canvas.bind_class('scroll_frame_bg', '<MouseWheel>',
                                    lambda event: self.canvas.yview_scroll(-int(event.delta / 60), "units"))
@@ -284,48 +283,6 @@ class ScrollFrame(ttk.Frame):
 
         self.canvas.configure(scrollregion=(0, 0, self.winfo_width(), height))
         self.list_height = height
-
-    def create_item(self, clients):
-        frame = ttk.Frame(self.frame)
-        item = TabBarTree(frame, self.tree_index, f'{clients}')
-        item.pack(expand=True, fill='both')
-        self.tree_index += 1
-        return frame
-
-    def client_release(self, event):
-        global client_store
-        try:
-            start_x = self.winfo_pointerx() - self.winfo_rootx()
-            start_y = self.winfo_pointery() - self.winfo_rooty()
-            if 0 <= start_x <= self.winfo_width() and 0 <= start_y <= self.winfo_height():
-                if client_store:
-                    for item in client_store:
-                        new_item = self.create_item(item)
-                        new_item.grid(row=self.tree_row, column=self.tree_col)
-                        self.update_idletasks()
-                        # Adjusting height
-                        if self.tree_row == 0:
-                            height = 340
-                        else:
-                            height = new_item.winfo_height() * (self.tree_row + 1)
-                        self.update_size_new_item(height)
-                        # updating row, col numbers
-                        self.tree_row, self.tree_col = self.update_row_column(self.tree_row,
-                                                                              self.tree_col)
-            else:
-                pass
-            client_store = None
-        except NameError:
-            return None
-
-    @staticmethod
-    def update_row_column(row, column):
-        if column >= 4:
-            row += 1
-            column = 0
-        else:
-            column += 1
-        return row, column
 
 
 App('Glass Panel Control', (200, 200))
