@@ -6,7 +6,7 @@ from Tree_Widgets import TabBarTree
 class ClientDragManager:
     def __init__(self, m_update_size_new_item):
         self.tree_row = 0
-        self.tree_col = 0
+        self.tree_col = 1
         self.widget = None
         self.tree_selection = list()
         self.m_update_size_new_item = m_update_size_new_item
@@ -34,6 +34,7 @@ class ClientDragManager:
         # find the widget under the cursor
         x, y = event.widget.winfo_pointerxy()
         target = event.widget.winfo_containing(x, y)
+        print(target)
         # item = TabBarTree(target, self.tree_index, self.tab_dict, f'{clients}')
         client_frame = ttk.Frame(target)
         tree = TabBarTree(client_frame, 0, f'test')
@@ -47,8 +48,10 @@ class ClientDragManager:
             height = 340
         else:
             height = client_frame.winfo_height() * (self.tree_row + 1)
+            self.m_update_size_new_item(height)
         self.tree_row, self.tree_col = self.update_row_column(self.tree_row,
                                                               self.tree_col)
+        print(f'{self.tree_row},{self.tree_col}')
 
     @staticmethod
     def update_row_column(row, column):
