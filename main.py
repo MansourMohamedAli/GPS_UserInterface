@@ -79,25 +79,6 @@ class Configuration(tk.Toplevel):
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=5)
 
-        # Tab Frame configuration
-        self.tabs = ttk.Notebook(self.tab_frame, width=700, height=self.tab_frame.winfo_height())
-        self.tab_frame.rowconfigure(0, weight=1)
-        self.tab_frame.columnconfigure(0, weight=1)
-
-        # Creating Tab 1
-        self.tab1 = tk.Frame(self.tabs)
-        self.tab1_dict = dict()
-        self.tab1_scroll = ScrollFrame(self.tab1, 100, 1, self.tab1_dict)
-
-        # Creating Tab 2
-        self.tab2 = tk.Frame(self.tabs)
-
-        # Adding tabs to Tab Notebook Frame
-        self.tabs.add(self.tab1, text='First Tab')
-        self.tabs.add(self.tab2, text='Second Tab')
-
-        self.tabs.grid(sticky='nsew')
-
         # Side Bar Configuration
         self.side_bar_frame.rowconfigure(0, weight=1, uniform='a')
         self.side_bar_frame.rowconfigure(1, weight=1, uniform='a')
@@ -134,6 +115,25 @@ class Configuration(tk.Toplevel):
         self.clients_tree.grid(row=0, columnspan=2)
         self.new_client_button.grid(row=1, column=0, padx=5, pady=5)
         self.delete_client_button.grid(row=1, column=1, padx=5, pady=5)
+
+        # Tab Frame configuration
+        self.tabs = ttk.Notebook(self.tab_frame, width=700, height=self.tab_frame.winfo_height())
+        self.tab_frame.rowconfigure(0, weight=1)
+        self.tab_frame.columnconfigure(0, weight=1)
+
+        # Creating Tab 1
+        self.tab1 = tk.Frame(self.tabs)
+        self.tab1_dict = dict()
+        self.tab1_scroll = ScrollFrame(self.tab1, 100, 1, self.clients_tree)
+
+        # Creating Tab 2
+        self.tab2 = tk.Frame(self.tabs)
+
+        # Adding tabs to Tab Notebook Frame
+        self.tabs.add(self.tab1, text='First Tab')
+        self.tabs.add(self.tab2, text='Second Tab')
+
+        self.tabs.grid(sticky='nsew')
 
         self.bot_side_bar_frame = ttk.Frame(self.side_bar_frame)
         self.bot_side_bar_frame.grid(row=1, columnspan=2, padx=10, pady=10, sticky="nsew")
@@ -179,8 +179,8 @@ class Configuration(tk.Toplevel):
         command_dnd = CommandDragManager()
         command_dnd.add_dragable(self.commands_tree)
 
-        client_dnd = ClientDragManager(ScrollFrame.update_size_new_item)
-        client_dnd.add_dragable(self.clients_tree)
+        # client_dnd = ClientDragManager(ScrollFrame.update_size_new_item)
+        # client_dnd.add_dragable(self.clients_tree)
 
     def insert_command(self, window_instance, new_command):
         if new_command:
@@ -208,7 +208,7 @@ class Configuration(tk.Toplevel):
 
 
 class ScrollFrame(ttk.Frame):
-    def __init__(self, parent, item_height, tree_index, tab_dict):
+    def __init__(self, parent, item_height, tree_index, clients_tree):
         super().__init__(master=parent)
         self.pack(expand=True, fill='both')
 
@@ -218,7 +218,7 @@ class ScrollFrame(ttk.Frame):
         self.tree_col = 0
         self.item_height = item_height
         self.list_height = (self.tree_index * item_height)  # Five items per row
-        self.tab_dict = tab_dict
+        self.clients_tree = clients_tree
 
         # canvas
         self.canvas = tk.Canvas(self, background='red', scrollregion=(0, 0, self.winfo_width(), self.list_height))
@@ -241,6 +241,9 @@ class ScrollFrame(ttk.Frame):
                                lambda event: self.canvas.yview_scroll(-int(event.delta / 60), "units"))
         self.bind('<Configure>', self.update_size_event)
         # self.bind_all('<ButtonRelease-1>', self.client_release)
+
+        client_dnd = ClientDragManager(self.update_size_new_item)
+        client_dnd.add_dragable(self.clients_tree)
 
     def update_size_event(self, event):
         if self.list_height >= self.winfo_height():
@@ -284,7 +287,7 @@ class ScrollFrame(ttk.Frame):
 
     def create_item(self, clients):
         frame = ttk.Frame(self.frame)
-        item = TabBarTree(frame, self.tree_index, self.tab_dict, f'{clients}')
+        item = TabBarTree(frame, self.tree_index, f'{clients}')
         item.pack(expand=True, fill='both')
         self.tree_index += 1
         return frame
@@ -297,10 +300,8 @@ class ScrollFrame(ttk.Frame):
             if 0 <= start_x <= self.winfo_width() and 0 <= start_y <= self.winfo_height():
                 if client_store:
                     for item in client_store:
-                        self.tab_dict[self.tree_index] = item
                         new_item = self.create_item(item)
                         new_item.grid(row=self.tree_row, column=self.tree_col)
-                        print(self.tab_dict)
                         self.update_idletasks()
                         # Adjusting height
                         if self.tree_row == 0:
