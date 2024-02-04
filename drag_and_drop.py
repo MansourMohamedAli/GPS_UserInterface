@@ -4,9 +4,12 @@ from Tree_Widgets import TabBarTree
 
 
 class ClientDragManager:
-    def __init__(self):
+    def __init__(self, m_update_size_new_item):
+        self.tree_row = 0
+        self.tree_col = 0
         self.widget = None
         self.tree_selection = list()
+        self.m_update_size_new_item = m_update_size_new_item
 
     def add_dragable(self, widget):
         self.widget = widget
@@ -32,14 +35,29 @@ class ClientDragManager:
         x, y = event.widget.winfo_pointerxy()
         target = event.widget.winfo_containing(x, y)
         # item = TabBarTree(target, self.tree_index, self.tab_dict, f'{clients}')
-        item = TabBarTree(target, 0, f'test')
-        item.pack(expand=True, fill='both')
-        # try:
-        #     for item in self.tree_selection:
-        #         target.create_item(item)
-        # except:
-        #     pass
-        # self.tree_selection.clear()
+        client_frame = ttk.Frame(target)
+        tree = TabBarTree(client_frame, 0, f'test')
+        tree.pack(expand=True, fill='both')
+
+        client_frame.grid(row=self.tree_row, column=self.tree_col)
+
+        # target.update_idletasks()
+
+        if self.tree_row == 0:
+            height = 340
+        else:
+            height = client_frame.winfo_height() * (self.tree_row + 1)
+        self.tree_row, self.tree_col = self.update_row_column(self.tree_row,
+                                                              self.tree_col)
+
+    @staticmethod
+    def update_row_column(row, column):
+        if column >= 4:
+            row += 1
+            column = 0
+        else:
+            column += 1
+        return row, column
 
 
 class CommandDragManager:

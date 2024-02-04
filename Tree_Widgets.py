@@ -8,7 +8,7 @@ class ClientListTree(ttk.Treeview):
         self.args = args
         self.parent = parent
         self.get_tree_headings()
-        self.bind('<<TreeviewSelect>>', self.item_select)
+        # self.bind('<<TreeviewSelect>>', self.item_select)
         self.bind('<Delete>', self.delete_row)
 
     def item_select(self, event):

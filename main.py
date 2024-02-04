@@ -179,7 +179,7 @@ class Configuration(tk.Toplevel):
         command_dnd = CommandDragManager()
         command_dnd.add_dragable(self.commands_tree)
 
-        client_dnd = ClientDragManager()
+        client_dnd = ClientDragManager(ScrollFrame.update_size_new_item)
         client_dnd.add_dragable(self.clients_tree)
 
     def insert_command(self, window_instance, new_command):
@@ -240,7 +240,7 @@ class ScrollFrame(ttk.Frame):
         self.canvas.bind_class('scroll_frame_bg', '<MouseWheel>',
                                lambda event: self.canvas.yview_scroll(-int(event.delta / 60), "units"))
         self.bind('<Configure>', self.update_size_event)
-        self.bind_all('<ButtonRelease-1>', self.client_release)
+        # self.bind_all('<ButtonRelease-1>', self.client_release)
 
     def update_size_event(self, event):
         if self.list_height >= self.winfo_height():
@@ -262,6 +262,7 @@ class ScrollFrame(ttk.Frame):
 
     def update_size_new_item(self, new_height):
         if new_height >= self.winfo_height():
+            print(self.winfo_height())
             height = new_height
             self.canvas.bind_class('scroll_frame_bg', '<MouseWheel>',
                                    lambda event: self.canvas.yview_scroll(-int(event.delta / 60), "units"))
