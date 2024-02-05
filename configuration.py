@@ -11,9 +11,6 @@ from Tree_Widgets import (ClientListTree,
 class Configuration(tk.Toplevel):
     def __init__(self):
         super().__init__()
-        self.tree_column = None
-        self.tree_row = None
-        self.tree_index = None
         self.title('Configuration')
         self.geometry("1000x600")
         # self.resizable(False, False)

@@ -7,6 +7,7 @@ class ClientDragManager:
     def __init__(self, m_update_size_new_item, target_frame):
         self.tree_row = 0
         self.tree_col = 0
+        self.tab_tree_index = 1
         self.widget = None
         self.tree_selection = list()
         self.m_update_size_new_item = m_update_size_new_item
@@ -15,33 +16,34 @@ class ClientDragManager:
     def add_dragable(self, widget):
         self.widget = widget
         widget.bind('<<TreeviewSelect>>', self.on_start)
-        # widget.bind("<B1-Motion>", self.on_drag)
+        # widget.bind("<B1-Motion>", self.on_drag) # todo
         widget.bind("<ButtonRelease-1>", self.on_drop)
         widget.configure(cursor="hand1")
 
     def on_start(self, event):
         for i in self.widget.selection():
             self.tree_selection.append(self.widget.item(i)['values'][0])
-
         # you could use this method to create a floating window
         # that represents what is being dragged.
+        # todo
 
     def on_drag(self, event):
         # you could use this method to move a floating window that
         # represents what you're dragging
+        # todo
         pass
 
     def on_drop(self, event):
         # find the widget under the cursor
         x, y = event.widget.winfo_pointerxy()
         target = event.widget.winfo_containing(x, y)
-        # item = TabBarTree(target, self.tree_index, self.tab_dict, f'{clients}')
         if target == self.target_frame:
             for item in self.tree_selection:
                 client_frame = ttk.Frame(target)
-                tree = TabBarTree(client_frame, 0, item)
+                tree = TabBarTree(client_frame, self.tab_tree_index, item)
+                print(f'Tab Tree Index {self.tab_tree_index}')
                 tree.pack(expand=True, fill='both')
-                client_frame.grid(row=self.tree_row, column=self.tree_col, padx=10,pady=10)
+                client_frame.grid(row=self.tree_row, column=self.tree_col, padx=10, pady=10)
                 target.update_idletasks()
                 if self.tree_row == 0:
                     height = 340
@@ -50,6 +52,7 @@ class ClientDragManager:
                 self.m_update_size_new_item(height)
                 self.tree_row, self.tree_col = self.update_row_column(self.tree_row,
                                                                       self.tree_col)
+                self.tab_tree_index += 1
         self.tree_selection.clear()
 
     @staticmethod
@@ -70,20 +73,21 @@ class CommandDragManager:
     def add_dragable(self, widget):
         self.widget = widget
         widget.bind('<<TreeviewSelect>>', self.on_start)
-        # widget.bind("<B1-Motion>", self.on_drag)
+        # widget.bind("<B1-Motion>", self.on_drag) # todo
         widget.bind("<ButtonRelease-1>", self.on_drop)
         widget.configure(cursor="hand1")
 
     def on_start(self, event):
         for i in self.widget.selection():
             self.tree_selection.append(self.widget.item(i)['values'][0])
-
         # you could use this method to create a floating window
         # that represents what is being dragged.
+        # todo
 
     def on_drag(self, event):
         # you could use this method to move a floating window that
         # represents what you're dragging
+        # todo
         pass
 
     def on_drop(self, event):
@@ -94,7 +98,6 @@ class CommandDragManager:
             if target.tree_name == "tab_tree":
                 for item in self.tree_selection:
                     target.insert(parent='', index=tk.END, values=[item])
-                print(self.tree_selection)
         except:
             pass
         self.tree_selection.clear()

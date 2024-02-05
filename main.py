@@ -51,6 +51,4 @@ class Menu(ttk.Frame):
         self.config_button.grid(row=3, column=0, sticky='nsew', columnspan=2, padx=(5, 10), pady=(10, 10))
 
 
-
-
 App('Glass Panel Control', (200, 200))
