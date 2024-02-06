@@ -57,7 +57,7 @@ class ClientDragManager:
 
     @staticmethod
     def update_row_column(row, column):
-        if column >= 4:
+        if column >= 2:
             row += 1
             column = 0
         else:
