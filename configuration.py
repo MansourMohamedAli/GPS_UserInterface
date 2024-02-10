@@ -170,8 +170,8 @@ class ScrollFrame(ttk.Frame):
         # display frame
         self.frame = ttk.Frame(self)
 
-        # Adding new tag for frame to allow scroll only when not on treeview
-        self.new_tags = self.frame.bindtags() + ("scroll_frame_bg",)
+        # Adding new tag for frame to allow scroll on TabTree and background.
+        self.new_tags = self.frame.bindtags() + ("scroll_frame_widgets",)
         self.frame.bindtags(self.new_tags)
 
         # scrollbar
@@ -180,7 +180,7 @@ class ScrollFrame(ttk.Frame):
         self.scrollbar.place(relx=1, rely=0, relheight=1, anchor='ne')
 
         # events
-        self.canvas.bind_class('scroll_frame_bg', '<MouseWheel>',
+        self.canvas.bind_class('scroll_frame_widgets', '<MouseWheel>',
                                lambda event: self.canvas.yview_scroll(-int(event.delta / 60), "units"))
         self.bind('<Configure>', self.update_size_event)
 
@@ -193,7 +193,7 @@ class ScrollFrame(ttk.Frame):
     def update_size_event(self, event):
         if self.list_height >= self.winfo_height():
             height = self.list_height
-            self.canvas.bind_class('scroll_frame_bg', '<MouseWheel>',
+            self.canvas.bind_class('scroll_frame_widgets', '<MouseWheel>',
                                    lambda event: self.canvas.yview_scroll(-int(event.delta / 60), "units"))
             self.scrollbar.place(relx=1, rely=0, relheight=1, anchor='ne')
         else:
@@ -212,7 +212,7 @@ class ScrollFrame(ttk.Frame):
     def update_size_new_item(self, new_height):
         if new_height >= self.winfo_height():
             height = new_height
-            self.canvas.bind_class('scroll_frame_bg', '<MouseWheel>',
+            self.canvas.bind_class('scroll_frame_widgets', '<MouseWheel>',
                                    lambda event: self.canvas.yview_scroll(-int(event.delta / 60), "units"))
             self.scrollbar.place(relx=1, rely=0, relheight=1, anchor='ne')
         else:
