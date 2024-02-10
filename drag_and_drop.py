@@ -51,8 +51,6 @@ class ClientDragManager:
                     height = 340 + (2 * tree_pady)
                 else:
                     height = client_frame.winfo_height() * (self.tree_row + 1) + (((self.tree_row + 1) * 2) * tree_pady)
-                    print(self.tree_row)
-                print(height)
                 self.m_update_size_new_item(height)
                 self.tree_row, self.tree_col = self.update_row_column(self.tree_row,
                                                                       self.tree_col)

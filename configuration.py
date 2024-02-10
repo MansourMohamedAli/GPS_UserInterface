@@ -190,6 +190,12 @@ class ScrollFrame(ttk.Frame):
         command_dnd = CommandDragManager()
         command_dnd.add_dragable(self.commands_tree)
 
+        self.frame.bind("<Button-1>", self.enable_scroll)
+
+    def enable_scroll(self, event):
+        print("Scrolling enabled")
+        # self.bindtags() + ("scroll_frame_widgets",)
+
     def update_size_event(self, event):
         if self.list_height >= self.winfo_height():
             height = self.list_height
@@ -207,7 +213,6 @@ class ScrollFrame(ttk.Frame):
             anchor='nw',
             width=self.winfo_width(),
             height=height)
-        # print(height)
 
     def update_size_new_item(self, new_height):
         if new_height >= self.winfo_height():
@@ -226,7 +231,6 @@ class ScrollFrame(ttk.Frame):
             anchor='nw',
             width=self.winfo_width(),
             height=height)
-        print(height)
 
         self.canvas.configure(scrollregion=(0, 0, self.winfo_width(), height))
         self.list_height = height
