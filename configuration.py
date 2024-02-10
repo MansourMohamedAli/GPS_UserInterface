@@ -100,7 +100,7 @@ class Configuration(tk.Toplevel):
         # Creating Tab 1
         self.tab1 = tk.Frame(self.tabs)
         self.tab1_dict = dict()
-        self.tab1_scroll = ScrollFrame(self.tab1, 100, 1, self.clients_tree, self.commands_tree)
+        self.tab1_scroll = ScrollFrame(self.tab1, 10, 1, self.clients_tree, self.commands_tree)
 
         # Creating Tab 2
         self.tab2 = tk.Frame(self.tabs)
@@ -164,7 +164,7 @@ class ScrollFrame(ttk.Frame):
         self.commands_tree = commands_tree
 
         # canvas
-        self.canvas = tk.Canvas(self, background='red', scrollregion=(0, 0, self.winfo_width(), self.list_height))
+        self.canvas = tk.Canvas(self, background='red')
         self.canvas.pack(expand=True, fill='both')
 
         # display frame
@@ -207,6 +207,7 @@ class ScrollFrame(ttk.Frame):
             anchor='nw',
             width=self.winfo_width(),
             height=height)
+        # print(height)
 
     def update_size_new_item(self, new_height):
         if new_height >= self.winfo_height():
@@ -225,6 +226,7 @@ class ScrollFrame(ttk.Frame):
             anchor='nw',
             width=self.winfo_width(),
             height=height)
+        print(height)
 
         self.canvas.configure(scrollregion=(0, 0, self.winfo_width(), height))
         self.list_height = height
