@@ -22,7 +22,7 @@ class Configuration(tk.Toplevel):
         self.bot_bar_frame = ttk.Frame(self, relief=tk.GROOVE)
 
         self.rowconfigure(0, weight=1)
-        self.rowconfigure(1, weight=5)
+        self.rowconfigure(1, weight=10)
         self.rowconfigure(2, weight=1)
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=1)
@@ -44,9 +44,14 @@ class Configuration(tk.Toplevel):
         self.client_frame.pack(fill='both', expand=True)
 
         self.clients_tree = ClientListTree(self.client_frame, "Clients")
-        self.clients_tree.insert(parent='', index=0, values=["VB1"])
-        self.clients_tree.insert(parent='', index=1, values=["VB2"])
-        self.clients_tree.insert(parent='', index=2, values=["VB3"])
+        i = 0
+        while i < 15:
+            self.clients_tree.insert(parent='', index=i, values=[f"VB{i + 1}"])
+            i += 1
+
+        # self.clients_tree.insert(parent='', index=0, values=["VB1"])
+        # self.clients_tree.insert(parent='', index=1, values=["VB2"])
+        # self.clients_tree.insert(parent='', index=2, values=["VB3"])
 
         # New Command Button
         self.new_client_button = ttk.Button(self.client_frame,
@@ -73,9 +78,15 @@ class Configuration(tk.Toplevel):
 
         # Command List Tree
         self.commands_tree = CommandListTree(self.command_frame, "Commands")
-        self.commands_tree.insert(parent='', index=0, values=["Load VB1"])
-        self.commands_tree.insert(parent='', index=1, values=["Load VB2"])
-        self.commands_tree.insert(parent='', index=2, values=["Load VB3"])
+
+        i = 0
+        while i < 15:
+            self.commands_tree.insert(parent='', index=i, values=[f"Load VB{i + 1}"])
+            i += 1
+
+        # self.commands_tree.insert(parent='', index=0, values=["Load VB1"])
+        # self.commands_tree.insert(parent='', index=1, values=["Load VB2"])
+        # self.commands_tree.insert(parent='', index=2, values=["Load VB3"])
 
         self.new_command_button = ttk.Button(self.command_frame,
                                              text="New",

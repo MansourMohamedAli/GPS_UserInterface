@@ -7,7 +7,12 @@ class ClientListTree(ttk.Treeview):
         super().__init__(master=parent, columns=args, show='headings')
         self.args = args
         self.parent = parent
+        self.get_tree_headings()
         self.bind('<Delete>', self.delete_row)
+
+    def get_tree_headings(self):
+        for arg in self.args:
+            self.heading(arg, text=str(arg))
 
     def delete_row(self, event):
         selected_items = self.selection()
@@ -20,7 +25,12 @@ class CommandListTree(ttk.Treeview):
         super().__init__(master=parent, columns=args, show='headings')
         self.args = args
         self.parent = parent
+        self.get_tree_headings()
         self.bind('<Delete>', self.delete_row)
+
+    def get_tree_headings(self):
+        for arg in self.args:
+            self.heading(arg, text=str(arg))
 
     def delete_row(self, event):
         selected_items = self.selection()
