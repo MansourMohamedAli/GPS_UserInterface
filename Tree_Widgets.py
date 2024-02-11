@@ -43,20 +43,14 @@ class TabBarTree(ttk.Treeview):
         # Adding new tag for frame to allow scroll on TabTree and background.
         self.scroll_tags = self.bindtags() + ("scroll_frame_widgets",)
         self.bindtags(self.scroll_tags)
-
         self.bind('<<TreeviewSelect>>', self.on_row_click)
 
     def on_row_click(self, event):
-        # get the column index being clicked
-        col = self.identify_column(event.x)
-        print(col)
-        # get the column name of the clicked column
-        # name = self.column(col, 'id')
-        # if name == 'blankspace':
-        #     # clear the selection
-        #     self.selection_set()
-        #     # disable default mouse click handler
-        #     return 'break'
+        # print(self.selection()[0])
+        curItem = self.focus()
+        for item in curItem:
+            print(self.item(curItem)['values'])
+
 
     # def disable_scroll(self, event):
     #     print("Scrolling disabled")

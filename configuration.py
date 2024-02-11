@@ -12,8 +12,8 @@ class Configuration(tk.Toplevel):
     def __init__(self):
         super().__init__()
         self.title('Configuration')
-        self.geometry("1000x600")
-        # self.resizable(False, False)
+        self.geometry("1340x600")
+        self.resizable(False, False)
         # seZlf.minsize(400, 300)
 
         self.tab_frame = ttk.Frame(self, relief=tk.GROOVE)
@@ -25,7 +25,7 @@ class Configuration(tk.Toplevel):
         self.rowconfigure(1, weight=5)
         self.rowconfigure(2, weight=1)
         self.columnconfigure(0, weight=1)
-        self.columnconfigure(1, weight=5)
+        self.columnconfigure(1, weight=1)
 
         # Side Bar Configuration
         self.side_bar_frame.rowconfigure(0, weight=1, uniform='a')
@@ -93,7 +93,7 @@ class Configuration(tk.Toplevel):
         self.delete_command_button.grid(row=1, column=1, padx=5, pady=5)
 
         # Tab Frame configuration
-        self.tabs = ttk.Notebook(self.tab_frame, width=700, height=self.tab_frame.winfo_height())
+        self.tabs = ttk.Notebook(self.tab_frame, width=1080, height=self.tab_frame.winfo_height())
         self.tab_frame.rowconfigure(0, weight=1)
         self.tab_frame.columnconfigure(0, weight=1)
 
@@ -119,10 +119,14 @@ class Configuration(tk.Toplevel):
         self.bot_label = ttk.Label(self.bot_bar_frame, text="Bottom Bar")
         self.bot_label.pack(expand=True)
 
-        self.tab_frame.grid(row=1, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
-        self.side_bar_frame.grid(row=0, column=0, sticky='nsw', rowspan=3, padx=(10, 5), pady=(10, 10))
-        self.top_bar_frame.grid(row=0, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
-        self.bot_bar_frame.grid(row=2, column=1, sticky='nsew', padx=(10, 5), pady=(10, 10))
+        self.tab_frame.grid(row=1, column=1, sticky='nsew', padx=(5, 5), pady=(10, 10))
+        self.side_bar_frame.grid(row=0, column=0, sticky='nsew', rowspan=3, padx=(5, 5), pady=(10, 10))
+        self.top_bar_frame.grid(row=0, column=1, sticky='nsew', padx=(5, 5), pady=(10, 10))
+        self.bot_bar_frame.grid(row=2, column=1, sticky='nsew', padx=(5, 5), pady=(10, 10))
+
+
+        style = ttk.Style(self)
+        style.theme_use('clam')
 
     def insert_command(self, window_instance, new_command):
         if new_command:

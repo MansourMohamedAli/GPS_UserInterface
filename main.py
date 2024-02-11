@@ -50,5 +50,8 @@ class Menu(ttk.Frame):
         self.menu_button_6.grid(row=2, column=1, sticky='nsew', columnspan=1, padx=(5, 10), pady=(10, 10))
         self.config_button.grid(row=3, column=0, sticky='nsew', columnspan=2, padx=(5, 10), pady=(10, 10))
 
+        style = ttk.Style(self)
+        style.theme_use('clam')
+
 
 App('Glass Panel Control', (200, 200))

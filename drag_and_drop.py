@@ -43,14 +43,12 @@ class ClientDragManager:
                 tree = TabBarTree(client_frame, self.tab_tree_index, item)
                 # print(f'Tab Tree Index {self.tab_tree_index}')
                 tree.pack(expand=True, fill='both')
-                tree_padx = 10
+                tree_padx = 5
                 tree_pady = 10
+                client_frame.grid_propagate(False)
                 client_frame.grid(row=self.tree_row, column=self.tree_col, padx=tree_padx, pady=tree_pady)
                 target.update_idletasks()
-                if self.tree_row == 0:
-                    height = 340 + (2 * tree_pady)
-                else:
-                    height = client_frame.winfo_height() * (self.tree_row + 1) + (((self.tree_row + 1) * 2) * tree_pady)
+                height = client_frame.winfo_height() * (self.tree_row + 1) + (((self.tree_row + 1) * 2) * tree_pady)
                 self.m_update_size_new_item(height)
                 self.tree_row, self.tree_col = self.update_row_column(self.tree_row,
                                                                       self.tree_col)
@@ -59,7 +57,7 @@ class ClientDragManager:
 
     @staticmethod
     def update_row_column(row, column):
-        if column >= 2:
+        if column >= 4:
             row += 1
             column = 0
         else:
