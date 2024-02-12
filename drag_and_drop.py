@@ -40,13 +40,14 @@ class ClientDragManager:
         if target == self.target_frame:
             for item in self.tree_selection:
                 client_frame = ttk.Frame(target)
+                TabTreeMouseOver(client_frame)
                 tree = TabBarTree(client_frame, self.tab_tree_index, item)
                 # print(f'Tab Tree Index {self.tab_tree_index}')
                 tree.pack(expand=True, fill='both')
                 tree_padx = 5
                 tree_pady = 10
                 client_frame.grid_propagate(False)
-                client_frame.grid(row=self.tree_row, column=self.tree_col, padx=tree_padx, pady=tree_pady)
+                client_frame.grid(row=self.tree_row, column=self.tree_col, padx=tree_padx, pady=tree_pady,sticky="new")
                 target.update_idletasks()
                 height = client_frame.winfo_height() * (self.tree_row + 1) + (((self.tree_row + 1) * 2) * tree_pady)
                 self.m_update_size_new_item(height)
@@ -101,3 +102,18 @@ class CommandDragManager:
         except:
             pass
         self.tree_selection.clear()
+
+
+class TabTreeMouseOver:
+    def __init__(self, frame):
+        self.frame = frame
+        self.test_button = None
+        self.frame.bind('<Enter>', self.mouse_over)
+        self.frame.bind('<Leave>', self.mouse_leave)
+
+    def mouse_over(self, event):
+        self.test_button = ttk.Button(self.frame, text="Delete")
+        self.test_button.pack(side="bottom")
+
+    def mouse_leave(self, event):
+        self.test_button.pack_forget()
