@@ -184,6 +184,12 @@ class ScrollFrame(ttk.Frame):
 
         # display frame
         self.frame = ttk.Frame(self)
+        self.frame.rowconfigure(self.tree_row, minsize=280)
+        self.frame.columnconfigure(0, weight=1, uniform='a')
+        self.frame.columnconfigure(1, weight=1, uniform='a')
+        self.frame.columnconfigure(2, weight=1, uniform='a')
+        self.frame.columnconfigure(3, weight=1, uniform='a')
+        self.frame.columnconfigure(4, weight=1, uniform='a')
 
         # Adding new tag for frame to allow scroll on TabTree and background.
         self.new_tags = self.frame.bindtags() + ("scroll_frame_widgets",)

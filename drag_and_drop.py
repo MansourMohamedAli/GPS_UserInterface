@@ -61,12 +61,13 @@ class ClientDragManager:
                 self.new_button.grid(row=0, column=1)
                 self.delete_button.grid(row=0, column=2)
                 self.move_right_button.grid(row=0, column=3)
+                # tree.pack(expand=True, fill='both')
+                tree.pack(expand=False, fill='both')
                 TabTreeMouseOver(self.button_frame, client_frame)
-                tree.pack(expand=True, fill='both')
                 tree_padx = 5
                 tree_pady = 10
                 client_frame.grid(row=self.tree_row, column=self.tree_col, padx=tree_padx, pady=tree_pady, sticky="nsew")
-                client_frame.grid_propagate(False)
+                target.grid_propagate(False)
                 target.update_idletasks()
                 height = client_frame.winfo_height() * (self.tree_row + 1) + (((self.tree_row + 1) * 2) * tree_pady)
                 self.m_update_size_new_item(height)
@@ -131,25 +132,8 @@ class TabTreeMouseOver:
         self.client_frame.bind('<Leave>', self.mouse_leave)
 
     def mouse_over(self, event):
-        # self.button_frame = ttk.Frame(self.frame)
-        # self.button_frame.rowconfigure(0, weight=1, uniform='a')
-        # self.button_frame.columnconfigure(0, weight=1, uniform='a')
-        # self.button_frame.columnconfigure(1, weight=1, uniform='a')
-        # self.button_frame.columnconfigure(2, weight=1, uniform='a')
-        # self.button_frame.columnconfigure(3, weight=1, uniform='a')
-        #
-        # self.move_left_button = ttk.Button(self.button_frame, text="Move Left")
-        # self.new_button = ttk.Button(self.button_frame, text="New")
-        # self.delete_button = ttk.Button(self.button_frame, text="Delete")
-        # self.move_right_button = ttk.Button(self.button_frame, text="Move Right")
-        #
-        # self.move_left_button.grid(row=0, column=0)
-        # self.new_button.grid(row=0, column=1)
-        # self.delete_button.grid(row=0, column=2)
-        # self.move_right_button.grid(row=0, column=3)
-
+        # self.button_frame.pack(side="bottom")
         self.button_frame.pack(side="bottom")
-
 
     def mouse_leave(self, event):
         self.button_frame.pack_forget()
