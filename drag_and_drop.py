@@ -5,6 +5,11 @@ from Tree_Widgets import TabBarTree
 
 class ClientDragManager:
     def __init__(self, m_update_size_new_item, target_frame):
+        self.move_left_button = None
+        self.new_button = None
+        self.delete_button = None
+        self.move_right_button = None
+        self.button_frame = None
         self.tree_row = 0
         self.tree_col = 0
         self.tab_tree_index = 1
@@ -40,14 +45,28 @@ class ClientDragManager:
         if target == self.target_frame:
             for item in self.tree_selection:
                 client_frame = ttk.Frame(target)
-                TabTreeMouseOver(client_frame)
                 tree = TabBarTree(client_frame, self.tab_tree_index, item)
-                # print(f'Tab Tree Index {self.tab_tree_index}')
+                self.button_frame = ttk.Frame(client_frame)
+                self.button_frame.rowconfigure(0, weight=1, uniform='a')
+                self.button_frame.columnconfigure(0, weight=1, uniform='a')
+                self.button_frame.columnconfigure(1, weight=1, uniform='a')
+                self.button_frame.columnconfigure(2, weight=1, uniform='a')
+                self.button_frame.columnconfigure(3, weight=1, uniform='a')
+                button_width = 5
+                self.move_left_button = ttk.Button(self.button_frame, text="\u2B9C", width=button_width)
+                self.new_button = ttk.Button(self.button_frame, text="+", width=button_width)
+                self.delete_button = ttk.Button(self.button_frame, text=u"\U0001F5D1", width=button_width)
+                self.move_right_button = ttk.Button(self.button_frame, text="\u2B9E", width=button_width)
+                self.move_left_button.grid(row=0, column=0)
+                self.new_button.grid(row=0, column=1)
+                self.delete_button.grid(row=0, column=2)
+                self.move_right_button.grid(row=0, column=3)
+                TabTreeMouseOver(self.button_frame, client_frame)
                 tree.pack(expand=True, fill='both')
                 tree_padx = 5
                 tree_pady = 10
+                client_frame.grid(row=self.tree_row, column=self.tree_col, padx=tree_padx, pady=tree_pady, sticky="nsew")
                 client_frame.grid_propagate(False)
-                client_frame.grid(row=self.tree_row, column=self.tree_col, padx=tree_padx, pady=tree_pady,sticky="new")
                 target.update_idletasks()
                 height = client_frame.winfo_height() * (self.tree_row + 1) + (((self.tree_row + 1) * 2) * tree_pady)
                 self.m_update_size_new_item(height)
@@ -105,15 +124,32 @@ class CommandDragManager:
 
 
 class TabTreeMouseOver:
-    def __init__(self, frame):
-        self.frame = frame
-        self.test_button = None
-        self.frame.bind('<Enter>', self.mouse_over)
-        self.frame.bind('<Leave>', self.mouse_leave)
+    def __init__(self, button_frame, client_frame):
+        self.button_frame = button_frame
+        self.client_frame = client_frame
+        self.client_frame.bind('<Enter>', self.mouse_over)
+        self.client_frame.bind('<Leave>', self.mouse_leave)
 
     def mouse_over(self, event):
-        self.test_button = ttk.Button(self.frame, text="Delete")
-        self.test_button.pack(side="bottom")
+        # self.button_frame = ttk.Frame(self.frame)
+        # self.button_frame.rowconfigure(0, weight=1, uniform='a')
+        # self.button_frame.columnconfigure(0, weight=1, uniform='a')
+        # self.button_frame.columnconfigure(1, weight=1, uniform='a')
+        # self.button_frame.columnconfigure(2, weight=1, uniform='a')
+        # self.button_frame.columnconfigure(3, weight=1, uniform='a')
+        #
+        # self.move_left_button = ttk.Button(self.button_frame, text="Move Left")
+        # self.new_button = ttk.Button(self.button_frame, text="New")
+        # self.delete_button = ttk.Button(self.button_frame, text="Delete")
+        # self.move_right_button = ttk.Button(self.button_frame, text="Move Right")
+        #
+        # self.move_left_button.grid(row=0, column=0)
+        # self.new_button.grid(row=0, column=1)
+        # self.delete_button.grid(row=0, column=2)
+        # self.move_right_button.grid(row=0, column=3)
+
+        self.button_frame.pack(side="bottom")
+
 
     def mouse_leave(self, event):
-        self.test_button.pack_forget()
+        self.button_frame.pack_forget()
