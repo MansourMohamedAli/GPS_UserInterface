@@ -135,7 +135,6 @@ class Configuration(tk.Toplevel):
         self.top_bar_frame.grid(row=0, column=1, sticky='nsew', padx=(5, 5), pady=(10, 10))
         self.bot_bar_frame.grid(row=2, column=1, sticky='nsew', padx=(5, 5), pady=(10, 10))
 
-
         style = ttk.Style(self)
         style.theme_use('clam')
 
@@ -184,6 +183,7 @@ class ScrollFrame(ttk.Frame):
 
         # display frame
         self.frame = ttk.Frame(self)
+        # self.frame.rowconfigure(self.tree_row, minsize=280)
 
         # Adding new tag for frame to allow scroll on TabTree and background.
         self.new_tags = self.frame.bindtags() + ("scroll_frame_widgets",)

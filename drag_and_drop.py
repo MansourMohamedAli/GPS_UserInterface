@@ -44,6 +44,7 @@ class ClientDragManager:
         target = event.widget.winfo_containing(x, y)
         if target == self.target_frame:
             for item in self.tree_selection:
+                target.rowconfigure(self.tree_row, minsize=260)
                 client_frame = ttk.Frame(target)
                 tree = TabBarTree(client_frame, self.tab_tree_index, item)
                 self.button_frame = ttk.Frame(client_frame)
@@ -61,12 +62,23 @@ class ClientDragManager:
                 self.new_button.grid(row=0, column=1)
                 self.delete_button.grid(row=0, column=2)
                 self.move_right_button.grid(row=0, column=3)
+
+                scroll_tags = self.move_left_button.bindtags() + ("scroll_frame_widgets",)
+                self.move_left_button.bindtags(scroll_tags)
+                self.new_button.bindtags(scroll_tags)
+                self.delete_button.bindtags(scroll_tags)
+                self.move_right_button.bindtags(scroll_tags)
+
+                scroll_tags = self.button_frame.bindtags() + ("scroll_frame_widgets",)
+                self.button_frame.bindtags(scroll_tags)
+
+                # tree.pack(expand=True, fill='both')
+                tree.pack(expand=False, fill='both')
                 TabTreeMouseOver(self.button_frame, client_frame)
-                tree.pack(expand=True, fill='both')
                 tree_padx = 5
-                tree_pady = 10
+                tree_pady = 0
                 client_frame.grid(row=self.tree_row, column=self.tree_col, padx=tree_padx, pady=tree_pady, sticky="nsew")
-                client_frame.grid_propagate(False)
+                target.grid_propagate(False)
                 target.update_idletasks()
                 height = client_frame.winfo_height() * (self.tree_row + 1) + (((self.tree_row + 1) * 2) * tree_pady)
                 self.m_update_size_new_item(height)
@@ -127,29 +139,13 @@ class TabTreeMouseOver:
     def __init__(self, button_frame, client_frame):
         self.button_frame = button_frame
         self.client_frame = client_frame
+        # self.scroll_tags = self.button_frame.bindtags() + ("scroll_frame_widgets",)
+        # self.button_frame.bindtags(self.scroll_tags)
         self.client_frame.bind('<Enter>', self.mouse_over)
         self.client_frame.bind('<Leave>', self.mouse_leave)
 
     def mouse_over(self, event):
-        # self.button_frame = ttk.Frame(self.frame)
-        # self.button_frame.rowconfigure(0, weight=1, uniform='a')
-        # self.button_frame.columnconfigure(0, weight=1, uniform='a')
-        # self.button_frame.columnconfigure(1, weight=1, uniform='a')
-        # self.button_frame.columnconfigure(2, weight=1, uniform='a')
-        # self.button_frame.columnconfigure(3, weight=1, uniform='a')
-        #
-        # self.move_left_button = ttk.Button(self.button_frame, text="Move Left")
-        # self.new_button = ttk.Button(self.button_frame, text="New")
-        # self.delete_button = ttk.Button(self.button_frame, text="Delete")
-        # self.move_right_button = ttk.Button(self.button_frame, text="Move Right")
-        #
-        # self.move_left_button.grid(row=0, column=0)
-        # self.new_button.grid(row=0, column=1)
-        # self.delete_button.grid(row=0, column=2)
-        # self.move_right_button.grid(row=0, column=3)
-
         self.button_frame.pack(side="bottom")
-
 
     def mouse_leave(self, event):
         self.button_frame.pack_forget()
