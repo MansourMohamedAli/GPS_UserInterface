@@ -39,15 +39,17 @@ class CommandListTree(ttk.Treeview):
 
 
 class TabBarTree(ttk.Treeview):
-    def __init__(self, parent, tab_tree_index, *args):
+    def __init__(self, parent, row, column, *args):
         # todo change "*args" argument to a list
         super().__init__(master=parent, columns=args, show='headings')
         self.args = args
         self.parent = parent
         self.get_tree_headings()
         self.bind('<Delete>', self.delete_row)
-        self.tab_tree_index = tab_tree_index
         self.tree_name = "tab_tree"
+        self.row = row
+        self.column = column
+        # print(f'Row:{self.row}, Column:{self.column}')
 
         self.no_scroll_tags = self.bindtags()
         # Adding new tag for frame to allow scroll on TabTree and background.
