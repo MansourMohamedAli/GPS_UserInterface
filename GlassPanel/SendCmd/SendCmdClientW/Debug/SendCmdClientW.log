@@ -1,0 +1,9 @@
+﻿cl : command line  warning D9035: option 'Gm' has been deprecated and will be removed in a future release
+  StdAfx.cpp
+cl : command line  warning D9035: option 'Gm' has been deprecated and will be removed in a future release
+  cmdline.cpp
+cl : command line  warning D9035: option 'Gm' has been deprecated and will be removed in a future release
+  SendCmdClientWDlg.cpp
+  SendCmdClientW.cpp
+  Generating Code...
+  SendCmdClientW.vcxproj -> C:\Trex\Lightning\GlassPanel\SendCmd\SendCmdClientW\Debug\SendCmdClientW.exe
