@@ -1,14 +1,1 @@
-﻿cl : command line  warning D9035: option 'Gm' has been deprecated and will be removed in a future release
-  SendCmdClient.c
-C:\Trex\Lightning\GlassPanel\SendCmd\SendCmdClient\SendCmdClient.c(53,3): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Trex\Lightning\GlassPanel\SendCmd\SendCmdClient\SendCmdClient.c(60,3): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Trex\Lightning\GlassPanel\SendCmd\SendCmdClient\SendCmdClient.c(66,2): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Trex\Lightning\GlassPanel\SendCmd\SendCmdClient\SendCmdClient.c(92,30): warning C4996: 'inet_addr': Use inet_pton() or InetPton() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
-C:\Trex\Lightning\GlassPanel\SendCmd\SendCmdClient\SendCmdClient.c(97,8): warning C4996: 'gethostbyname': Use getaddrinfo() or GetAddrInfoW() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
-C:\Trex\Lightning\GlassPanel\SendCmd\SendCmdClient\SendCmdClient.c(117,12): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Trex\Lightning\GlassPanel\SendCmd\SendCmdClient\SendCmdClient.c(126,17): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Trex\Lightning\GlassPanel\SendCmd\SendCmdClient\SendCmdClient.c(139,8): warning C4996: 'gethostbyname': Use getaddrinfo() or GetAddrInfoW() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
-C:\Trex\Lightning\GlassPanel\SendCmd\SendCmdClient\SendCmdClient.c(254,33): warning C4996: 'inet_addr': Use inet_pton() or InetPton() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
-C:\Trex\Lightning\GlassPanel\SendCmd\SendCmdClient\SendCmdClient.c(255,33): warning C4996: 'inet_addr': Use inet_pton() or InetPton() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
-C:\Trex\Lightning\GlassPanel\SendCmd\SendCmdClient\SendCmdClient.c(263): warning C4172: returning address of local variable or temporary: CardAddr
-  SendCmdClient.vcxproj -> C:\Trex\Lightning\GlassPanel\SendCmd\SendCmdClient\Debug\SendCmdClient.exe
+﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(497,5): error MSB8041: MFC libraries are required for this project. Install them from the Visual Studio installer (Individual Components tab) for any toolsets and architectures being used.

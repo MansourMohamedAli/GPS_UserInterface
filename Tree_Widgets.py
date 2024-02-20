@@ -39,7 +39,7 @@ class CommandListTree(ttk.Treeview):
 
 
 class TabBarTree(ttk.Treeview):
-    def __init__(self, parent, row, column, *args):
+    def __init__(self, parent, tree_index, *args):
         # todo change "*args" argument to a list
         super().__init__(master=parent, columns=args, show='headings')
         self.args = args
@@ -47,8 +47,7 @@ class TabBarTree(ttk.Treeview):
         self.get_tree_headings()
         self.bind('<Delete>', self.delete_row)
         self.tree_name = "tab_tree"
-        self.row = row
-        self.column = column
+        self.tree_index = tree_index
         # print(f'Row:{self.row}, Column:{self.column}')
 
         self.no_scroll_tags = self.bindtags()
