@@ -48,6 +48,8 @@ class TabBarTree(ttk.Treeview):
         self.bind('<Delete>', self.delete_row)
         self.tree_name = "tab_tree"
         self.tree_index = tree_index
+        self.row = None
+        self.column = None
         # print(f'Row:{self.row}, Column:{self.column}')
 
         self.no_scroll_tags = self.bindtags()

@@ -2,18 +2,10 @@ import tkinter as tk
 from tkinter import ttk
 from Tree_Widgets import TabBarTree
 from math import floor
-import time
 
 
 class ClientDragManager:
     def __init__(self, m_update_size_new_item, target_frame):
-        self.move_left_button = None
-        self.new_button = None
-        self.delete_button = None
-        self.move_right_button = None
-        self.button_frame = None
-        self.tree_row = 1
-        self.tree_col = 1
         self.tab_tree_index = 0
         self.widget = None
         self.tree_selection = list()
@@ -48,84 +40,51 @@ class ClientDragManager:
         target = event.widget.winfo_containing(x, y)
         if target == self.target_frame:
             for item in self.tree_selection:
-                target.rowconfigure(self.tree_row, minsize=260)
-                client_frame = ttk.Frame(target)
-                tree = TabBarTree(client_frame, self.tab_tree_index, item)
-                tree.pack(expand=False, fill='both')
-                TabTreeMouseOver(tree, client_frame, self.tree_list, self.client_frame_list)
-                tree_pad_x = 5
-                tree_pad_y = 0
-                client_frame.grid(row=self.tree_row, column=self.tree_col,
-                                  padx=tree_pad_x,
-                                  pady=tree_pad_y,
-                                  sticky="nsew")
-                target.grid_propagate(False)
-                target.update_idletasks()
-                height = client_frame.winfo_height() * self.tree_row + ((self.tree_row * 2) * tree_pad_y)
-                self.m_update_size_new_item(height)
-                self.tree_row, self.tree_col = self.update_row_column(self.tree_row,
-                                                                      self.tree_col)
-                self.tree_list.append(tree)
-                self.client_frame_list.append(client_frame)
+                self.pack_trees(item)
                 self.tab_tree_index += 1
         self.tree_selection.clear()
 
+    def pack_trees(self, item):
+        client_frame = ClientFrame(self.target_frame, self.tab_tree_index)
+        tree = TabBarTree(client_frame, self.tab_tree_index, item)
+        client_frame_row, client_frame_col = self.assign_row_column(tree, self.tab_tree_index)
+        self.target_frame.rowconfigure(client_frame_row, minsize=260)
+        tree.pack(expand=False, fill='both')
+        TabTreeMouseOver(client_frame, self.client_frame_list, self.target_frame)
+
+        tree_pad_x = 5
+        tree_pad_y = 0
+
+        client_frame.grid(row=client_frame_row, column=client_frame_col,
+                          padx=tree_pad_x,
+                          pady=tree_pad_y,
+                          sticky="nsew")
+
+        self.target_frame.grid_propagate(False)
+        self.target_frame.update_idletasks()
+        height = client_frame.winfo_height() * client_frame_row + ((client_frame_row * 2) * tree_pad_y)
+        self.m_update_size_new_item(height)
+        self.tree_list.append(tree)
+        self.client_frame_list.append(client_frame)
+
     @staticmethod
-    def update_row_column(row, column):
-        if column >= 5:
-            row += 1
-            column = 1
-        else:
-            column += 1
-        return row, column
+    def assign_row_column(tree, tree_index):
+        tree.row = (floor(tree_index / 5)) + 1
+        tree.column = (tree_index % 5) + 1
+        return tree.row, tree.column
 
 
-class CommandDragManager:
-    def __init__(self):
-        self.widget = None
-        self.tree_selection = list()
-
-    def add_dragable(self, widget):
-        self.widget = widget
-        widget.bind('<<TreeviewSelect>>', self.on_start)
-        # widget.bind("<B1-Motion>", self.on_drag) # todo
-        widget.bind("<ButtonRelease-1>", self.on_drop)
-        widget.configure(cursor="hand1")
-
-    def on_start(self, event):
-        for i in self.widget.selection():
-            self.tree_selection.append(self.widget.item(i)['values'][0])
-        # you could use this method to create a floating window
-        # that represents what is being dragged.
-        # todo
-
-    def on_drag(self, event):
-        # you could use this method to move a floating window that
-        # represents what you're dragging
-        # todo
-        pass
-
-    def on_drop(self, event):
-        # find the widget under the cursor
-        x, y = event.widget.winfo_pointerxy()
-        target = event.widget.winfo_containing(x, y)
-        try:
-            if target.tree_name == "tab_tree":
-                for item in self.tree_selection:
-                    target.insert(parent='', index=tk.END, values=[item])
-        except:
-            pass
-        self.tree_selection.clear()
+class ClientFrame(ttk.Frame):
+    def __init__(self, parent, index):
+        super().__init__(master=parent)
+        self.index = index
 
 
 class TabTreeMouseOver:
-    def __init__(self, tree, client_frame, tree_list, client_frame_list):
-        self.tree = tree
+    def __init__(self, client_frame, client_frame_list, target_frame):
         self.client_frame = client_frame
-        self.tree_list = tree_list
+        self.target_frame = target_frame
         self.client_frame_list = client_frame_list
-        # self.scroll_tags = self.button_frame.bindtags() + ("scroll_frame_widgets",)
-        # self.button_frame.bindtags(self.scroll_tags)
         self.client_frame.bind('<Enter>', self.mouse_over)
         self.client_frame.bind('<Leave>', self.mouse_leave)
         self.button_frame = ttk.Frame(client_frame)
@@ -164,53 +123,77 @@ class TabTreeMouseOver:
         self.button_frame.pack_forget()
 
     def move_left(self):
-        print("Before Left Press")
-        print(f'Clicked on {self.tree.args[0]}, tree index: {self.tree.tree_index}')
-
-        for tree in self.tree_list:
-            print(f'{tree.args[0]}, tree index: {tree.tree_index}')
-
         self.shift_index_down()
-        self.re_sort(self.tree_list)
+        self.re_sort(self.client_frame_list)
+        self.unpack_client_frame()
 
-        print("\nAfter Left Press")
-        for tree in self.tree_list:
-            print(f'{tree.args[0]}, tree index: {tree.tree_index}')
+        for frame in self.client_frame_list:
+            row, column = self.get_row_and_column(frame.index)
+            self.repack_client_frame(frame, row, column)
 
-        # self.unpack_tree()
-
-    def unpack_tree(self):
+    def unpack_client_frame(self):
         for frame in self.client_frame_list:
             frame.grid_forget()
-        self.client_frame_list.clear()
 
     def shift_index_down(self):
-        for item in self.tree_list:
-            if (self.tree.tree_index - item.tree_index) == 1:  # one below
-                item.tree_index += 1
-        self.tree.tree_index -= 1
-        self.tree.tree_index = max(self.tree.tree_index, 0)  # Limit to 0
+        for client_frame in self.client_frame_list:
+            if (self.client_frame.index - client_frame.index) == 1:  # one below
+                client_frame.index += 1
+        self.client_frame.index -= 1
+        self.client_frame.index = max(self.client_frame.index, 0)  # Limit to 0
 
     @staticmethod
-    def shift_row_and_col_left(tree_index):
-        row = (floor(tree_index / 5)) + 1
-        column = (tree_index % 5) + 1
-        # print(f'Tree Row:{row}, Tree Column:{column}')
-        old_row = row
-        old_col = column
-        if row != 1:
-            if column > 1:
-                column -= 1
-            elif column == 1:
-                row -= 1
-                column = 5
-        elif column > 1:
-            column -= 1
+    def get_row_and_column(client_frame_index):
+        row = (floor(client_frame_index / 5)) + 1
+        column = (client_frame_index % 5) + 1
         return row, column
 
     @staticmethod
-    def re_sort(tree_list):
-        return tree_list.sort(key=lambda x: x.tree_index)
+    def re_sort(client_frame_list):
+        return client_frame_list.sort(key=lambda x: x.index)
 
-    def repack_trees(self):
+
+    @staticmethod
+    def repack_client_frame(client_frame, row, column):
+        tree_pad_x = 5
+        tree_pad_y = 0
+        client_frame.grid(row=row, column=column,
+                          padx=tree_pad_x,
+                          pady=tree_pad_y,
+                          sticky="nsew")
+
+
+class CommandDragManager:
+    def __init__(self):
+        self.widget = None
+        self.tree_selection = list()
+
+    def add_dragable(self, widget):
+        self.widget = widget
+        widget.bind('<<TreeviewSelect>>', self.on_start)
+        # widget.bind("<B1-Motion>", self.on_drag)
+        widget.bind("<ButtonRelease-1>", self.on_drop)
+        widget.configure(cursor="hand1")
+
+    def on_start(self, event):
+        for i in self.widget.selection():
+            self.tree_selection.append(self.widget.item(i)['values'][0])
+        # you could use this method to create a floating window
+        # that represents what is being dragged.
+
+    def on_drag(self, event):
+        # you could use this method to move a floating window that
+        # represents what you're dragging
         pass
+
+    def on_drop(self, event):
+        # find the widget under the cursor
+        x, y = event.widget.winfo_pointerxy()
+        target = event.widget.winfo_containing(x, y)
+        try:
+            if target.tree_name == "tab_tree":
+                for item in self.tree_selection:
+                    target.insert(parent='', index=tk.END, values=[item])
+        except:
+            pass
+        self.tree_selection.clear()
