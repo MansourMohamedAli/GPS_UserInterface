@@ -50,7 +50,7 @@ class ClientDragManager:
         client_frame_row, client_frame_col = self.assign_row_column(tree, self.tab_tree_index)
         self.target_frame.rowconfigure(client_frame_row, minsize=260)
         tree.pack(expand=False, fill='both')
-        TabTreeMouseOver(client_frame, self.client_frame_list, self.target_frame)
+        TabTreeMouseOver(client_frame, self.client_frame_list, self.target_frame, self.reduce_tab_tree_index)
 
         tree_pad_x = 5
         tree_pad_y = 0
@@ -73,6 +73,9 @@ class ClientDragManager:
         tree.column = (tree_index % 5) + 1
         return tree.row, tree.column
 
+    def reduce_tab_tree_index(self):
+        self.tab_tree_index -= 1
+
 
 class ClientFrame(ttk.Frame):
     def __init__(self, parent, index):
@@ -81,10 +84,11 @@ class ClientFrame(ttk.Frame):
 
 
 class TabTreeMouseOver:
-    def __init__(self, client_frame, client_frame_list, target_frame):
+    def __init__(self, client_frame, client_frame_list, target_frame, m_reduce_tab_tree_index):
         self.client_frame = client_frame
         self.target_frame = target_frame
         self.client_frame_list = client_frame_list
+        self.m_reduce_tab_tree_index = m_reduce_tab_tree_index
         self.client_frame.bind('<Enter>', self.mouse_over)
         self.client_frame.bind('<Leave>', self.mouse_leave)
         self.button_frame = ttk.Frame(client_frame)
@@ -97,12 +101,21 @@ class TabTreeMouseOver:
                                            text="\u2B9C",
                                            width=5,
                                            command=self.move_left)
-        self.new_button = ttk.Button(self.button_frame, text="+", width=5)
-        self.delete_button = ttk.Button(self.button_frame, text=u"\U0001F5D1", width=5)
+
         self.move_right_button = ttk.Button(self.button_frame,
                                             text="\u2B9E",
                                             width=5,
                                             command=self.move_right)
+
+        self.new_button = ttk.Button(self.button_frame,
+                                     text="+",
+                                     width=5)
+
+        self.delete_button = ttk.Button(self.button_frame,
+                                        text=u"\U0001F5D1",
+                                        width=5,
+                                        command=self.delete_client)
+
         self.move_left_button.grid(row=0, column=0)
         self.new_button.grid(row=0, column=1)
         self.delete_button.grid(row=0, column=2)
@@ -129,23 +142,17 @@ class TabTreeMouseOver:
         self.shift_index_up()
         self.re_sort(self.client_frame_list)
         self.unpack_client_frame()
-
-        for frame in self.client_frame_list:
-            row, column = self.get_row_and_column(frame.index)
-            self.repack_client_frame(frame, row, column)
+        for client_frame in self.client_frame_list:
+            row, column = self.get_row_and_column(client_frame.index)
+            self.repack_client_frame(client_frame, row, column)
 
     def move_left(self):
         self.shift_index_down()
         self.re_sort(self.client_frame_list)
         self.unpack_client_frame()
-
-        for frame in self.client_frame_list:
-            row, column = self.get_row_and_column(frame.index)
-            self.repack_client_frame(frame, row, column)
-
-    def unpack_client_frame(self):
-        for frame in self.client_frame_list:
-            frame.grid_forget()
+        for client_frame in self.client_frame_list:
+            row, column = self.get_row_and_column(client_frame.index)
+            self.repack_client_frame(client_frame, row, column)
 
     def shift_index_up(self):
         if self.client_frame.index < self.client_frame_list[-1].index:  # Making sure frame is not last.
@@ -161,6 +168,27 @@ class TabTreeMouseOver:
         self.client_frame.index -= 1
         self.client_frame.index = max(self.client_frame.index, 0)  # Limit to 0
 
+    def delete_client(self):
+        self.unpack_client_frame()
+        for index, client_frame in enumerate(self.client_frame_list):
+            if client_frame.index == self.client_frame.index:
+                del self.client_frame_list[index]
+
+        for client_frame in self.client_frame_list:
+            if client_frame.index > self.client_frame.index:
+                client_frame.index -= 1
+
+        self.re_sort(self.client_frame_list)
+        for client_frame in self.client_frame_list:
+            row, column = self.get_row_and_column(client_frame.index)
+            self.repack_client_frame(client_frame, row, column)
+
+        self.m_reduce_tab_tree_index()  # drop tab tree index by one so next client dragged and dropped doesn't skip
+        # a number
+
+    def unpack_client_frame(self):
+        for frame in self.client_frame_list:
+            frame.grid_forget()
 
     @staticmethod
     def get_row_and_column(client_frame_index):
@@ -190,7 +218,7 @@ class CommandDragManager:
     def add_dragable(self, widget):
         self.widget = widget
         widget.bind('<<TreeviewSelect>>', self.on_start)
-        # widget.bind("<B1-Motion>", self.on_drag)
+        # widget.bind("<B1-Motion>", self.on_drag)  # Todo
         widget.bind("<ButtonRelease-1>", self.on_drop)
         widget.configure(cursor="hand1")
 
@@ -199,10 +227,12 @@ class CommandDragManager:
             self.tree_selection.append(self.widget.item(i)['values'][0])
         # you could use this method to create a floating window
         # that represents what is being dragged.
+        # Todo
 
     def on_drag(self, event):
         # you could use this method to move a floating window that
         # represents what you're dragging
+        # Todo
         pass
 
     def on_drop(self, event):
