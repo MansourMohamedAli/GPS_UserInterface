@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from Tree_Widgets import TabBarTree
 from math import floor
+from command_window import CommandWindow
 
 
 class ClientDragManager:
@@ -50,7 +51,7 @@ class ClientDragManager:
         client_frame_row, client_frame_col = self.assign_row_column(tree, self.tab_tree_index)
         self.target_frame.rowconfigure(client_frame_row, minsize=260)
         tree.pack(expand=False, fill='both')
-        TabTreeMouseOver(client_frame, self.client_frame_list, self.target_frame, self.reduce_tab_tree_index)
+        TabTreeMouseOver(client_frame, self.client_frame_list, self.target_frame, tree, self.reduce_tab_tree_index)
 
         tree_pad_x = 5
         tree_pad_y = 0
@@ -84,10 +85,11 @@ class ClientFrame(ttk.Frame):
 
 
 class TabTreeMouseOver:
-    def __init__(self, client_frame, client_frame_list, target_frame, m_reduce_tab_tree_index):
+    def __init__(self, client_frame, client_frame_list, target_frame, client_tree, m_reduce_tab_tree_index):
         self.client_frame = client_frame
         self.target_frame = target_frame
         self.client_frame_list = client_frame_list
+        self.client_tree = client_tree
         self.m_reduce_tab_tree_index = m_reduce_tab_tree_index
         self.client_frame.bind('<Enter>', self.mouse_over)
         self.client_frame.bind('<Leave>', self.mouse_leave)
@@ -109,7 +111,9 @@ class TabTreeMouseOver:
 
         self.new_button = ttk.Button(self.button_frame,
                                      text="+",
-                                     width=5)
+                                     width=5,
+                                     command=lambda: CommandWindow(self.insert_command,
+                                                                   self.insert_another_command))
 
         self.delete_button = ttk.Button(self.button_frame,
                                         text=u"\U0001F5D1",
@@ -208,6 +212,15 @@ class TabTreeMouseOver:
                           padx=tree_pad_x,
                           pady=tree_pad_y,
                           sticky="nsew")
+
+    def insert_command(self, window_instance, new_command):
+        if new_command:
+            self.client_tree.insert(parent='', index=tk.END, values=new_command)
+        window_instance.destroy()
+
+    def insert_another_command(self, new_command):
+        if new_command:
+            self.client_tree.insert(parent='', index=tk.END, values=new_command)
 
 
 class CommandDragManager:
