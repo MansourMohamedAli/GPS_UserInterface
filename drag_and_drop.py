@@ -99,7 +99,10 @@ class TabTreeMouseOver:
                                            command=self.move_left)
         self.new_button = ttk.Button(self.button_frame, text="+", width=5)
         self.delete_button = ttk.Button(self.button_frame, text=u"\U0001F5D1", width=5)
-        self.move_right_button = ttk.Button(self.button_frame, text="\u2B9E", width=5)
+        self.move_right_button = ttk.Button(self.button_frame,
+                                            text="\u2B9E",
+                                            width=5,
+                                            command=self.move_right)
         self.move_left_button.grid(row=0, column=0)
         self.new_button.grid(row=0, column=1)
         self.delete_button.grid(row=0, column=2)
@@ -122,6 +125,15 @@ class TabTreeMouseOver:
     def mouse_leave(self, event):
         self.button_frame.pack_forget()
 
+    def move_right(self):
+        self.shift_index_up()
+        self.re_sort(self.client_frame_list)
+        self.unpack_client_frame()
+
+        for frame in self.client_frame_list:
+            row, column = self.get_row_and_column(frame.index)
+            self.repack_client_frame(frame, row, column)
+
     def move_left(self):
         self.shift_index_down()
         self.re_sort(self.client_frame_list)
@@ -135,12 +147,20 @@ class TabTreeMouseOver:
         for frame in self.client_frame_list:
             frame.grid_forget()
 
+    def shift_index_up(self):
+        if self.client_frame.index < self.client_frame_list[-1].index:  # Making sure frame is not last.
+            for client_frame in self.client_frame_list:
+                if client_frame.index == (self.client_frame.index + 1):  # One above
+                    client_frame.index -= 1
+            self.client_frame.index += 1
+
     def shift_index_down(self):
         for client_frame in self.client_frame_list:
-            if (self.client_frame.index - client_frame.index) == 1:  # one below
+            if client_frame.index == (self.client_frame.index - 1):  # One below
                 client_frame.index += 1
         self.client_frame.index -= 1
         self.client_frame.index = max(self.client_frame.index, 0)  # Limit to 0
+
 
     @staticmethod
     def get_row_and_column(client_frame_index):
@@ -151,7 +171,6 @@ class TabTreeMouseOver:
     @staticmethod
     def re_sort(client_frame_list):
         return client_frame_list.sort(key=lambda x: x.index)
-
 
     @staticmethod
     def repack_client_frame(client_frame, row, column):
