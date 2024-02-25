@@ -1,1 +1,2 @@
 C:\WorkArea\TRex_Surry\Thundersim\Lightning\GlassPanel\SendCmd\SendCmdClient\Release\SendCmdClient.exe
+C:\Projects\Python\GPS_UserInterface\GlassPanel\SendCmd\SendCmdClient\Release\SendCmdClient.exe

@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\WorkArea\TRex_Surry\Thundersim\Lightning\GlassPanel\SendCmd\SendCmdClient\Release\SendCmdClient.exe</FullPath>
+      <FullPath>C:\Projects\Python\GPS_UserInterface\GlassPanel\SendCmd\SendCmdClient\Release\SendCmdClient.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />
