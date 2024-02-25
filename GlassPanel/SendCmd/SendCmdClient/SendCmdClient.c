@@ -6,6 +6,8 @@
 #include <string.h>
 #include <time.h>
 #include <winsock2.h>
+#include "ctypes.h"
+
 
 #define SIZE 500
 #define DEFAULT_PORT	(52000)
@@ -171,4 +173,22 @@ void usage(void)
 	fprintf(stderr, "Note: To bind to a specific ethernet card set the environment variable\n");
 	fprintf(stderr, "      [%s] to the cards IP address.\n\n", BIND_TO_IP);
 	exit(0);
+}
+
+//char* python_display_test(int x)
+//{
+//	printf(x);
+//	return("complete");
+//	//printf("C Function Imported");
+//}
+
+int python_display_int_arg(int x, int y)
+{
+	return x + y;
+}
+
+void python_display_void_return(int x, int y)
+{
+	printf("%d", x + y);
+
 }

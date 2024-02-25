@@ -1,7 +1,14 @@
+import ctypes
 import tkinter as tk
 from tkinter import ttk
 from configuration import Configuration
+#from ctypes import CDLL
+from ctypes import *
 
+clibrary = CDLL("C:/Projects/Python/GPS_UserInterface/GlassPanel/SendCmd/SendCmdClient/Debug/SendCmdClient.dll")
+# clibrary = CDLL("C:/Projects/Python/GPS_UserInterface/c_test/x64/Debug/c_test.dll")
+func = clibrary.python_display_test
+func.restype = ctypes.c_
 
 class App(tk.Tk):
     def __init__(self, title, dimensions):
@@ -24,7 +31,7 @@ class Menu(ttk.Frame):
         super().__init__(parent)
         self.place(x=0, y=0, relwidth=1, relheight=1)
 
-        self.menu_button_1 = ttk.Button(self, text='Button 1')
+        self.menu_button_1 = ttk.Button(self, text='Button 1', command=self.c_test)
         self.menu_button_2 = ttk.Button(self, text='Button 2')
         self.menu_button_3 = ttk.Button(self, text='Button 3')
         self.menu_button_4 = ttk.Button(self, text='Button 4')
@@ -52,6 +59,10 @@ class Menu(ttk.Frame):
 
         style = ttk.Style(self)
         style.theme_use('clam')
+
+    @staticmethod
+    def c_test():
+        clibrary.main()
 
 
 App('Glass Panel Control', (200, 200))
