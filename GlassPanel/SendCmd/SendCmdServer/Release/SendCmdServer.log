@@ -1,0 +1,6 @@
+﻿  SendCmdServer.c
+C:\WorkArea\TRex_Surry\Thundersim\Lightning\GlassPanel\SendCmd\SendCmdServer\SendCmdServer.c(148,7): warning C4996: 'strnicmp': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _strnicmp. See online help for details.
+C:\WorkArea\TRex_Surry\Thundersim\Lightning\GlassPanel\SendCmd\SendCmdServer\SendCmdServer.c(192,16): warning C4996: 'strdup': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _strdup. See online help for details.
+C:\WorkArea\TRex_Surry\Thundersim\Lightning\GlassPanel\SendCmd\SendCmdServer\SendCmdServer.c(200,7): warning C4996: 'strnicmp': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _strnicmp. See online help for details.
+C:\WorkArea\TRex_Surry\Thundersim\Lightning\GlassPanel\SendCmd\SendCmdServer\SendCmdServer.c(220,7): warning C4996: 'strnicmp': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _strnicmp. See online help for details.
+  SendCmdServer.vcxproj -> C:\WorkArea\TRex_Surry\Thundersim\Lightning\GlassPanel\SendCmd\SendCmdServer\Release\SendCmdServer.exe
