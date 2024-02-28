@@ -40,12 +40,12 @@ class ClientWindow(tk.Toplevel):
         self.buttons_frame = ttk.Frame(self)
         self.done_button = ttk.Button(self.buttons_frame,
                                       text="Done",
-                                      command=lambda: self.m_insert_client(self, self.client_name_entry.get()))
+                                      command=lambda: self.m_insert_client(self, self.collect_entries()))
         # Add Another Button
         self.add_another_button = ttk.Button(self.buttons_frame,
                                              text="Add Another",
                                              command=lambda: self.m_insert_another_client(
-                                                 self.client_name_entry.get()))
+                                                 self.collect_entries()))
         self.done_button.place(relx=0.32, rely=0.25)
         self.add_another_button.place(relx=0.58, rely=0.25)
 
@@ -60,5 +60,13 @@ class ClientWindow(tk.Toplevel):
         self.ip_frame.grid(row=1, column=0, sticky='nsew')
         self.mac_frame.grid(row=2, column=0, sticky='nsew')
         self.buttons_frame.grid(row=3, column=0, sticky='nsew')
+
+    def collect_entries(self):
+        entry_list = list()
+        entry_list. append(self.client_name_entry.get())
+        entry_list.append(self.ip_entry.get())
+        entry_list.append(self.mac_entry.get())
+        return entry_list
+
 
 

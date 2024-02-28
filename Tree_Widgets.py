@@ -9,6 +9,7 @@ class ClientListTree(ttk.Treeview):
         self.parent = parent
         self.get_tree_headings()
         self.bind('<Delete>', self.delete_row)
+        self.client_list = list()
 
     def get_tree_headings(self):
         for arg in self.args:
@@ -18,6 +19,11 @@ class ClientListTree(ttk.Treeview):
         selected_items = self.selection()
         for item in selected_items:
             self.delete(item)
+
+    def append_client_list(self, client):
+        self.client_list.append(client)
+
+
 
 
 class CommandListTree(ttk.Treeview):
@@ -50,7 +56,8 @@ class TabBarTree(ttk.Treeview):
         self.tree_index = tree_index
         self.row = None
         self.column = None
-        # print(f'Row:{self.row}, Column:{self.column}')
+        self.client_name = None
+        self.mac_address = None
 
         self.no_scroll_tags = self.bindtags()
         # Adding new tag for frame to allow scroll on TabTree and background.

@@ -44,10 +44,10 @@ class Configuration(tk.Toplevel):
         self.client_frame.pack(fill='both', expand=True)
 
         self.clients_tree = ClientListTree(self.client_frame, "Clients")
-        i = 0
-        while i < 15:
-            self.clients_tree.insert(parent='', index=i, values=[f"VB{i + 1}"])
-            i += 1
+        #i = 0
+        #while i < 15:
+        #    self.clients_tree.insert(parent='', index=i, values=[f"VB{i + 1}"])
+        #    i += 1
 
         # self.clients_tree.insert(parent='', index=0, values=["VB1"])
         # self.clients_tree.insert(parent='', index=1, values=["VB2"])
@@ -79,14 +79,10 @@ class Configuration(tk.Toplevel):
         # Command List Tree
         self.commands_tree = CommandListTree(self.command_frame, "Commands")
 
-        i = 0
-        while i < 15:
-            self.commands_tree.insert(parent='', index=i, values=[f"Load VB{i + 1}"])
-            i += 1
-
-        # self.commands_tree.insert(parent='', index=0, values=["Load VB1"])
-        # self.commands_tree.insert(parent='', index=1, values=["Load VB2"])
-        # self.commands_tree.insert(parent='', index=2, values=["Load VB3"])
+        #i = 0
+        #while i < 15:
+        #    self.commands_tree.insert(parent='', index=i, values=[f"Load VB{i + 1}"])
+        #    i += 1
 
         self.new_command_button = ttk.Button(self.command_frame,
                                              text="New",
@@ -148,13 +144,16 @@ class Configuration(tk.Toplevel):
             self.commands_tree.insert(parent='', index=tk.END, values=new_command)
 
     def insert_client(self, window_instance, new_client):
-        if new_client:
+        if new_client[0]:
             self.clients_tree.insert(parent='', index=tk.END, values=new_client)
+            self.clients_tree.append_client_list(new_client)
         window_instance.destroy()
 
     def insert_another_client(self, new_client):
-        if new_client:
+        if new_client[0]:
             self.clients_tree.insert(parent='', index=tk.END, values=new_client)
+            self.clients_tree.append_client_list(new_client)
+        print(self.clients_tree.client_list)
 
     @staticmethod
     def delete_row(tree_list):
