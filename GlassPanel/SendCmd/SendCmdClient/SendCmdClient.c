@@ -33,12 +33,13 @@ int send_cmd(char* py_string)
 	char* pBindIP;
 	char** command;
 
-	command = str_split(py_string, ' ');
+	command = str_split(py_string, ',');
 	/* Make sure command line is correct */
 	//if ((num_words < 2) || (num_words > 3))
 	//{
 	//	usage();
 	//}
+	printf(command[1]);
 	port_number = DEFAULT_PORT;
 	// Look for embedded port number
 	pColon = strstr(command[0], ":");
@@ -220,36 +221,6 @@ char* extract_between(const char* str, const char* p1, const char* p2) {
 		}
 	}
 	return NULL;
-}
-
-#include <stdio.h>
-#include <string.h>
-
-int extract_between_quotes(const char* str, const char* p1, const char* p2) {
-	const char* input = "SetVariables \"a\" \"b\" \"c\"";
-	const char* start = "\"";
-	const char* end = "\"";
-
-	char* substring_start = strstr(input, start);
-	if (substring_start) {
-		substring_start += strlen(start); // Move past the opening quote
-		char* substring_end = strstr(substring_start, end);
-		if (substring_end) {
-			size_t length = substring_end - substring_start;
-			char extracted[length + 1];
-			strncpy(extracted, substring_start, length);
-			extracted[length] = '\0'; // Null-terminate the extracted string
-			printf("Extracted substring: %s\n", extracted);
-		}
-		else {
-			printf("Closing quote not found.\n");
-		}
-	}
-	else {
-		printf("Opening quote not found.\n");
-	}
-
-	return 0;
 }
 
 
