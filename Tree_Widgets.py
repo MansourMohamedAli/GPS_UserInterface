@@ -13,7 +13,6 @@ class ClientListTree(ttk.Treeview):
         self.client_list = list()
         self.insert_client(clients)
 
-
     def get_tree_headings(self):
         for arg in self.args:
             self.heading(arg, text=str(arg))
@@ -47,24 +46,55 @@ class ClientListTree(ttk.Treeview):
                 self.insert(parent='', index=tk.END, values=client)
                 self.append_client_list(client)
 
+
 class CommandListTree(ttk.Treeview):
-    def __init__(self, parent, *args):
+    def __init__(self, parent, commands, *args):
         super().__init__(master=parent, columns=args, show='headings')
         self.args = args
         self.parent = parent
         self.get_tree_headings()
         self.bind('<Delete>', self.delete_row)
+        self.command_list = list()
+        self.insert_command(commands)
 
     def get_tree_headings(self):
         for arg in self.args:
             self.heading(arg, text=str(arg))
 
+    # def delete_row(self, event):
+    #     selected_items = self.selection()
+    #     for item in selected_items:
+    #         print(item)
+    #         self.delete(item)
+
     def delete_row(self, event):
         selected_items = self.selection()
-        for item in selected_items:
-            print(item)
-            self.delete(item)
+        print(f"Before removing {self.command_list}")
+        commands_to_delete = list()
+        for command in selected_items:
+            command_full_tree_info = self.item(command)
+            command_info = command_full_tree_info['values']
+            c = list()
+            for item in command_info:
+                c.append(str(item))
+            commands_to_delete.append(c)
+            print(f'command_to_delete = {commands_to_delete}')
+            self.delete(command)
 
+        for command in self.command_list:
+            if command in commands_to_delete:
+                self.command_list.remove(command)
+
+        print(f"After removing {self.command_list}")
+
+    def append_command_list(self, command):
+        self.command_list.append(command)
+
+    def insert_command(self, new_command):
+        for command in new_command:
+            if command[0]:
+                self.insert(parent='', index=tk.END, values=command)
+                self.append_command_list(command)
 
 class TabBarTree(ttk.Treeview):
     def __init__(self, parent, tree_index, *args):

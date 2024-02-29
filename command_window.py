@@ -37,11 +37,11 @@ class CommandWindow(tk.Toplevel):
         #
         self.done_button = ttk.Button(self.buttons_frame,
                                       text="Done",
-                                      command=lambda: self.m_insert_command(self, self.command_name_entry.get()))
+                                      command=lambda: self.m_insert_command(self, self.collect_entries()))
         # Add Another Button
         self.add_another_button = ttk.Button(self.buttons_frame,
                                              text="Add Another",
-                                             command=lambda: self.m_insert_another_command(self.command_name_entry.get()))
+                                             command=lambda: self.m_insert_another_command(self.collect_entries()))
         # Placing Buttons
         self.done_button.place(relx=0.125, rely=0)
         self.add_another_button.place(relx=0.45, rely=0)
@@ -56,3 +56,9 @@ class CommandWindow(tk.Toplevel):
         self.labels_frame.grid(row=0, column=0, rowspan=2, sticky='nsew')
         self.text_frame.grid(row=0, column=1, rowspan=2, sticky='nsew')
         self.buttons_frame.grid(row=1, column=1, sticky='nsew')
+
+    def collect_entries(self):
+        entry_list = list()
+        entry_list.append(self.command_name_entry.get())
+        entry_list.append(self.command_text_box.get("1.0", "end-1c"))
+        return entry_list
