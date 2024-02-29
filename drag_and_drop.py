@@ -3,11 +3,7 @@ from tkinter import ttk
 from Tree_Widgets import TabBarTree
 from math import floor
 from command_window import CommandWindow
-# from ctypes import CDLL
-#
-# # clibrary = CDLL("C:/Projects/Python/GPS_UserInterface/GlassPanel/SendCmd/SendCmdClient/Debug/SendCmdClient.dll")
-# clibrary = CDLL("C:/Projects/Python/GPS_UserInterface/c_test/x64/Debug/c_test.dll")
-# clibrary.display()
+
 
 class ClientDragManager:
     def __init__(self, m_update_size_new_item, target_frame):

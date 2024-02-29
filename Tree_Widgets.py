@@ -3,13 +3,16 @@ from tkinter import ttk
 
 
 class ClientListTree(ttk.Treeview):
-    def __init__(self, parent, *args):
+    def __init__(self, parent, clients, *args):
         super().__init__(master=parent, columns=args, show='headings')
         self.args = args
         self.parent = parent
         self.get_tree_headings()
         self.bind('<Delete>', self.delete_row)
+        # self.clients = clients
         self.client_list = list()
+        self.insert_client(clients)
+
 
     def get_tree_headings(self):
         for arg in self.args:
@@ -17,14 +20,32 @@ class ClientListTree(ttk.Treeview):
 
     def delete_row(self, event):
         selected_items = self.selection()
-        for item in selected_items:
-            self.delete(item)
+        print(f"Before removing {self.client_list}")
+        clients_to_delete = list()
+        for client in selected_items:
+            client_full_tree_info = self.item(client)
+            client_info = client_full_tree_info['values']
+            c = list()
+            for item in client_info:
+                c.append(str(item))
+            clients_to_delete.append(c)
+            print(f'client_to_delete = {clients_to_delete}')
+            self.delete(client)
+
+        for client in self.client_list:
+            if client in clients_to_delete:
+                self.client_list.remove(client)
+
+        print(f"After removing {self.client_list}")
 
     def append_client_list(self, client):
         self.client_list.append(client)
 
-
-
+    def insert_client(self, new_client):
+        for client in new_client:
+            if client[0]:
+                self.insert(parent='', index=tk.END, values=client)
+                self.append_client_list(client)
 
 class CommandListTree(ttk.Treeview):
     def __init__(self, parent, *args):
@@ -41,6 +62,7 @@ class CommandListTree(ttk.Treeview):
     def delete_row(self, event):
         selected_items = self.selection()
         for item in selected_items:
+            print(item)
             self.delete(item)
 
 
