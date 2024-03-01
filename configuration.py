@@ -45,14 +45,6 @@ class Configuration(tk.Toplevel):
 
         clients = [['VB1', '199.199.199.2', 'mac1'], ['VB12', '199.199.199.1', 'mac2'], ['VB5', '199.199.199.3', 'mac3']]
         self.clients_tree = ClientListTree(self.client_frame, clients, "Clients")
-        # i = 0
-        # while i < 15:
-        #    self.clients_tree.insert(parent='', index=i, values=[f"VB{i + 1}"])
-        #    i += 1
-
-        # self.clients_tree.insert(parent='', index=0, values=["VB1"])
-        # self.clients_tree.insert(parent='', index=1, values=["VB2"])
-        # self.clients_tree.insert(parent='', index=2, values=["VB3"])
 
         # New Command Button
         self.new_client_button = ttk.Button(self.client_frame,
@@ -77,15 +69,13 @@ class Configuration(tk.Toplevel):
         self.command_frame.columnconfigure(1, weight=1, uniform='a')
         self.command_frame.pack(fill='both', expand=True)
 
-        commands = [["load", "LOADIJNG!"]]
+        commands = [["load", "LOADIJNG!"],
+                    ["1", "LOADIJNG!"],
+                    ["2", "LOADIJNG!"],
+                    ["3", "LOADIJNG!"]]
+
         # Command List Tree
         self.commands_tree = CommandListTree(self.command_frame, commands, "Commands")
-
-        # i = 0
-        # while i < 15:
-        #    self.commands_tree.insert(parent='', index=i, values=[f"Load VB{i + 1}"])
-        #    i += 1
-
         self.new_command_button = ttk.Button(self.command_frame,
                                              text="New",
                                              command=lambda: CommandWindow(self.insert_command,
@@ -161,24 +151,8 @@ class Configuration(tk.Toplevel):
 
     @staticmethod
     def delete_row(tree):
-        selected_items = tree.selection()
-        print(f"Before removing {tree.client_list}")
-        clients_to_delete = list()
-        for client in selected_items:
-            full_tree_info = tree.item(client)
-            info = full_tree_info['values']
-            i = list()
-            for item in info:
-                i.append(str(item))
-            clients_to_delete.append(i)
-            print(f'client_to_delete = {clients_to_delete}')
-            tree.delete(client)
+        tree.delete_row()
 
-        for item in tree.client_list: #WRONG
-            if item in clients_to_delete:
-                tree.client_list.remove(item)
-
-        print(f"After removing {tree.client_list}")
 
 class ScrollFrame(ttk.Frame):
     def __init__(self, parent, item_height, tree_index, clients_tree, commands_tree):

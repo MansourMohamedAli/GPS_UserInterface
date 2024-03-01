@@ -8,7 +8,7 @@ class ClientListTree(ttk.Treeview):
         self.args = args
         self.parent = parent
         self.get_tree_headings()
-        self.bind('<Delete>', self.delete_row)
+        self.bind('<Delete>', self.delete_row_keyboard_button)
         # self.clients = clients
         self.client_list = list()
         self.insert_client(clients)
@@ -17,9 +17,11 @@ class ClientListTree(ttk.Treeview):
         for arg in self.args:
             self.heading(arg, text=str(arg))
 
-    def delete_row(self, event):
+    def delete_row_keyboard_button(self, event):
+        self.delete_row()
+
+    def delete_row(self):
         selected_items = self.selection()
-        print(f"Before removing {self.client_list}")
         clients_to_delete = list()
         for client in selected_items:
             client_full_tree_info = self.item(client)
@@ -28,14 +30,11 @@ class ClientListTree(ttk.Treeview):
             for item in client_info:
                 c.append(str(item))
             clients_to_delete.append(c)
-            print(f'client_to_delete = {clients_to_delete}')
             self.delete(client)
 
         for client in self.client_list:
             if client in clients_to_delete:
                 self.client_list.remove(client)
-
-        print(f"After removing {self.client_list}")
 
     def append_client_list(self, client):
         self.client_list.append(client)
@@ -53,7 +52,7 @@ class CommandListTree(ttk.Treeview):
         self.args = args
         self.parent = parent
         self.get_tree_headings()
-        self.bind('<Delete>', self.delete_row)
+        self.bind('<Delete>', self.delete_row_keyboard_button)
         self.command_list = list()
         self.insert_command(commands)
 
@@ -61,15 +60,11 @@ class CommandListTree(ttk.Treeview):
         for arg in self.args:
             self.heading(arg, text=str(arg))
 
-    # def delete_row(self, event):
-    #     selected_items = self.selection()
-    #     for item in selected_items:
-    #         print(item)
-    #         self.delete(item)
+    def delete_row_keyboard_button(self, event):
+        self.delete_row()
 
-    def delete_row(self, event):
+    def delete_row(self):
         selected_items = self.selection()
-        print(f"Before removing {self.command_list}")
         commands_to_delete = list()
         for command in selected_items:
             command_full_tree_info = self.item(command)
@@ -78,14 +73,11 @@ class CommandListTree(ttk.Treeview):
             for item in command_info:
                 c.append(str(item))
             commands_to_delete.append(c)
-            print(f'command_to_delete = {commands_to_delete}')
             self.delete(command)
 
         for command in self.command_list:
             if command in commands_to_delete:
                 self.command_list.remove(command)
-
-        print(f"After removing {self.command_list}")
 
     def append_command_list(self, command):
         self.command_list.append(command)
@@ -96,11 +88,11 @@ class CommandListTree(ttk.Treeview):
                 self.insert(parent='', index=tk.END, values=command)
                 self.append_command_list(command)
 
+
 class TabBarTree(ttk.Treeview):
-    def __init__(self, parent, tree_index, *args):
-        # todo change "*args" argument to a list
-        super().__init__(master=parent, columns=args, show='headings')
-        self.args = args
+    def __init__(self, parent, tree_index, headings):
+        super().__init__(master=parent, columns=headings, show='headings')
+        self.headings = headings
         self.parent = parent
         self.get_tree_headings()
         self.bind('<Delete>', self.delete_row)
@@ -131,8 +123,8 @@ class TabBarTree(ttk.Treeview):
             self.scroll_state = False
 
     def get_tree_headings(self):
-        for arg in self.args:
-            self.heading(arg, text=str(arg))
+        for h in self.headings:
+            self.heading(h, text=str(h))
 
     def delete_row(self, event):
         selected_items = self.selection()

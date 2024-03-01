@@ -41,7 +41,7 @@ class ClientDragManager:
         target = event.widget.winfo_containing(x, y)
         if target == self.target_frame:
             for item in self.tree_selection:
-                self.pack_trees(item)
+                self.pack_trees([item,])
                 self.tab_tree_index += 1
         self.tree_selection.clear()
 
