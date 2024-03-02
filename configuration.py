@@ -2,11 +2,17 @@ import tkinter as tk
 from tkinter import ttk
 from command_window import CommandWindow
 from client_window import ClientWindow
+
 from drag_and_drop import (CommandDragManager,
                            ClientDragManager)
-from Tree_Widgets import (ClientListTree,
-                          CommandListTree)
 
+from Tree_Widgets import (ClientListTree,
+                          CommandListTree,
+                          TabBarTree,
+                          ClientFrame,
+                          TabTreeMouseOver)
+
+from math import floor
 
 class Configuration(tk.Toplevel):
     def __init__(self):
@@ -168,6 +174,11 @@ class ScrollFrame(ttk.Frame):
         self.clients_tree = clients_tree
         self.commands_tree = commands_tree
 
+        self.tab_tree_index = 0
+        self.tab_tree_frame_list = list()
+        self.client_list = ["test1", "test2", "test3"]
+
+
         # canvas
         self.canvas = tk.Canvas(self, background='red')
         self.canvas.pack(expand=True, fill='both')
@@ -190,7 +201,12 @@ class ScrollFrame(ttk.Frame):
                                lambda event: self.canvas.yview_scroll(-int(event.delta / 60), "units"))
         self.bind('<Configure>', self.update_size_event)
 
-        client_dnd = ClientDragManager(self.update_size_new_item, self.frame)
+        self.initialize_tab_trees()
+
+        client_dnd = ClientDragManager(self.frame,
+                                       self.tab_tree_index,
+                                       self.pack_trees)
+
         client_dnd.add_dragable(self.clients_tree)
 
         command_dnd = CommandDragManager()
@@ -234,3 +250,43 @@ class ScrollFrame(ttk.Frame):
 
         self.canvas.configure(scrollregion=(0, 0, self.winfo_width(), height))
         self.list_height = height
+
+    def initialize_tab_trees(self):
+        for client in self.client_list:
+            self.pack_trees([client,])
+
+    def pack_trees(self, client):
+        client_frame = ClientFrame(self.frame, self.tab_tree_index)
+        tree = TabBarTree(client_frame, self.tab_tree_index, client)
+        client_frame_row, client_frame_col = self.assign_row_column(tree, self.tab_tree_index)
+        self.frame.rowconfigure(client_frame_row, minsize=260)
+        tree.pack(expand=False, fill='both')
+
+        TabTreeMouseOver(client_frame, self.tab_tree_frame_list, self.frame, tree, self.reduce_tab_tree_index)
+
+        tree_pad_x = 5
+        tree_pad_y = 0
+
+        client_frame.grid(row=client_frame_row, column=client_frame_col,
+                          padx=tree_pad_x,
+                          pady=tree_pad_y,
+                          sticky="nsew")
+
+        self.frame.grid_propagate(False)
+        self.frame.update_idletasks()
+        height = client_frame.winfo_height() * client_frame_row + ((client_frame_row * 2) * tree_pad_y)
+        self.update_size_new_item(height)
+        self.tab_tree_frame_list.append(client_frame)
+        print(self.tab_tree_index)
+        self.tab_tree_index += 1
+
+    @staticmethod
+    def assign_row_column(tree, tree_index):
+        tree.row = (floor(tree_index / 5)) + 1
+        tree.column = (tree_index % 5) + 1
+        return tree.row, tree.column
+
+    def reduce_tab_tree_index(self):
+        self.tab_tree_index -= 1
+
+
