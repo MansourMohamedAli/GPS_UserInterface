@@ -134,22 +134,27 @@ class TabBarTree(ttk.Treeview):
             self.delete(item)
 
 
-class ClientFrame(ttk.Frame):
+class ClientTabFrame(ttk.Frame):
     def __init__(self, parent, index):
         super().__init__(master=parent)
         self.index = index
 
 
 class TabTreeMouseOver:
-    def __init__(self, client_frame, tab_tree_frame_list, target_frame, client_tree, m_reduce_tab_tree_index):
-        self.client_frame = client_frame
-        self.target_frame = target_frame
-        self.tab_tree_frame_list = tab_tree_frame_list
-        self.client_tree = client_tree
+    def __init__(self, client_tab_frame,
+                 client_tab_frame_list,
+                 client_tab_tree,
+                 m_reduce_tab_tree_index,
+                 m_update_scroll_area):
+
+        self.client_tab_frame = client_tab_frame
+        self.client_tab_frame_list = client_tab_frame_list
+        self.client_tab_tree = client_tab_tree
         self.m_reduce_tab_tree_index = m_reduce_tab_tree_index
-        self.client_frame.bind('<Enter>', self.mouse_over)
-        self.client_frame.bind('<Leave>', self.mouse_leave)
-        self.button_frame = ttk.Frame(client_frame)
+        self.m_update_scroll_area = m_update_scroll_area
+        self.client_tab_frame.bind('<Enter>', self.mouse_over)
+        self.client_tab_frame.bind('<Leave>', self.mouse_leave)
+        self.button_frame = ttk.Frame(client_tab_frame)
         self.button_frame.rowconfigure(0, weight=1, uniform='a')
         self.button_frame.columnconfigure(0, weight=1, uniform='a')
         self.button_frame.columnconfigure(1, weight=1, uniform='a')
@@ -200,55 +205,54 @@ class TabTreeMouseOver:
 
     def move_right(self):
         self.shift_index_up()
-        self.re_sort(self.tab_tree_frame_list)
+        self.re_sort(self.client_tab_frame_list)
         self.unpack_client_frame()
-        for client_frame in self.tab_tree_frame_list:
-            row, column = self.get_row_and_column(client_frame.index)
-            self.repack_client_frame(client_frame, row, column)
+        for client_tab_frame in self.client_tab_frame_list:
+            row, column = self.get_row_and_column(client_tab_frame.index)
+            self.repack_client_frame(client_tab_frame, row, column)
 
     def move_left(self):
         self.shift_index_down()
-        self.re_sort(self.tab_tree_frame_list)
+        self.re_sort(self.client_tab_frame_list)
         self.unpack_client_frame()
-        for client_frame in self.tab_tree_frame_list:
-            row, column = self.get_row_and_column(client_frame.index)
-            self.repack_client_frame(client_frame, row, column)
+        for client_tab_frame in self.client_tab_frame_list:
+            row, column = self.get_row_and_column(client_tab_frame.index)
+            self.repack_client_frame(client_tab_frame, row, column)
 
     def shift_index_up(self):
-        if self.client_frame.index < self.tab_tree_frame_list[-1].index:  # Making sure frame is not last.
-            for client_frame in self.tab_tree_frame_list:
-                if client_frame.index == (self.client_frame.index + 1):  # One above
-                    client_frame.index -= 1
-            self.client_frame.index += 1
+        if self.client_tab_frame.index < self.client_tab_frame_list[-1].index:  # Making sure frame is not last.
+            for client_tab_frame in self.client_tab_frame_list:
+                if client_tab_frame.index == (self.client_tab_frame.index + 1):  # One above
+                    client_tab_frame.index -= 1
+            self.client_tab_frame.index += 1
 
     def shift_index_down(self):
-        for client_frame in self.tab_tree_frame_list:
-            if client_frame.index == (self.client_frame.index - 1):  # One below
-                client_frame.index += 1
-        self.client_frame.index -= 1
-        self.client_frame.index = max(self.client_frame.index, 0)  # Limit to 0
+        for client_tab_frame in self.client_tab_frame_list:
+            if client_tab_frame.index == (self.client_tab_frame.index - 1):  # One below
+                client_tab_frame.index += 1
+        self.client_tab_frame.index -= 1
+        self.client_tab_frame.index = max(self.client_tab_frame.index, 0)  # Limit to 0
 
     def delete_client(self):
         self.unpack_client_frame()
-        for index, client_frame in enumerate(self.tab_tree_frame_list):
-            if client_frame.index == self.client_frame.index:
-                del self.tab_tree_frame_list[index]
+        for index, client_tab_frame in enumerate(self.client_tab_frame_list):
+            if client_tab_frame.index == self.client_tab_frame.index:
+                del self.client_tab_frame_list[index]
 
-        for client_frame in self.tab_tree_frame_list:
-            if client_frame.index > self.client_frame.index:
-                client_frame.index -= 1
+        for client_tab_frame in self.client_tab_frame_list:
+            if client_tab_frame.index > self.client_tab_frame.index:
+                client_tab_frame.index -= 1
 
-        self.re_sort(self.tab_tree_frame_list)
-        for client_frame in self.tab_tree_frame_list:
-            row, column = self.get_row_and_column(client_frame.index)
-            self.repack_client_frame(client_frame, row, column)
+        self.re_sort(self.client_tab_frame_list)
+        for client_tab_frame in self.client_tab_frame_list:
+            row, column = self.get_row_and_column(client_tab_frame.index)
+            self.repack_client_frame(client_tab_frame, row, column)
 
-        self.m_reduce_tab_tree_index()  # drop tab tree index by one so next client dragged and dropped doesn't skip
-        # a number
-        print(self.tab_tree_frame_list)
+        # drop tab tree index by one so next client dragged and dropped doesn't skip # a number
+        self.m_reduce_tab_tree_index()
 
     def unpack_client_frame(self):
-        for frame in self.tab_tree_frame_list:
+        for frame in self.client_tab_frame_list:
             frame.grid_forget()
 
     @staticmethod
@@ -258,23 +262,23 @@ class TabTreeMouseOver:
         return row, column
 
     @staticmethod
-    def re_sort(tab_tree_frame_list):
-        return tab_tree_frame_list.sort(key=lambda x: x.index)
+    def re_sort(client_tab_frame_list):
+        return client_tab_frame_list.sort(key=lambda x: x.index)
 
     @staticmethod
-    def repack_client_frame(client_frame, row, column):
+    def repack_client_frame(client_tab_frame, row, column):
         tree_pad_x = 5
         tree_pad_y = 0
-        client_frame.grid(row=row, column=column,
+        client_tab_frame.grid(row=row, column=column,
                           padx=tree_pad_x,
                           pady=tree_pad_y,
                           sticky="nsew")
 
     def insert_command(self, window_instance, new_command):
         if new_command:
-            self.client_tree.insert(parent='', index=tk.END, values=new_command)
+            self.client_tab_tree.insert(parent='', index=tk.END, values=new_command)
         window_instance.destroy()
 
     def insert_another_command(self, new_command):
         if new_command:
-            self.client_tree.insert(parent='', index=tk.END, values=new_command)
+            self.client_tab_tree.insert(parent='', index=tk.END, values=new_command)

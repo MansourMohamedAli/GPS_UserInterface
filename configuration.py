@@ -9,10 +9,11 @@ from drag_and_drop import (CommandDragManager,
 from Tree_Widgets import (ClientListTree,
                           CommandListTree,
                           TabBarTree,
-                          ClientFrame,
+                          ClientTabFrame,
                           TabTreeMouseOver)
 
 from math import floor
+
 
 class Configuration(tk.Toplevel):
     def __init__(self):
@@ -49,7 +50,8 @@ class Configuration(tk.Toplevel):
         self.client_frame.columnconfigure(1, weight=1, uniform='a')
         self.client_frame.pack(fill='both', expand=True)
 
-        clients = [['VB1', '199.199.199.2', 'mac1'], ['VB12', '199.199.199.1', 'mac2'], ['VB5', '199.199.199.3', 'mac3']]
+        clients = [['VB1', '199.199.199.2', 'mac1'], ['VB12', '199.199.199.1', 'mac2'],
+                   ['VB5', '199.199.199.3', 'mac3']]
         self.clients_tree = ClientListTree(self.client_frame, clients, "Clients")
 
         # New Command Button
@@ -174,22 +176,21 @@ class ScrollFrame(ttk.Frame):
         self.clients_tree = clients_tree
         self.commands_tree = commands_tree
 
-        self.tab_tree_index = 0
-        self.tab_tree_frame_list = list()
-        self.client_list = ["test1", "test2", "test3"]
-
+        self.client_tab_tree_index = 0
+        self.client_tab_frame_list = list()
+        self.client_list = ["test1", "test2", "test3", "geertgserdgedszg"]
 
         # canvas
         self.canvas = tk.Canvas(self, background='red')
         self.canvas.pack(expand=True, fill='both')
 
         # display frame
-        self.frame = ttk.Frame(self)
-        # self.frame.rowconfigure(self.tree_row, minsize=280)
+        self.scroll_frame = ttk.Frame(self)
+        # self.scroll_frame.rowconfigure(self.tree_row, minsize=280)
 
         # Adding new tag for frame to allow scroll on TabTree and background.
-        self.new_tags = self.frame.bindtags() + ("scroll_frame_widgets",)
-        self.frame.bindtags(self.new_tags)
+        self.new_tags = self.scroll_frame.bindtags() + ("scroll_frame_widgets",)
+        self.scroll_frame.bindtags(self.new_tags)
 
         # scrollbar
         self.scrollbar = ttk.Scrollbar(self, orient='vertical', command=self.canvas.yview)
@@ -199,12 +200,12 @@ class ScrollFrame(ttk.Frame):
         # events
         self.canvas.bind_class('scroll_frame_widgets', '<MouseWheel>',
                                lambda event: self.canvas.yview_scroll(-int(event.delta / 60), "units"))
-        self.bind('<Configure>', self.update_size_event)
+        self.bind('<Configure>', self.update_scroll_area_resize_event)
 
         self.initialize_tab_trees()
 
-        client_dnd = ClientDragManager(self.frame,
-                                       self.tab_tree_index,
+        client_dnd = ClientDragManager(self.scroll_frame,
+                                       self.client_tab_tree_index,
                                        self.pack_trees)
 
         client_dnd.add_dragable(self.clients_tree)
@@ -212,7 +213,8 @@ class ScrollFrame(ttk.Frame):
         command_dnd = CommandDragManager()
         command_dnd.add_dragable(self.commands_tree)
 
-    def update_size_event(self, event):
+    def update_scroll_area_resize_event(self, event):
+        """Resizing Currently Disabled"""
         if self.list_height >= self.winfo_height():
             height = self.list_height
             self.canvas.bind_class('scroll_frame_widgets', '<MouseWheel>',
@@ -225,12 +227,12 @@ class ScrollFrame(ttk.Frame):
 
         self.canvas.create_window(
             (0, 0),
-            window=self.frame,
+            window=self.scroll_frame,
             anchor='nw',
             width=self.winfo_width(),
             height=height)
 
-    def update_size_new_item(self, new_height):
+    def update_scroll_area(self, new_height):
         if new_height >= self.winfo_height():
             height = new_height
             self.canvas.bind_class('scroll_frame_widgets', '<MouseWheel>',
@@ -243,50 +245,52 @@ class ScrollFrame(ttk.Frame):
 
         self.canvas.create_window(
             (0, 0),
-            window=self.frame,
+            window=self.scroll_frame,
             anchor='nw',
             width=self.winfo_width(),
             height=height)
 
         self.canvas.configure(scrollregion=(0, 0, self.winfo_width(), height))
         self.list_height = height
+        print("Size Updated!")
 
     def initialize_tab_trees(self):
         for client in self.client_list:
-            self.pack_trees([client,])
+            self.pack_trees([client, ])
 
     def pack_trees(self, client):
-        client_frame = ClientFrame(self.frame, self.tab_tree_index)
-        tree = TabBarTree(client_frame, self.tab_tree_index, client)
-        client_frame_row, client_frame_col = self.assign_row_column(tree, self.tab_tree_index)
-        self.frame.rowconfigure(client_frame_row, minsize=260)
-        tree.pack(expand=False, fill='both')
+        client_tab_frame = ClientTabFrame(self.scroll_frame, self.client_tab_tree_index)
+        client_tab_tree = TabBarTree(client_tab_frame, self.client_tab_tree_index, client)
+        client_tab_frame_row, client_tab_frame_col = self.assign_row_column(client_tab_tree, self.client_tab_tree_index)
+        self.scroll_frame.rowconfigure(client_tab_frame_row, minsize=260)
+        client_tab_tree.pack(expand=False, fill='both')
 
-        TabTreeMouseOver(client_frame, self.tab_tree_frame_list, self.frame, tree, self.reduce_tab_tree_index)
+        TabTreeMouseOver(client_tab_frame,
+                         self.client_tab_frame_list,
+                         client_tab_tree,
+                         self.reduce_tab_tree_index,
+                         self.update_scroll_area)
 
         tree_pad_x = 5
         tree_pad_y = 0
 
-        client_frame.grid(row=client_frame_row, column=client_frame_col,
-                          padx=tree_pad_x,
-                          pady=tree_pad_y,
-                          sticky="nsew")
+        client_tab_frame.grid(row=client_tab_frame_row, column=client_tab_frame_col,
+                              padx=tree_pad_x,
+                              pady=tree_pad_y,
+                              sticky="nsew")
 
-        self.frame.grid_propagate(False)
-        self.frame.update_idletasks()
-        height = client_frame.winfo_height() * client_frame_row + ((client_frame_row * 2) * tree_pad_y)
-        self.update_size_new_item(height)
-        self.tab_tree_frame_list.append(client_frame)
-        print(self.tab_tree_index)
-        self.tab_tree_index += 1
+        self.scroll_frame.grid_propagate(False)
+        self.scroll_frame.update_idletasks()
+        height = client_tab_frame.winfo_height() * client_tab_frame_row + ((client_tab_frame_row * 2) * tree_pad_y)
+        self.update_scroll_area(height)
+        self.client_tab_frame_list.append(client_tab_frame)
+        self.client_tab_tree_index += 1
 
     @staticmethod
-    def assign_row_column(tree, tree_index):
-        tree.row = (floor(tree_index / 5)) + 1
-        tree.column = (tree_index % 5) + 1
-        return tree.row, tree.column
+    def assign_row_column(client_tab_frame, client_tab_frame_index):
+        client_tab_frame.row = (floor(client_tab_frame_index / 5)) + 1
+        client_tab_frame.column = (client_tab_frame_index % 5) + 1
+        return client_tab_frame.row, client_tab_frame.column
 
     def reduce_tab_tree_index(self):
-        self.tab_tree_index -= 1
-
-
+        self.client_tab_tree_index -= 1
