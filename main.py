@@ -2,7 +2,11 @@ import tkinter as tk
 from tkinter import ttk
 from configuration import Configuration
 from send_command import send_command
+import socket
+import os
 
+host = socket.gethostname()
+ip_address = socket.gethostbyname(host)
 
 class App(tk.Tk):
     def __init__(self, title, dimensions):
@@ -25,7 +29,7 @@ class Menu(ttk.Frame):
         super().__init__(parent)
         self.place(x=0, y=0, relwidth=1, relheight=1)
 
-        self.menu_button_1 = ttk.Button(self, text='Button 1', command=lambda: send_command("10.0.0.132", "dir"))
+        self.menu_button_1 = ttk.Button(self, text='Button 1', command=lambda: send_command(ip_address, "dir"))
         self.menu_button_2 = ttk.Button(self, text='Button 2')
         self.menu_button_3 = ttk.Button(self, text='Button 3')
         self.menu_button_4 = ttk.Button(self, text='Button 4')
