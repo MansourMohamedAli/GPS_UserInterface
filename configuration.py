@@ -281,8 +281,9 @@ class ScrollFrame(ttk.Frame):
 
         self.scroll_frame.grid_propagate(False)
         self.scroll_frame.update_idletasks()
-        height = client_tab_frame.winfo_height() * client_tab_frame_row + ((client_tab_frame_row * 2) * tree_pad_y)
-        self.update_scroll_area(height)
+        scroll_frame_height = (client_tab_frame.winfo_height() * client_tab_frame_row
+                               + ((client_tab_frame_row * 2) * tree_pad_y))
+        self.update_scroll_area(scroll_frame_height)
         self.client_tab_frame_list.append(client_tab_frame)
         self.client_tab_tree_index += 1
 

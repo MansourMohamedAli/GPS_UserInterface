@@ -250,6 +250,12 @@ class TabTreeMouseOver:
 
         # drop tab tree index by one so next client dragged and dropped doesn't skip # a number
         self.m_reduce_tab_tree_index()
+        # Get index of last frame as that is what determines the scroll area. Or I could count items in frame list.
+        last_frame = self.client_tab_frame_list[-1].index
+        last_row, last_column = self.get_row_and_column(last_frame)
+        scroll_frame_height = (self.client_tab_frame.winfo_height() * last_row
+                               + ((last_row * 2) * 0))
+        self.m_update_scroll_area(scroll_frame_height)
 
     def unpack_client_frame(self):
         for frame in self.client_tab_frame_list:
