@@ -5,9 +5,9 @@ from command_window import CommandWindow
 
 
 class ClientListTree(ttk.Treeview):
-    def __init__(self, parent, clients, *args):
-        super().__init__(master=parent, columns=args, show='headings')
-        self.args = args
+    def __init__(self, parent, clients, headings):
+        super().__init__(master=parent, columns=headings, show='headings')
+        self.headings = headings
         self.parent = parent
         self.get_tree_headings()
         self.bind('<Delete>', self.delete_row_keyboard_button)
@@ -16,8 +16,8 @@ class ClientListTree(ttk.Treeview):
         self.insert_client(clients)
 
     def get_tree_headings(self):
-        for arg in self.args:
-            self.heading(arg, text=str(arg))
+        for heading in self.headings:
+            self.heading(heading, text=str(heading))
 
     def delete_row_keyboard_button(self, event):
         self.delete_row()
@@ -49,9 +49,9 @@ class ClientListTree(ttk.Treeview):
 
 
 class CommandListTree(ttk.Treeview):
-    def __init__(self, parent, commands, *args):
-        super().__init__(master=parent, columns=args, show='headings')
-        self.args = args
+    def __init__(self, parent, commands, headings):
+        super().__init__(master=parent, columns=headings, show='headings')
+        self.headings = headings
         self.parent = parent
         self.get_tree_headings()
         self.bind('<Delete>', self.delete_row_keyboard_button)
@@ -59,8 +59,8 @@ class CommandListTree(ttk.Treeview):
         self.insert_command(commands)
 
     def get_tree_headings(self):
-        for arg in self.args:
-            self.heading(arg, text=str(arg))
+        for heading in self.headings:
+            self.heading(heading, text=str(heading))
 
     def delete_row_keyboard_button(self, event):
         self.delete_row()
@@ -104,6 +104,9 @@ class TabBarTree(ttk.Treeview):
         self.column = None
         self.client_name = None
         self.mac_address = None
+        self.commands_dict = dict()
+        self.commands = list()
+        self.initialize_commands()
 
         self.no_scroll_tags = self.bindtags()
         # Adding new tag for frame to allow scroll on TabTree and background.
@@ -112,6 +115,10 @@ class TabBarTree(ttk.Treeview):
         self.bind('<ButtonPress-1>', self.enable_scroll)
         self.bind('<<TreeviewSelect>>', self.disable_scroll)
         self.scroll_state = True
+
+    def initialize_commands(self):
+        for command in self.commands:
+            self.insert(parent='', index=tk.END, values=command)
 
     def enable_scroll(self, event):
         if not self.scroll_state:

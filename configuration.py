@@ -21,7 +21,9 @@ class Configuration(tk.Toplevel):
         self.title('Configuration')
         self.geometry("1340x600")
         self.resizable(False, False)
-        # seZlf.minsize(400, 300)
+        # self.minsize(400, 300)
+        self.tab_tree_list = dict()
+        self.tab1_list = ["test", "test"]
 
         self.tab_frame = ttk.Frame(self, relief=tk.GROOVE)
         self.side_bar_frame = ttk.Frame(self, relief=tk.GROOVE)
@@ -52,7 +54,7 @@ class Configuration(tk.Toplevel):
 
         clients = [['VB1', '199.199.199.2', 'mac1'], ['VB12', '199.199.199.1', 'mac2'],
                    ['VB5', '199.199.199.3', 'mac3']]
-        self.clients_tree = ClientListTree(self.client_frame, clients, "Clients")
+        self.clients_tree = ClientListTree(self.client_frame, clients, ["Clients"])
 
         # New Command Button
         self.new_client_button = ttk.Button(self.client_frame,
@@ -83,7 +85,7 @@ class Configuration(tk.Toplevel):
                     ["3", "LOADIJNG!"]]
 
         # Command List Tree
-        self.commands_tree = CommandListTree(self.command_frame, commands, "Commands")
+        self.commands_tree = CommandListTree(self.command_frame, commands, ["Commands"])
         self.new_command_button = ttk.Button(self.command_frame,
                                              text="New",
                                              command=lambda: CommandWindow(self.insert_command,
@@ -100,15 +102,19 @@ class Configuration(tk.Toplevel):
         self.delete_command_button.grid(row=1, column=1, padx=5, pady=5)
 
         # Tab Frame configuration
-        self.tabs = ttk.Notebook(self.tab_frame, width=1080, height=self.tab_frame.winfo_height())
+        # self.tabs = ttk.Notebook(self.tab_frame, width=1080, height=self.tab_frame.winfo_height())
+        self.tabs = ttk.Notebook(self.tab_frame, width=1080)
         self.tab_frame.rowconfigure(0, weight=1)
         self.tab_frame.columnconfigure(0, weight=1)
 
         # Creating Tab 1
         self.tab1 = tk.Frame(self.tabs)
-        self.tab1_dict = dict()
-        self.tab1_scroll = ScrollFrame(self.tab1, 10, 1, self.clients_tree, self.commands_tree)
-
+        self.tab1_scroll = ScrollFrame(self.tab1,
+                                       10,
+                                       1,
+                                       self.clients_tree,
+                                       self.commands_tree)
+        self.tab1_scroll.pack(expand=True, fill='both')
         # Creating Tab 2
         self.tab2 = tk.Frame(self.tabs)
 
@@ -165,12 +171,10 @@ class Configuration(tk.Toplevel):
 class ScrollFrame(ttk.Frame):
     def __init__(self, parent, item_height, tree_index, clients_tree, commands_tree):
         super().__init__(master=parent)
-        self.pack(expand=True, fill='both')
+        # self.pack(expand=True, fill='both')
 
         # widget data
         self.tree_index = tree_index
-        self.tree_row = 0
-        self.tree_col = 0
         self.item_height = item_height
         self.list_height = (self.tree_index * item_height)  # Five items per row
         self.clients_tree = clients_tree
@@ -186,7 +190,6 @@ class ScrollFrame(ttk.Frame):
 
         # display frame
         self.scroll_frame = ttk.Frame(self)
-        # self.scroll_frame.rowconfigure(self.tree_row, minsize=280)
 
         # Adding new tag for frame to allow scroll on TabTree and background.
         self.new_tags = self.scroll_frame.bindtags() + ("scroll_frame_widgets",)
@@ -212,6 +215,7 @@ class ScrollFrame(ttk.Frame):
 
         command_dnd = CommandDragManager()
         command_dnd.add_dragable(self.commands_tree)
+
 
     def update_scroll_area_resize_event(self, event):
         """Resizing Currently Disabled"""
@@ -252,7 +256,7 @@ class ScrollFrame(ttk.Frame):
 
         self.canvas.configure(scrollregion=(0, 0, self.winfo_width(), height))
         self.list_height = height
-        print("Size Updated!")
+        # print("Size Updated!")
 
     def initialize_tab_trees(self):
         for client in self.client_list:
