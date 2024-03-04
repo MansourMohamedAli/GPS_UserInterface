@@ -41,7 +41,7 @@ class ClientListTree(ttk.Treeview):
 
     def append_client_list(self, client):
         self.client_list.append(client)
-        print(self.client_list)
+        # print(self.client_list)
 
     def insert_client(self, new_client_list):
         for new_client in new_client_list:
@@ -51,14 +51,14 @@ class ClientListTree(ttk.Treeview):
 
 
 class CommandListTree(ttk.Treeview):
-    def __init__(self, parent, commands, headings):
+    def __init__(self, parent, new_command_list, headings):
         super().__init__(master=parent, columns=headings, show='headings')
         self.headings = headings
         self.parent = parent
         self.get_tree_headings()
         self.bind('<Delete>', self.delete_row_keyboard_button)
         self.command_list = list()
-        self.insert_command(commands)
+        self.insert_command(new_command_list)
 
     def get_tree_headings(self):
         for heading in self.headings:
@@ -87,11 +87,11 @@ class CommandListTree(ttk.Treeview):
         self.command_list.append(command)
         # print(self.command_list)
 
-    def insert_command(self, new_command):
-        for command in new_command:
-            if command[0]:
-                self.insert(parent='', index=tk.END, values=command)
-                self.append_command_list(command)
+    def insert_command(self, new_command_list):
+        for new_command in new_command_list:
+            if new_command:
+                self.insert(parent='', index=tk.END, values=[*new_command])
+                self.append_command_list(new_command)
 
 
 class TabBarTree(ttk.Treeview):
@@ -261,6 +261,7 @@ class TabTreeMouseOver:
         # drop tab tree index by one so next client dragged and dropped doesn't skip # a number
         self.m_reduce_tab_tree_index()
         # Get index of last frame as that is what determines the scroll area. Or I could count items in frame list.
+        # todo
         last_frame = self.client_tab_frame_list[-1].index
         last_row, last_column = self.get_row_and_column(last_frame)
         scroll_frame_height = (self.client_tab_frame.winfo_height() * last_row

@@ -81,10 +81,7 @@ class Configuration(tk.Toplevel):
         self.command_frame.columnconfigure(1, weight=1, uniform='a')
         self.command_frame.pack(fill='both', expand=True)
 
-        commands = [["load", "LOADIJNG!"],
-                    ["1", "LOADIJNG!"],
-                    ["2", "LOADIJNG!"],
-                    ["3", "LOADIJNG!"]]
+        commands = [{'Load All': 'test'}, {'Unload': 'yeehaw'}]
 
         # Command List Tree
         self.commands_tree = CommandListTree(self.command_frame, commands, ["Commands"])
@@ -143,14 +140,14 @@ class Configuration(tk.Toplevel):
         style.theme_use('clam')
 
     def insert_command(self, window_instance, new_command):
-        if new_command[0]:
-            self.commands_tree.insert(parent='', index=tk.END, values=new_command)
+        if new_command:
+            self.commands_tree.insert(parent='', index=tk.END, values=[*new_command])
             self.commands_tree.append_command_list(new_command)
         window_instance.destroy()
 
     def insert_another_command(self, new_command):
-        if new_command[0]:
-            self.commands_tree.insert(parent='', index=tk.END, values=new_command)
+        if new_command:
+            self.commands_tree.insert(parent='', index=tk.END, values=[*new_command])
             self.commands_tree.append_command_list(new_command)
 
     def insert_client(self, window_instance, new_client):
@@ -160,10 +157,9 @@ class Configuration(tk.Toplevel):
         window_instance.destroy()
 
     def insert_another_client(self, new_client):
-        if new_client[0]:
-            self.clients_tree.insert(parent='', index=tk.END, values=new_client)
+        if new_client:
+            self.clients_tree.insert(parent='', index=tk.END, values=[*new_client])
             self.clients_tree.append_client_list(new_client)
-        print(self.clients_tree.client_list)
 
     @staticmethod
     def delete_row(tree):

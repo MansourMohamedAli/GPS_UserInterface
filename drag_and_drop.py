@@ -1,4 +1,5 @@
 import tkinter as tk
+from Tree_Widgets import CommandListTree
 
 
 class ClientDragManager:
@@ -76,6 +77,8 @@ class CommandDragManager:
             if target.tree_name == "tab_tree":
                 for item in self.tree_selection:
                     target.insert(parent='', index=tk.END, values=[item])
+                    # Commands Dictionary for matching command name
+
                     # Add command to command list.
                     target.commands.append(item)
             # Add commands as values to client key.
