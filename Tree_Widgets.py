@@ -5,15 +5,16 @@ from command_window import CommandWindow
 
 
 class ClientListTree(ttk.Treeview):
-    def __init__(self, parent, clients, headings):
+    def __init__(self, parent, new_client_list, headings):
         super().__init__(master=parent, columns=headings, show='headings')
         self.headings = headings
         self.parent = parent
         self.get_tree_headings()
         self.bind('<Delete>', self.delete_row_keyboard_button)
         # self.clients = clients
+        self.dict = dict()
         self.client_list = list()
-        self.insert_client(clients)
+        self.insert_client(new_client_list)
 
     def get_tree_headings(self):
         for heading in self.headings:
@@ -40,12 +41,13 @@ class ClientListTree(ttk.Treeview):
 
     def append_client_list(self, client):
         self.client_list.append(client)
+        print(self.client_list)
 
-    def insert_client(self, new_client):
-        for client in new_client:
-            if client[0]:
-                self.insert(parent='', index=tk.END, values=client)
-                self.append_client_list(client)
+    def insert_client(self, new_client_list):
+        for new_client in new_client_list:
+            if new_client:
+                self.insert(parent='', index=tk.END, values=[*new_client])
+                self.append_client_list(new_client)
 
 
 class CommandListTree(ttk.Treeview):
@@ -83,6 +85,7 @@ class CommandListTree(ttk.Treeview):
 
     def append_command_list(self, command):
         self.command_list.append(command)
+        # print(self.command_list)
 
     def insert_command(self, new_command):
         for command in new_command:

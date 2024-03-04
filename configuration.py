@@ -52,8 +52,10 @@ class Configuration(tk.Toplevel):
         self.client_frame.columnconfigure(1, weight=1, uniform='a')
         self.client_frame.pack(fill='both', expand=True)
 
-        clients = [['VB1', '199.199.199.2', 'mac1'], ['VB12', '199.199.199.1', 'mac2'],
-                   ['VB5', '199.199.199.3', 'mac3']]
+        # clients = [['VB1', '199.199.199.2', 'mac1'], ['VB12', '199.199.199.1', 'mac2'],
+        #            ['VB5', '199.199.199.3', 'mac3']]
+
+        clients = [{'vb1': ('12345', 'abcde')}]
         self.clients_tree = ClientListTree(self.client_frame, clients, ["Clients"])
 
         # New Command Button
@@ -152,8 +154,8 @@ class Configuration(tk.Toplevel):
             self.commands_tree.append_command_list(new_command)
 
     def insert_client(self, window_instance, new_client):
-        if new_client[0]:
-            self.clients_tree.insert(parent='', index=tk.END, values=new_client)
+        if new_client:
+            self.clients_tree.insert(parent='', index=tk.END, values=[*new_client])
             self.clients_tree.append_client_list(new_client)
         window_instance.destroy()
 
@@ -215,7 +217,6 @@ class ScrollFrame(ttk.Frame):
 
         command_dnd = CommandDragManager()
         command_dnd.add_dragable(self.commands_tree)
-
 
     def update_scroll_area_resize_event(self, event):
         """Resizing Currently Disabled"""

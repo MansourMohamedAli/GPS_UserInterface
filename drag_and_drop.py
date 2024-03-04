@@ -76,9 +76,10 @@ class CommandDragManager:
             if target.tree_name == "tab_tree":
                 for item in self.tree_selection:
                     target.insert(parent='', index=tk.END, values=[item])
+                    # Add command to command list.
                     target.commands.append(item)
-                    target.commands_dict[target.headings[0]] = target.commands
+            # Add commands as values to client key.
+            target.commands_dict[target.headings[0]] = target.commands
         except:
             pass
         self.tree_selection.clear()
-        print(target.commands_dict)
