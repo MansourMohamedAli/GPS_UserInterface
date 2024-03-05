@@ -6,13 +6,15 @@ class ClientDragManager:
     def __init__(self,
                  target_frame,
                  tab_tree_index,
-                 pack_trees):
+                 pack_trees,
+                 clients_tree):
 
         self.tab_tree_index = tab_tree_index
         self.widget = None
         self.tree_selection = list()
         self.target_frame = target_frame
         self.pack_trees = pack_trees
+        self.clients_tree = clients_tree
 
     def add_dragable(self, widget):
         self.widget = widget
@@ -40,7 +42,13 @@ class ClientDragManager:
         target = event.widget.winfo_containing(x, y)
         if target == self.target_frame:
             for item in self.tree_selection:
-                self.pack_trees([item,])
+                # self.pack_trees([item,])
+                for client in self.clients_tree.client_list:
+                    if item in client:
+                        ip_address, mac_address = client.get(item)
+                self.pack_trees([item, ])
+            # print(ip_address,mac_address)
+
         self.tree_selection.clear()
 
 
@@ -78,11 +86,11 @@ class CommandDragManager:
                 for item in self.tree_selection:
                     target.insert(parent='', index=tk.END, values=[item])
                     # Commands Dictionary for matching command name
-
                     # Add command to command list.
                     target.commands.append(item)
-            # Add commands as values to client key.
-            target.commands_dict[target.headings[0]] = target.commands
+                # Add commands as values to client key.
+                target.commands_dict[target.headings[0]] = target.commands
+
         except:
             pass
         self.tree_selection.clear()

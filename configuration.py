@@ -207,7 +207,8 @@ class ScrollFrame(ttk.Frame):
 
         client_dnd = ClientDragManager(self.scroll_frame,
                                        self.client_tab_tree_index,
-                                       self.pack_trees)
+                                       self.pack_trees,
+                                       self.clients_tree)
 
         client_dnd.add_dragable(self.clients_tree)
 
@@ -256,12 +257,21 @@ class ScrollFrame(ttk.Frame):
         # print("Size Updated!")
 
     def initialize_tab_trees(self):
-        for client in self.client_list:
-            self.pack_trees([client, ])
+        # for client in self.client_list:
+        #     self.pack_trees([client, ])
+        for client in self.clients_tree.client_list:
+            print(client.values())
+            for item in #todo
+            # ip_address, mac_address = client
+        # self.pack_trees([item, ])
 
-    def pack_trees(self, client):
+    def pack_trees(self, client, ip_address, mac_address):
         client_tab_frame = ClientTabFrame(self.scroll_frame, self.client_tab_tree_index)
-        client_tab_tree = TabBarTree(client_tab_frame, self.client_tab_tree_index, client)
+        client_tab_tree = TabBarTree(client_tab_frame,
+                                     self.client_tab_tree_index,
+                                     client,
+                                     ip_address,
+                                     mac_address)
         client_tab_frame_row, client_tab_frame_col = self.assign_row_column(client_tab_tree, self.client_tab_tree_index)
         self.scroll_frame.rowconfigure(client_tab_frame_row, minsize=260)
         client_tab_tree.pack(expand=False, fill='both')
