@@ -42,13 +42,13 @@ class ClientDragManager:
         target = event.widget.winfo_containing(x, y)
         if target == self.target_frame:
             for item in self.tree_selection:
-                # self.pack_trees([item,])
+                print(item)
+                ip_address = None
+                mac_address = None
                 for client in self.clients_tree.client_list:
                     if item in client:
                         ip_address, mac_address = client.get(item)
-                self.pack_trees([item, ])
-            # print(ip_address,mac_address)
-
+                self.pack_trees([item, ], ip_address, mac_address)
         self.tree_selection.clear()
 
 

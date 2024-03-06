@@ -3,8 +3,9 @@ from tkinter import ttk
 
 
 class CommandWindow(tk.Toplevel):
-    def __init__(self, m_insert_command, m_insert_another_command):
+    def __init__(self, command_dictionary, m_insert_command, m_insert_another_command):
         super().__init__()
+        self.command_dictionary = command_dictionary
         self.m_insert_command = m_insert_command
         self.m_insert_another_command = m_insert_another_command
         self.title('Command Configuration')
@@ -37,11 +38,11 @@ class CommandWindow(tk.Toplevel):
         #
         self.done_button = ttk.Button(self.buttons_frame,
                                       text="Done",
-                                      command=lambda: self.m_insert_command(self, self.create_command_dictionary()))
+                                      command=lambda: self.m_insert_command(self, self.append_command_dictionary()))
         # Add Another Button
         self.add_another_button = ttk.Button(self.buttons_frame,
                                              text="Add Another",
-                                             command=lambda: self.m_insert_another_command(self.create_command_dictionary()))
+                                             command=lambda: self.m_insert_another_command(self.append_command_dictionary()))
         # Placing Buttons
         self.done_button.place(relx=0.125, rely=0)
         self.add_another_button.place(relx=0.45, rely=0)
@@ -57,10 +58,12 @@ class CommandWindow(tk.Toplevel):
         self.text_frame.grid(row=0, column=1, rowspan=2, sticky='nsew')
         self.buttons_frame.grid(row=1, column=1, sticky='nsew')
 
-    def create_command_dictionary(self):
-        command_dict = dict()
+    def append_command_dictionary(self):
+        # Get Command name from entry.
         command_name = self.command_name_entry.get()
         if command_name:
+            # Get Command from text box.
             command_text_box = self.command_text_box.get("1.0", "end-1c")
-            command_dict[command_name] = command_text_box
-            return command_dict
+            # Add command to dictionary.
+            self.command_dictionary[command_name] = command_text_box
+            return command_name

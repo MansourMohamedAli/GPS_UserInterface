@@ -52,16 +52,14 @@ class Configuration(tk.Toplevel):
         self.client_frame.columnconfigure(1, weight=1, uniform='a')
         self.client_frame.pack(fill='both', expand=True)
 
-        # clients = [['VB1', '199.199.199.2', 'mac1'], ['VB12', '199.199.199.1', 'mac2'],
-        #            ['VB5', '199.199.199.3', 'mac3']]
-
-        clients = [{'vb1': ('12345', 'abcde')}]
+        clients = {'vb1 dfhgd': ('12345', 'abcde'), 'vb2': ('12345', 'abcde'), 'vb3': ('12345', 'abcde'), 'vb4': ('12345', 'abcde')}
         self.clients_tree = ClientListTree(self.client_frame, clients, ["Clients"])
 
-        # New Command Button
+        # New Client Button
         self.new_client_button = ttk.Button(self.client_frame,
                                             text="New",
-                                            command=lambda: ClientWindow(self.insert_client,
+                                            command=lambda: ClientWindow(self.clients_tree.client_dictionary,
+                                                                         self.insert_client,
                                                                          self.insert_another_client))
 
         # Delete Command Button
@@ -81,13 +79,14 @@ class Configuration(tk.Toplevel):
         self.command_frame.columnconfigure(1, weight=1, uniform='a')
         self.command_frame.pack(fill='both', expand=True)
 
-        commands = [{'Load All': 'test'}, {'Unload': 'yeehaw'}]
+        commands = {'Load All': 'test', 'test': 'yesr'}
 
         # Command List Tree
         self.commands_tree = CommandListTree(self.command_frame, commands, ["Commands"])
         self.new_command_button = ttk.Button(self.command_frame,
                                              text="New",
-                                             command=lambda: CommandWindow(self.insert_command,
+                                             command=lambda: CommandWindow(self.commands_tree.command_dictionary,
+                                                                           self.insert_command,
                                                                            self.insert_another_command))
 
         # Delete Command Button
@@ -139,27 +138,23 @@ class Configuration(tk.Toplevel):
         style = ttk.Style(self)
         style.theme_use('clam')
 
-    def insert_command(self, window_instance, new_command):
-        if new_command:
-            self.commands_tree.insert(parent='', index=tk.END, values=[*new_command])
-            self.commands_tree.append_command_list(new_command)
-        window_instance.destroy()
-
-    def insert_another_command(self, new_command):
-        if new_command:
-            self.commands_tree.insert(parent='', index=tk.END, values=[*new_command])
-            self.commands_tree.append_command_list(new_command)
-
     def insert_client(self, window_instance, new_client):
         if new_client:
-            self.clients_tree.insert(parent='', index=tk.END, values=[*new_client])
-            self.clients_tree.append_client_list(new_client)
+            self.clients_tree.insert(parent='', index=tk.END, values=new_client)
         window_instance.destroy()
 
     def insert_another_client(self, new_client):
         if new_client:
-            self.clients_tree.insert(parent='', index=tk.END, values=[*new_client])
-            self.clients_tree.append_client_list(new_client)
+            self.clients_tree.insert(parent='', index=tk.END, values=new_client)
+
+    def insert_command(self, window_instance, new_command):
+        if new_command:
+            self.commands_tree.insert(parent='', index=tk.END, values=new_command)
+        window_instance.destroy()
+
+    def insert_another_command(self, new_command):
+        if new_command:
+            self.commands_tree.insert(parent='', index=tk.END, values=new_command)
 
     @staticmethod
     def delete_row(tree):
@@ -180,7 +175,6 @@ class ScrollFrame(ttk.Frame):
 
         self.client_tab_tree_index = 0
         self.client_tab_frame_list = list()
-        self.client_list = ["test1", "test2", "test3", "geertgserdgedszg"]
 
         # canvas
         self.canvas = tk.Canvas(self, background='red')
@@ -203,7 +197,7 @@ class ScrollFrame(ttk.Frame):
                                lambda event: self.canvas.yview_scroll(-int(event.delta / 60), "units"))
         self.bind('<Configure>', self.update_scroll_area_resize_event)
 
-        self.initialize_tab_trees()
+        # self.initialize_tab_trees()
 
         client_dnd = ClientDragManager(self.scroll_frame,
                                        self.client_tab_tree_index,
@@ -260,10 +254,13 @@ class ScrollFrame(ttk.Frame):
         # for client in self.client_list:
         #     self.pack_trees([client, ])
         for client in self.clients_tree.client_list:
-            print(client.values())
-            for item in #todo
-            # ip_address, mac_address = client
-        # self.pack_trees([item, ])
+            pass
+            # print(*client)
+            # print(client.keys())
+
+        #     for item in #todo
+        #     # ip_address, mac_address = client
+        # # self.pack_trees([item, ])
 
     def pack_trees(self, client, ip_address, mac_address):
         client_tab_frame = ClientTabFrame(self.scroll_frame, self.client_tab_tree_index)

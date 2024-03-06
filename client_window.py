@@ -3,8 +3,9 @@ from tkinter import ttk
 
 
 class ClientWindow(tk.Toplevel):
-    def __init__(self, m_insert_client, m_insert_another_client):
+    def __init__(self, client_dictionary, m_insert_client, m_insert_another_client):
         super().__init__()
+        self.client_dictionary = client_dictionary
         self.m_insert_client = m_insert_client
         self.m_insert_another_client = m_insert_another_client
 
@@ -40,12 +41,12 @@ class ClientWindow(tk.Toplevel):
         self.buttons_frame = ttk.Frame(self)
         self.done_button = ttk.Button(self.buttons_frame,
                                       text="Done",
-                                      command=lambda: self.m_insert_client(self, self.create_client_dictionary()))
+                                      command=lambda: self.m_insert_client(self, self.append_client_dictionary()))
         # Add Another Button
         self.add_another_button = ttk.Button(self.buttons_frame,
                                              text="Add Another",
                                              command=lambda: self.m_insert_another_client(
-                                                 self.create_client_dictionary()))
+                                                 self.append_client_dictionary()))
         self.done_button.place(relx=0.32, rely=0.25)
         self.add_another_button.place(relx=0.58, rely=0.25)
 
@@ -61,14 +62,16 @@ class ClientWindow(tk.Toplevel):
         self.mac_frame.grid(row=2, column=0, sticky='nsew')
         self.buttons_frame.grid(row=3, column=0, sticky='nsew')
 
-    def create_client_dictionary(self):
-        client_dict = dict()
-        client_name = self.client_name_entry.get()
-        if client_name:
+    def append_client_dictionary(self):
+        # Get Client name from entry.
+        new_client = self.client_name_entry.get()
+        if new_client:
+            # Get IP and MAC addresses from entries.
             ip_address = self.ip_entry.get()
             mac_address = self.mac_entry.get()
-            client_dict[client_name] = ip_address, mac_address
-            return client_dict
+            # Add client name and info to dictionary.
+            self.client_dictionary[new_client] = ip_address, mac_address
+            return new_client
 
 
 

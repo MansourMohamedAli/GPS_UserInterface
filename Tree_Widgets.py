@@ -5,16 +5,14 @@ from command_window import CommandWindow
 
 
 class ClientListTree(ttk.Treeview):
-    def __init__(self, parent, new_client_list, headings):
+    def __init__(self, parent, client_dictionary, headings):
         super().__init__(master=parent, columns=headings, show='headings')
         self.headings = headings
         self.parent = parent
         self.get_tree_headings()
         self.bind('<Delete>', self.delete_row_keyboard_button)
-        # self.clients = clients
-        self.dict = dict()
-        self.client_list = list()
-        self.insert_client(new_client_list)
+        self.client_dictionary = client_dictionary
+        self.insert_clients()
 
     def get_tree_headings(self):
         for heading in self.headings:
@@ -25,40 +23,27 @@ class ClientListTree(ttk.Treeview):
 
     def delete_row(self):
         selected_items = self.selection()
-        clients_to_delete = list()
         for client in selected_items:
             client_full_tree_info = self.item(client)
-            client_info = client_full_tree_info['values']
-            c = list()
-            for item in client_info:
-                c.append(str(item))
-            clients_to_delete.append(c)
+            client_name = client_full_tree_info['values'][0]
+            del self.client_dictionary[client_name]
             self.delete(client)
 
-        for client in self.client_list:
-            if client in clients_to_delete:
-                self.client_list.remove(client)
-
-    def append_client_list(self, client):
-        self.client_list.append(client)
-        # print(self.client_list)
-
-    def insert_client(self, new_client_list):
-        for new_client in new_client_list:
+    def insert_clients(self):
+        for new_client in self.client_dictionary:
             if new_client:
-                self.insert(parent='', index=tk.END, values=[*new_client])
-                self.append_client_list(new_client)
+                self.insert(parent='', index=tk.END, values=[new_client])
 
 
 class CommandListTree(ttk.Treeview):
-    def __init__(self, parent, new_command_list, headings):
+    def __init__(self, parent, command_dictionary, headings):
         super().__init__(master=parent, columns=headings, show='headings')
         self.headings = headings
         self.parent = parent
         self.get_tree_headings()
         self.bind('<Delete>', self.delete_row_keyboard_button)
-        self.command_list = list()
-        self.insert_command(new_command_list)
+        self.command_dictionary = command_dictionary
+        self.insert_commands()
 
     def get_tree_headings(self):
         for heading in self.headings:
@@ -69,29 +54,17 @@ class CommandListTree(ttk.Treeview):
 
     def delete_row(self):
         selected_items = self.selection()
-        commands_to_delete = list()
         for command in selected_items:
             command_full_tree_info = self.item(command)
-            command_info = command_full_tree_info['values']
-            c = list()
-            for item in command_info:
-                c.append(str(item))
-            commands_to_delete.append(c)
+            command_name = command_full_tree_info['values']
+            del self.command_dictionary[command_name]
             self.delete(command)
 
-        for command in self.command_list:
-            if command in commands_to_delete:
-                self.command_list.remove(command)
-
-    def append_command_list(self, command):
-        self.command_list.append(command)
-        # print(self.command_list)
-
-    def insert_command(self, new_command_list):
-        for new_command in new_command_list:
+    def insert_commands(self):
+        for new_command in self.command_dictionary:
             if new_command:
-                self.insert(parent='', index=tk.END, values=[*new_command])
-                self.append_command_list(new_command)
+                print(new_command)
+                self.insert(parent='', index=tk.END, values=[new_command])
 
 
 class TabBarTree(ttk.Treeview):
@@ -112,7 +85,7 @@ class TabBarTree(ttk.Treeview):
         self.commands = list()
         self.initialize_commands()
 
-        print(self.ip_address, self.mac_address)
+        # print(self.ip_address, self.mac_address)
 
         self.no_scroll_tags = self.bindtags()
         # Adding new tag for frame to allow scroll on TabTree and background.
