@@ -1,5 +1,4 @@
 import tkinter as tk
-from Tree_Widgets import CommandListTree
 
 
 class ClientDragManager:
@@ -42,20 +41,16 @@ class ClientDragManager:
         target = event.widget.winfo_containing(x, y)
         if target == self.target_frame:
             for item in self.tree_selection:
-                print(item)
-                ip_address = None
-                mac_address = None
-                for client in self.clients_tree.client_list:
-                    if item in client:
-                        ip_address, mac_address = client.get(item)
+                ip_address, mac_address = self.clients_tree.client_dictionary[item]
                 self.pack_trees([item, ], ip_address, mac_address)
         self.tree_selection.clear()
 
 
 class CommandDragManager:
-    def __init__(self):
+    def __init__(self, commands_tree):
         self.widget = None
         self.tree_selection = list()
+        self.commands_tree = commands_tree
 
     def add_dragable(self, widget):
         self.widget = widget
@@ -83,14 +78,26 @@ class CommandDragManager:
         target = event.widget.winfo_containing(x, y)
         try:
             if target.tree_name == "tab_tree":
+                # for item in self.tree_selection:
+                #     target.insert(parent='', index=tk.END, values=[item])
+                #     # Commands Dictionary for matching command name
+                #     command = self.commands_tree.command_dictionary[item]
+                #     # Add commands as values to client key.
+                #     target.commands.append(command)
+                #     print(f'{target.headings}:{target.commands}')
+
                 for item in self.tree_selection:
                     target.insert(parent='', index=tk.END, values=[item])
                     # Commands Dictionary for matching command name
-                    # Add command to command list.
-                    target.commands.append(item)
-                # Add commands as values to client key.
-                target.commands_dict[target.headings[0]] = target.commands
+                    command = self.commands_tree.command_dictionary[item]
+                    # Add commands as values to client key.
+                    target.commands.append(command)
+                    # print(f'{target.headings}:{target.commands}')
+                    print(item)
+                    print(command)
 
+                    target.tab_tree_dictionary[item] = command
+                print(target.tab_tree_dictionary)
         except:
             pass
         self.tree_selection.clear()

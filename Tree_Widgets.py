@@ -13,6 +13,7 @@ class ClientListTree(ttk.Treeview):
         self.bind('<Delete>', self.delete_row_keyboard_button)
         self.client_dictionary = client_dictionary
         self.insert_clients()
+        # self.client_list = list()
 
     def get_tree_headings(self):
         for heading in self.headings:
@@ -56,7 +57,7 @@ class CommandListTree(ttk.Treeview):
         selected_items = self.selection()
         for command in selected_items:
             command_full_tree_info = self.item(command)
-            command_name = command_full_tree_info['values']
+            command_name = command_full_tree_info['values'][0]
             del self.command_dictionary[command_name]
             self.delete(command)
 
@@ -68,7 +69,7 @@ class CommandListTree(ttk.Treeview):
 
 
 class TabBarTree(ttk.Treeview):
-    def __init__(self, parent, tree_index, headings, ip_address, mac_address):
+    def __init__(self, parent, tree_index, headings, ip_address, mac_address, tab_tree_dictionary):
         super().__init__(master=parent, columns=headings, show='headings')
         self.headings = headings
         self.parent = parent
@@ -81,11 +82,11 @@ class TabBarTree(ttk.Treeview):
         self.client_name = None
         self.ip_address = ip_address
         self.mac_address = mac_address
-        self.commands_dict = dict()
+        self.tab_tree_dictionary = dict()
         self.commands = list()
         self.initialize_commands()
 
-        # print(self.ip_address, self.mac_address)
+        print(self.ip_address, self.mac_address)
 
         self.no_scroll_tags = self.bindtags()
         # Adding new tag for frame to allow scroll on TabTree and background.
@@ -117,6 +118,7 @@ class TabBarTree(ttk.Treeview):
     def delete_row(self, event):
         selected_items = self.selection()
         for item in selected_items:
+            print(self.tab_tree_dictionary)
             self.delete(item)
 
 

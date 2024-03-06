@@ -52,7 +52,7 @@ class Configuration(tk.Toplevel):
         self.client_frame.columnconfigure(1, weight=1, uniform='a')
         self.client_frame.pack(fill='both', expand=True)
 
-        clients = {'vb1 dfhgd': ('12345', 'abcde'), 'vb2': ('12345', 'abcde'), 'vb3': ('12345', 'abcde'), 'vb4': ('12345', 'abcde')}
+        clients = {'vb1 dfhgd': ('1', '1'), 'vb2': ('2', '2'), 'vb3': ('3', '3'), 'vb4': ('4', '4')}
         self.clients_tree = ClientListTree(self.client_frame, clients, ["Clients"])
 
         # New Client Button
@@ -206,7 +206,7 @@ class ScrollFrame(ttk.Frame):
 
         client_dnd.add_dragable(self.clients_tree)
 
-        command_dnd = CommandDragManager()
+        command_dnd = CommandDragManager(self.commands_tree)
         command_dnd.add_dragable(self.commands_tree)
 
     def update_scroll_area_resize_event(self, event):
@@ -268,7 +268,8 @@ class ScrollFrame(ttk.Frame):
                                      self.client_tab_tree_index,
                                      client,
                                      ip_address,
-                                     mac_address)
+                                     mac_address,
+                                     tab_tree_dictionary=None)
         client_tab_frame_row, client_tab_frame_col = self.assign_row_column(client_tab_tree, self.client_tab_tree_index)
         self.scroll_frame.rowconfigure(client_tab_frame_row, minsize=260)
         client_tab_tree.pack(expand=False, fill='both')
