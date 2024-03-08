@@ -78,23 +78,17 @@ class CommandDragManager:
         target = event.widget.winfo_containing(x, y)
         try:
             if target.tree_name == "tab_tree":
-                # for item in self.tree_selection:
-                #     target.insert(parent='', index=tk.END, values=[item])
-                #     # Commands Dictionary for matching command name
-                #     command = self.commands_tree.command_dictionary[item]
-                #     # Add commands as values to client key.
-                #     target.commands.append(command)
-                #     print(f'{target.headings}:{target.commands}')
-
                 for item in self.tree_selection:
                     target.insert(parent='', index=tk.END, values=[item])
                     # Commands Dictionary for matching command name
                     command = self.commands_tree.command_dictionary[item]
-                    # Add commands as values to client key.
+                    # Add command names and commands to two separate lists.
+                    # I want to allow duplicate commands so a dictionary wouldn't work.
+                    target.command_names.append(item)
                     target.commands.append(command)
-                    # print(f'{target.headings}:{target.commands}')
-                    target.tab_tree_dictionary[item] = command
-                print(target.tab_tree_dictionary)
+                    print(f'{target.command_names}')
+                    print(f'{target.commands}')
+
         except:
             pass
         self.tree_selection.clear()

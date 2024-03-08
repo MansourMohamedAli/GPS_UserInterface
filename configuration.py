@@ -20,7 +20,6 @@ class Configuration(tk.Toplevel):
         self.resizable(False, False)
         # self.minsize(400, 300)
         self.tab_tree_list = dict()
-        self.tab1_list = ["test", "test"]
 
         self.tab_frame = ttk.Frame(self, relief=tk.GROOVE)
         self.side_bar_frame = ttk.Frame(self, relief=tk.GROOVE)
@@ -81,7 +80,10 @@ class Configuration(tk.Toplevel):
         self.command_frame.pack(fill='both', expand=True)
 
         commands = {'Load Graphic 1': 'cd dsfasdf',
-                    'Load Graphic 2': 'dfgbfdsxhb'}
+                    'Load Graphic 2': 'dfgbfdsxhb',
+                    'Load Graphic 3': '123',
+                    'Load Graphic 4': '345',
+                    'Load Graphic 5': '567'}
 
         # Command List Tree
         self.commands_tree = CommandListTree(self.command_frame, commands, ["Commands"])
@@ -142,21 +144,21 @@ class Configuration(tk.Toplevel):
 
     def insert_client(self, window_instance, new_client):
         if new_client:
-            self.clients_tree.insert(parent='', index=tk.END, values=new_client)
+            self.clients_tree.insert(parent='', index=tk.END, values=[new_client])
         window_instance.destroy()
 
     def insert_another_client(self, new_client):
         if new_client:
-            self.clients_tree.insert(parent='', index=tk.END, values=new_client)
+            self.clients_tree.insert(parent='', index=tk.END, values=[new_client])
 
     def insert_command(self, window_instance, new_command):
         if new_command:
-            self.commands_tree.insert(parent='', index=tk.END, values=new_command)
+            self.commands_tree.insert(parent='', index=tk.END, values=[new_command])
         window_instance.destroy()
 
     def insert_another_command(self, new_command):
         if new_command:
-            self.commands_tree.insert(parent='', index=tk.END, values=new_command)
+            self.commands_tree.insert(parent='', index=tk.END, values=[new_command])
 
     @staticmethod
     def delete_row(tree):
@@ -166,7 +168,6 @@ class Configuration(tk.Toplevel):
 class ScrollFrame(ttk.Frame):
     def __init__(self, parent, item_height, tree_index, clients_tree, commands_tree):
         super().__init__(master=parent)
-        # self.pack(expand=True, fill='both')
 
         # widget data
         self.tree_index = tree_index
@@ -264,14 +265,16 @@ class ScrollFrame(ttk.Frame):
         #     # ip_address, mac_address = client
         # # self.pack_trees([item, ])
 
-    def pack_trees(self, client, ip_address, mac_address):
+    def pack_trees(self, client, ip_address, mac_address, commands=None, command_names=None):
         client_tab_frame = ClientTabFrame(self.scroll_frame, self.client_tab_tree_index)
         client_tab_tree = TabBarTree(client_tab_frame,
                                      self.client_tab_tree_index,
                                      client,
                                      ip_address,
                                      mac_address,
-                                     tab_tree_dictionary=None)
+                                     self.commands_tree,
+                                     ["Command 1"],
+                                     ["command body"])
         client_tab_frame_row, client_tab_frame_col = self.assign_row_column(client_tab_tree, self.client_tab_tree_index)
         self.scroll_frame.rowconfigure(client_tab_frame_row, minsize=260)
         client_tab_tree.pack(expand=False, fill='both')

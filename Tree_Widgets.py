@@ -67,7 +67,7 @@ class CommandListTree(ttk.Treeview):
 
 
 class TabBarTree(ttk.Treeview):
-    def __init__(self, parent, tree_index, headings, ip_address, mac_address, tab_tree_dictionary):
+    def __init__(self, parent, tree_index, headings, ip_address, mac_address, commands_tree, command_names, commands):
         super().__init__(master=parent, columns=headings, show='headings')
         self.headings = headings
         self.parent = parent
@@ -80,8 +80,9 @@ class TabBarTree(ttk.Treeview):
         self.client_name = None
         self.ip_address = ip_address
         self.mac_address = mac_address
-        self.tab_tree_dictionary = dict()
-        self.commands = list()
+        self.commands_tree = commands_tree
+        self.command_names = command_names
+        self.commands = commands
         self.initialize_commands()
 
         print(self.ip_address, self.mac_address)
@@ -116,8 +117,26 @@ class TabBarTree(ttk.Treeview):
     def delete_row(self, event):
         selected_items = self.selection()
         for item in selected_items:
-            print(self.tab_tree_dictionary)
             self.delete(item)
+        self.update_command_list()
+
+    def update_command_list(self):
+        """
+        Duplicate commands are allowed in the tree and using the .remove() method will always
+        remove the first occurrence in a list. To get around this issue and allow the removal
+        of later occurrences, The command_names and commands list are cleared. Then the
+        command_names list is populated in order using the Tkinter get_children() method. Finally,
+        the command_tree dictionary is searched using the command_name as a key and the appropriate
+        command is added in the correct order back to the commands list.
+        :return: None
+        """
+        self.command_names.clear()
+        self.commands.clear()
+        for item in self.get_children():
+            command_name = self.item(item)['values'][0]
+            self.command_names.append(command_name)
+            command = self.commands_tree.command_dictionary[command_name]
+            self.commands.append(command)
 
 
 class ClientTabFrame(ttk.Frame):
@@ -239,8 +258,7 @@ class TabTreeMouseOver:
         # drop tab tree index by one so next client dragged and dropped doesn't skip # a number
         self.m_reduce_tab_tree_index()
         # Get index of last frame as that is what determines the scroll area. Or I could count items in frame list.
-        # todo
-        last_frame = self.client_tab_frame_list[-1].index
+        last_frame = len(self.client_tab_frame_list)
         last_row, last_column = self.get_row_and_column(last_frame)
         scroll_frame_height = (self.client_tab_frame.winfo_height() * last_row
                                + ((last_row * 2) * 0))
