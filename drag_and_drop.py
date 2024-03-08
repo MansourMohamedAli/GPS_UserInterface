@@ -39,6 +39,7 @@ class ClientDragManager:
         # find the widget under the cursor
         x, y = event.widget.winfo_pointerxy()
         target = event.widget.winfo_containing(x, y)
+        print(target)
         if target == self.target_frame:
             for item in self.tree_selection:
                 ip_address, mac_address = self.clients_tree.client_dictionary[item]

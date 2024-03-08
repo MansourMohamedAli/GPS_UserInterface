@@ -117,8 +117,16 @@ class Configuration(tk.Toplevel):
                                        self.clients_tree,
                                        self.commands_tree)
         self.tab1_scroll.pack(expand=True, fill='both')
+
         # Creating Tab 2
         self.tab2 = tk.Frame(self.tabs)
+        self.tab2_scroll = ScrollFrame(self.tab2,
+                                       10,
+                                       1,
+                                       self.clients_tree,
+                                       self.commands_tree)
+
+        self.tab2_scroll.pack(expand=True, fill='both')
 
         # Adding tabs to Tab Notebook Frame
         self.tabs.add(self.tab1, text='First Tab')
