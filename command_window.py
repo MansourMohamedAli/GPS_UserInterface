@@ -3,9 +3,9 @@ from tkinter import ttk
 
 
 class CommandWindow(tk.Toplevel):
-    def __init__(self, command_dictionary, m_insert_command, m_insert_another_command):
+    def __init__(self, tree_dictionary, m_insert_command, m_insert_another_command):
         super().__init__()
-        self.command_dictionary = command_dictionary
+        self.tree_dictionary = tree_dictionary
         self.m_insert_command = m_insert_command
         self.m_insert_another_command = m_insert_another_command
         self.title('Command Configuration')
@@ -61,9 +61,14 @@ class CommandWindow(tk.Toplevel):
     def append_command_dictionary(self):
         # Get Command name from entry.
         command_name = self.command_name_entry.get()
-        if command_name:
+        if command_name and command_name not in self.tree_dictionary:
             # Get Command from text box.
             command_text_box = self.command_text_box.get("1.0", "end-1c")
             # Add command to dictionary.
-            self.command_dictionary[command_name] = command_text_box
+            self.tree_dictionary[command_name] = command_text_box
+            print(self.tree_dictionary)
+            print("Command Added")
             return command_name
+        else:
+            print("Command Already Exists")
+            return None

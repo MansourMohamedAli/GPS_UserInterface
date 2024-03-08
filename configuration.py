@@ -2,16 +2,13 @@ import tkinter as tk
 from tkinter import ttk
 from command_window import CommandWindow
 from client_window import ClientWindow
-
 from drag_and_drop import (CommandDragManager,
                            ClientDragManager)
-
 from Tree_Widgets import (ClientListTree,
                           CommandListTree,
                           TabBarTree,
                           ClientTabFrame,
                           TabTreeMouseOver)
-
 from math import floor
 
 
@@ -52,7 +49,11 @@ class Configuration(tk.Toplevel):
         self.client_frame.columnconfigure(1, weight=1, uniform='a')
         self.client_frame.pack(fill='both', expand=True)
 
-        clients = {'vb1 dfhgd': ('1', '1'), 'vb2': ('2', '2'), 'vb3': ('3', '3'), 'vb4': ('4', '4')}
+        clients = {'VB1': ('199.199.199.01', 'MAC1'),
+                   'VB2': ('199.199.199.02', 'MAC2'),
+                   'VB3': ('199.199.199.03', 'MAC3'),
+                   'VB4': ('199.199.199.01', 'MAC4')}
+
         self.clients_tree = ClientListTree(self.client_frame, clients, ["Clients"])
 
         # New Client Button
@@ -79,7 +80,8 @@ class Configuration(tk.Toplevel):
         self.command_frame.columnconfigure(1, weight=1, uniform='a')
         self.command_frame.pack(fill='both', expand=True)
 
-        commands = {'Load All': 'test', 'test': 'yesr'}
+        commands = {'Load Graphic 1': 'cd dsfasdf',
+                    'Load Graphic 2': 'dfgbfdsxhb'}
 
         # Command List Tree
         self.commands_tree = CommandListTree(self.command_frame, commands, ["Commands"])
@@ -87,7 +89,7 @@ class Configuration(tk.Toplevel):
                                              text="New",
                                              command=lambda: CommandWindow(self.commands_tree.command_dictionary,
                                                                            self.insert_command,
-                                                                           self.insert_another_command))
+                                                                           self.insert_another_command,))
 
         # Delete Command Button
         self.delete_command_button = ttk.Button(self.command_frame,

@@ -13,7 +13,6 @@ class ClientListTree(ttk.Treeview):
         self.bind('<Delete>', self.delete_row_keyboard_button)
         self.client_dictionary = client_dictionary
         self.insert_clients()
-        # self.client_list = list()
 
     def get_tree_headings(self):
         for heading in self.headings:
@@ -64,7 +63,6 @@ class CommandListTree(ttk.Treeview):
     def insert_commands(self):
         for new_command in self.command_dictionary:
             if new_command:
-                print(new_command)
                 self.insert(parent='', index=tk.END, values=[new_command])
 
 
@@ -161,8 +159,10 @@ class TabTreeMouseOver:
         self.new_button = ttk.Button(self.button_frame,
                                      text="+",
                                      width=5,
-                                     command=lambda: CommandWindow(self.insert_command,
-                                                                   self.insert_another_command))
+                                     command=lambda: CommandWindow(self.client_tab_tree.tab_tree_dictionary,
+                                                                   self.insert_command,
+                                                                   self.insert_another_command,
+                                                                   ))
 
         self.delete_button = ttk.Button(self.button_frame,
                                         text=u"\U0001F5D1",

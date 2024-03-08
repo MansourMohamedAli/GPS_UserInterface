@@ -65,13 +65,17 @@ class ClientWindow(tk.Toplevel):
     def append_client_dictionary(self):
         # Get Client name from entry.
         new_client = self.client_name_entry.get()
-        if new_client:
+        if new_client and new_client not in self.client_dictionary:
             # Get IP and MAC addresses from entries.
             ip_address = self.ip_entry.get()
             mac_address = self.mac_entry.get()
             # Add client name and info to dictionary.
             self.client_dictionary[new_client] = ip_address, mac_address
+            print("Client Added")
             return new_client
+        else:
+            print("Client Already Exists")
+            return None
 
 
 

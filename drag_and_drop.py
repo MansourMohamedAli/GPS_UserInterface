@@ -93,9 +93,6 @@ class CommandDragManager:
                     # Add commands as values to client key.
                     target.commands.append(command)
                     # print(f'{target.headings}:{target.commands}')
-                    print(item)
-                    print(command)
-
                     target.tab_tree_dictionary[item] = command
                 print(target.tab_tree_dictionary)
         except:
