@@ -48,12 +48,12 @@ class Configuration(tk.Toplevel):
         self.client_frame.columnconfigure(1, weight=1, uniform='a')
         self.client_frame.pack(fill='both', expand=True)
 
-        clients = {'VB1': ('199.199.199.01', 'MAC1'),
+        clients_dictionary = {'VB1': ('199.199.199.01', 'MAC1'),
                    'VB2': ('199.199.199.02', 'MAC2'),
                    'VB3': ('199.199.199.03', 'MAC3'),
                    'VB4': ('199.199.199.01', 'MAC4')}
 
-        self.clients_tree = ClientListTree(self.client_frame, clients, ["Clients"])
+        self.clients_tree = ClientListTree(self.client_frame, clients_dictionary, ["Clients"])
 
         # New Client Button
         self.new_client_button = ttk.Button(self.client_frame,
@@ -79,14 +79,14 @@ class Configuration(tk.Toplevel):
         self.command_frame.columnconfigure(1, weight=1, uniform='a')
         self.command_frame.pack(fill='both', expand=True)
 
-        commands = {'Load Graphic 1': 'cd dsfasdf',
-                    'Load Graphic 2': 'dfgbfdsxhb',
-                    'Load Graphic 3': '123',
-                    'Load Graphic 4': '345',
-                    'Load Graphic 5': '567'}
+        commands_dictionary = {'Load Graphic 1': '111',
+                    'Load Graphic 2': '222',
+                    'Load Graphic 3': '333',
+                    'Load Graphic 4': '444',
+                    'Load Graphic 5': '555'}
 
         # Command List Tree
-        self.commands_tree = CommandListTree(self.command_frame, commands, ["Commands"])
+        self.commands_tree = CommandListTree(self.command_frame, commands_dictionary, ["Commands"])
         self.new_command_button = ttk.Button(self.command_frame,
                                              text="New",
                                              command=lambda: CommandWindow(self.commands_tree.command_dictionary,
@@ -109,28 +109,42 @@ class Configuration(tk.Toplevel):
         self.tab_frame.rowconfigure(0, weight=1)
         self.tab_frame.columnconfigure(0, weight=1)
 
+        # Initializing Tabs:
+
+        tab1_clients = ["VB1", "VB2", "VB3"]
+        tab1_commands = [["Load Graphic 1", "Load Graphic 2", "Load Graphic 3"],
+                         [None],
+                         [None]]
+
+        # tab1_clients = ["Vb"]
+        # tab1_commands = [[None]]
+
         # Creating Tab 1
         self.tab1 = tk.Frame(self.tabs)
         self.tab1_scroll = ScrollFrame(self.tab1,
                                        10,
                                        1,
                                        self.clients_tree,
-                                       self.commands_tree)
+                                       self.commands_tree,
+                                       clients_dictionary,
+                                       commands_dictionary,
+                                       tab1_clients,
+                                       tab1_commands)
         self.tab1_scroll.pack(expand=True, fill='both')
 
         # Creating Tab 2
-        self.tab2 = tk.Frame(self.tabs)
-        self.tab2_scroll = ScrollFrame(self.tab2,
-                                       10,
-                                       1,
-                                       self.clients_tree,
-                                       self.commands_tree)
-
-        self.tab2_scroll.pack(expand=True, fill='both')
+        # self.tab2 = tk.Frame(self.tabs)
+        # self.tab2_scroll = ScrollFrame(self.tab2,
+        #                                10,
+        #                                1,
+        #                                self.clients_tree,
+        #                                self.commands_tree)
+        #
+        # self.tab2_scroll.pack(expand=True, fill='both')
 
         # Adding tabs to Tab Notebook Frame
         self.tabs.add(self.tab1, text='First Tab')
-        self.tabs.add(self.tab2, text='Second Tab')
+        # self.tabs.add(self.tab2, text='Second Tab')
 
         self.tabs.grid(sticky='nsew')
 
@@ -174,7 +188,16 @@ class Configuration(tk.Toplevel):
 
 
 class ScrollFrame(ttk.Frame):
-    def __init__(self, parent, item_height, tree_index, clients_tree, commands_tree):
+    def __init__(self, parent,
+                 item_height,
+                 tree_index,
+                 clients_tree,
+                 commands_tree,
+                 clients_dictionary,
+                 commands_dictionary,
+                 tab_clients,
+                 tab_commands):
+
         super().__init__(master=parent)
 
         # widget data
@@ -183,6 +206,10 @@ class ScrollFrame(ttk.Frame):
         self.list_height = (self.tree_index * item_height)  # Five items per row
         self.clients_tree = clients_tree
         self.commands_tree = commands_tree
+        self.clients_dictionary = clients_dictionary
+        self.commands_dictionary = commands_dictionary
+        self.tab_clients = tab_clients
+        self.tab_commands = tab_commands
 
         self.client_tab_tree_index = 0
         self.client_tab_frame_list = list()
@@ -208,12 +235,12 @@ class ScrollFrame(ttk.Frame):
                                lambda event: self.canvas.yview_scroll(-int(event.delta / 60), "units"))
         self.bind('<Configure>', self.update_scroll_area_resize_event)
 
-        # self.initialize_tab_trees()
+        self.initialize_tab_trees()
 
         client_dnd = ClientDragManager(self.scroll_frame,
-                                       self.client_tab_tree_index,
                                        self.pack_trees,
-                                       self.clients_tree)
+                                       self.clients_dictionary,
+                                       self.commands_dictionary)
 
         client_dnd.add_dragable(self.clients_tree)
 
@@ -262,27 +289,22 @@ class ScrollFrame(ttk.Frame):
         # print("Size Updated!")
 
     def initialize_tab_trees(self):
-        # for client in self.client_list:
-        #     self.pack_trees([client, ])
-        for client in self.clients_tree.client_list:
-            pass
-            # print(*client)
-            # print(client.keys())
+        for index, client_name in enumerate(self.tab_clients):
+            # if self.tab_commands[index]:
+            if self.tab_clients[index]:
+                self.pack_trees([client_name, ],
+                                self.clients_dictionary,
+                                self.commands_dictionary,
+                                self.tab_commands[index])
 
-        #     for item in #todo
-        #     # ip_address, mac_address = client
-        # # self.pack_trees([item, ])
-
-    def pack_trees(self, client, ip_address, mac_address, commands=None, command_names=None):
+    def pack_trees(self, client_name, clients_dictionary, commands_dictionary, command_names=None):
         client_tab_frame = ClientTabFrame(self.scroll_frame, self.client_tab_tree_index)
         client_tab_tree = TabBarTree(client_tab_frame,
                                      self.client_tab_tree_index,
-                                     client,
-                                     ip_address,
-                                     mac_address,
-                                     self.commands_tree,
-                                     ["Command 1"],
-                                     ["command body"])
+                                     client_name,
+                                     command_names,
+                                     clients_dictionary,
+                                     commands_dictionary)
         client_tab_frame_row, client_tab_frame_col = self.assign_row_column(client_tab_tree, self.client_tab_tree_index)
         self.scroll_frame.rowconfigure(client_tab_frame_row, minsize=260)
         client_tab_tree.pack(expand=False, fill='both')

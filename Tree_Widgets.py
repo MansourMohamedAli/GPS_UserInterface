@@ -67,9 +67,9 @@ class CommandListTree(ttk.Treeview):
 
 
 class TabBarTree(ttk.Treeview):
-    def __init__(self, parent, tree_index, headings, ip_address, mac_address, commands_tree, command_names, commands):
-        super().__init__(master=parent, columns=headings, show='headings')
-        self.headings = headings
+    def __init__(self, parent, tree_index, client_name, command_names, clients_dictionary, commands_dictionary):
+        super().__init__(master=parent, columns=client_name, show='headings')
+        self.headings = client_name
         self.parent = parent
         self.get_tree_headings()
         self.bind('<Delete>', self.delete_row)
@@ -78,14 +78,21 @@ class TabBarTree(ttk.Treeview):
         self.row = None
         self.column = None
         self.client_name = None
-        self.ip_address = ip_address
-        self.mac_address = mac_address
-        self.commands_tree = commands_tree
+        self.ip_address = None
+        self.mac_address = None
+        self.client_name = client_name
         self.command_names = command_names
-        self.commands = commands
-        self.initialize_commands()
+        self.commands = list()
 
-        print(self.ip_address, self.mac_address)
+        self.clients_dictionary = clients_dictionary
+        self.commands_dictionary = commands_dictionary
+
+        self.initialize_client_info()
+        self.initialize_commands()
+        # print(self.command_names)
+        # print(self.commands)
+
+        # print(self.ip_address, self.mac_address)
 
         self.no_scroll_tags = self.bindtags()
         # Adding new tag for frame to allow scroll on TabTree and background.
@@ -95,9 +102,17 @@ class TabBarTree(ttk.Treeview):
         self.bind('<<TreeviewSelect>>', self.disable_scroll)
         self.scroll_state = True
 
+    def initialize_client_info(self):
+        self.ip_address, self.mac_address = self.clients_dictionary[self.client_name[0]]
+
     def initialize_commands(self):
-        for command in self.commands:
-            self.insert(parent='', index=tk.END, values=command)
+        if self.command_names[0]:
+            print(self.command_names)
+            for command in self.command_names:
+                self.insert(parent='', index=tk.END, values=[command])
+            self.update_command_list()
+        else:
+            self.command_names = list()
 
     def enable_scroll(self, event):
         if not self.scroll_state:
@@ -135,7 +150,7 @@ class TabBarTree(ttk.Treeview):
         for item in self.get_children():
             command_name = self.item(item)['values'][0]
             self.command_names.append(command_name)
-            command = self.commands_tree.command_dictionary[command_name]
+            command = self.commands_dictionary[command_name]
             self.commands.append(command)
 
 
