@@ -49,9 +49,9 @@ class Configuration(tk.Toplevel):
         self.client_frame.pack(fill='both', expand=True)
 
         clients_dictionary = {'VB1': ('199.199.199.01', 'MAC1'),
-                   'VB2': ('199.199.199.02', 'MAC2'),
-                   'VB3': ('199.199.199.03', 'MAC3'),
-                   'VB4': ('199.199.199.01', 'MAC4')}
+                              'VB2': ('199.199.199.02', 'MAC2'),
+                              'VB3': ('199.199.199.03', 'MAC3'),
+                              'VB4': ('199.199.199.01', 'MAC4')}
 
         self.clients_tree = ClientListTree(self.client_frame, clients_dictionary, ["Clients"])
 
@@ -80,10 +80,10 @@ class Configuration(tk.Toplevel):
         self.command_frame.pack(fill='both', expand=True)
 
         commands_dictionary = {'Load Graphic 1': '111',
-                    'Load Graphic 2': '222',
-                    'Load Graphic 3': '333',
-                    'Load Graphic 4': '444',
-                    'Load Graphic 5': '555'}
+                               'Load Graphic 2': '222',
+                               'Load Graphic 3': '333',
+                               'Load Graphic 4': '444',
+                               'Load Graphic 5': '555'}
 
         # Command List Tree
         self.commands_tree = CommandListTree(self.command_frame, commands_dictionary, ["Commands"])
@@ -91,7 +91,7 @@ class Configuration(tk.Toplevel):
                                              text="New",
                                              command=lambda: CommandWindow(self.commands_tree.command_dictionary,
                                                                            self.insert_command,
-                                                                           self.insert_another_command,))
+                                                                           self.insert_another_command, ))
 
         # Delete Command Button
         self.delete_command_button = ttk.Button(self.command_frame,
@@ -120,8 +120,7 @@ class Configuration(tk.Toplevel):
         # tab1_commands = [[None]]
 
         # Creating Tab 1
-        self.tab1 = tk.Frame(self.tabs)
-        self.tab1_scroll = ScrollFrame(self.tab1,
+        self.tab1_scroll = ScrollFrame(self.tabs,
                                        10,
                                        1,
                                        self.clients_tree,
@@ -133,18 +132,21 @@ class Configuration(tk.Toplevel):
         self.tab1_scroll.pack(expand=True, fill='both')
 
         # Creating Tab 2
-        # self.tab2 = tk.Frame(self.tabs)
-        # self.tab2_scroll = ScrollFrame(self.tab2,
-        #                                10,
-        #                                1,
-        #                                self.clients_tree,
-        #                                self.commands_tree)
-        #
-        # self.tab2_scroll.pack(expand=True, fill='both')
+        self.tab2_scroll = ScrollFrame(self.tabs,
+                                       10,
+                                       1,
+                                       self.clients_tree,
+                                       self.commands_tree,
+                                       clients_dictionary,
+                                       commands_dictionary,
+                                       tab1_clients,
+                                       tab1_commands)
+
+        self.tab2_scroll.pack(expand=True, fill='both')
 
         # Adding tabs to Tab Notebook Frame
-        self.tabs.add(self.tab1, text='First Tab')
-        # self.tabs.add(self.tab2, text='Second Tab')
+        self.tabs.add(self.tab1_scroll, text='First Tab')
+        self.tabs.add(self.tab2_scroll, text='Second Tab')
 
         self.tabs.grid(sticky='nsew')
 
@@ -339,3 +341,19 @@ class ScrollFrame(ttk.Frame):
 
     def reduce_tab_tree_index(self):
         self.client_tab_tree_index -= 1
+
+
+class BottomFrame(ttk.Frame):
+    def __init__(self):
+        super().__init__()
+
+        # self.save_button = ttk.Button(self, text="Save", command=lambda: self.save_pressed())
+
+        self.run_button = ttk.Button(self, text="Run", command=lambda: self.run_pressed())
+        self.run_button.pack()
+
+    def save_pressed(self):
+        pass
+
+    def run_pressed(self):
+        pass
