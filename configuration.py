@@ -242,7 +242,8 @@ class ScrollFrame(ttk.Frame):
         client_dnd = ClientDragManager(self.scroll_frame,
                                        self.pack_trees,
                                        self.clients_dictionary,
-                                       self.commands_dictionary)
+                                       self.commands_dictionary,
+                                       parent)
 
         client_dnd.add_dragable(self.clients_tree)
 
