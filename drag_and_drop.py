@@ -4,18 +4,14 @@ import tkinter as tk
 class ClientDragManager:
     def __init__(self,
                  target_frame,
-                 pack_trees,
                  clients_dictionary,
-                 commands_dictionary,
-                 parent):
+                 commands_dictionary):
 
         self.widget = None
         self.tree_selection = list()
         self.target_frame = target_frame
-        self.pack_trees = pack_trees
         self.clients_dictionary = clients_dictionary
         self.commands_dictionary = commands_dictionary
-        self.parent = parent
 
     def add_dragable(self, widget):
         self.widget = widget
@@ -41,11 +37,13 @@ class ClientDragManager:
         # find the widget under the cursor
         x, y = event.widget.winfo_pointerxy()
         target = event.widget.winfo_containing(x, y)
-        print(f'Widget mouse released over: {target}')
-        print(self.parent.select())
-        if target == self.target_frame:
+        target_str = str(target)
+        target_frame = str(self.target_frame) + ".!frame"
+
+        if target_str == target_frame:
+            print("succ")
             for item in self.tree_selection:
-                self.pack_trees([item, ], self.clients_dictionary, self.commands_dictionary, [None])
+                self.target_frame.pack_trees([item, ], self.clients_dictionary, self.commands_dictionary, [None])
         self.tree_selection.clear()
 
 
