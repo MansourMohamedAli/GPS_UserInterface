@@ -19,7 +19,7 @@ class Configuration(tk.Toplevel):
         self.geometry("1340x600")
         self.resizable(False, False)
         # self.minsize(400, 300)
-        self.tab_tree_list = dict()
+        self.tabs_list = list()
 
         self.tab_frame = ttk.Frame(self, relief=tk.GROOVE)
         self.side_bar_frame = ttk.Frame(self, relief=tk.GROOVE)
@@ -48,12 +48,12 @@ class Configuration(tk.Toplevel):
         self.client_frame.columnconfigure(1, weight=1, uniform='a')
         self.client_frame.pack(fill='both', expand=True)
 
-        clients_dictionary = {'VB1': ('199.199.199.01', 'MAC1'),
-                              'VB2': ('199.199.199.02', 'MAC2'),
-                              'VB3': ('199.199.199.03', 'MAC3'),
-                              'VB4': ('199.199.199.01', 'MAC4')}
+        self.clients_dictionary = {'VB1': ('199.199.199.01', 'MAC1'),
+                                   'VB2': ('199.199.199.02', 'MAC2'),
+                                   'VB3': ('199.199.199.03', 'MAC3'),
+                                   'VB4': ('199.199.199.01', 'MAC4')}
 
-        self.clients_tree = ClientListTree(self.client_frame, clients_dictionary, ["Clients"])
+        self.clients_tree = ClientListTree(self.client_frame, self.clients_dictionary, ["Clients"])
 
         # New Client Button
         self.new_client_button = ttk.Button(self.client_frame,
@@ -79,14 +79,14 @@ class Configuration(tk.Toplevel):
         self.command_frame.columnconfigure(1, weight=1, uniform='a')
         self.command_frame.pack(fill='both', expand=True)
 
-        commands_dictionary = {'Load Graphic 1': '111',
-                               'Load Graphic 2': '222',
-                               'Load Graphic 3': '333',
-                               'Load Graphic 4': '444',
-                               'Load Graphic 5': '555'}
+        self.commands_dictionary = {'Load Graphic 1': '111',
+                                    'Load Graphic 2': '222',
+                                    'Load Graphic 3': '333',
+                                    'Load Graphic 4': '444',
+                                    'Load Graphic 5': '555'}
 
         # Command List Tree
-        self.commands_tree = CommandListTree(self.command_frame, commands_dictionary, ["Commands"])
+        self.commands_tree = CommandListTree(self.command_frame, self.commands_dictionary, ["Commands"])
         self.new_command_button = ttk.Button(self.command_frame,
                                              text="New",
                                              command=lambda: CommandWindow(self.commands_tree.command_dictionary,
@@ -106,6 +106,7 @@ class Configuration(tk.Toplevel):
         # Tab Frame configuration
         # self.tabs = ttk.Notebook(self.tab_frame, width=1080, height=self.tab_frame.winfo_height())
         self.tabs = ttk.Notebook(self.tab_frame, width=1080)
+        self.tabs.bind("<<NotebookTabChanged>>", self.on_tab_selected)
         self.tab_frame.rowconfigure(0, weight=1)
         self.tab_frame.columnconfigure(0, weight=1)
 
@@ -125,11 +126,14 @@ class Configuration(tk.Toplevel):
                                        1,
                                        self.clients_tree,
                                        self.commands_tree,
-                                       clients_dictionary,
-                                       commands_dictionary,
+                                       self.clients_dictionary,
+                                       self.commands_dictionary,
                                        tab1_clients,
                                        tab1_commands)
+
         self.tab1_scroll.pack(expand=True, fill='both')
+        self.tabs_list.append(self.tab1_scroll)
+        self.tab1_scroll.initialize_tab_trees()
 
         # Creating Tab 2
         self.tab2_scroll = ScrollFrame(self.tabs,
@@ -137,12 +141,13 @@ class Configuration(tk.Toplevel):
                                        1,
                                        self.clients_tree,
                                        self.commands_tree,
-                                       clients_dictionary,
-                                       commands_dictionary,
+                                       self.clients_dictionary,
+                                       self.commands_dictionary,
                                        tab1_clients,
                                        tab1_commands)
 
         self.tab2_scroll.pack(expand=True, fill='both')
+        self.tabs_list.append(self.tab2_scroll)
 
         # Adding tabs to Tab Notebook Frame
         self.tabs.add(self.tab1_scroll, text='First Tab')
@@ -165,6 +170,19 @@ class Configuration(tk.Toplevel):
 
         style = ttk.Style(self)
         style.theme_use('clam')
+
+    def on_tab_selected(self, event):
+        selected_tab = event.widget.select()
+        tab_id = self.tabs.index(selected_tab)
+        scroll_frame = self.tabs_list[tab_id]
+
+        # todo Verify how class memory is managed. Is the old one being replaced?
+        client_dnd = ClientDragManager(scroll_frame,
+                                       self.clients_dictionary,
+                                       self.commands_dictionary)
+
+        client_dnd.add_dragable(self.clients_tree)
+        # print(client_dnd) # memory location
 
     def insert_client(self, window_instance, new_client):
         if new_client:
@@ -236,16 +254,6 @@ class ScrollFrame(ttk.Frame):
         self.canvas.bind_class('scroll_frame_widgets', '<MouseWheel>',
                                lambda event: self.canvas.yview_scroll(-int(event.delta / 60), "units"))
         self.bind('<Configure>', self.update_scroll_area_resize_event)
-
-        self.initialize_tab_trees()
-
-        client_dnd = ClientDragManager(self.scroll_frame,
-                                       self.pack_trees,
-                                       self.clients_dictionary,
-                                       self.commands_dictionary,
-                                       parent)
-
-        client_dnd.add_dragable(self.clients_tree)
 
         command_dnd = CommandDragManager(self.commands_tree)
         command_dnd.add_dragable(self.commands_tree)

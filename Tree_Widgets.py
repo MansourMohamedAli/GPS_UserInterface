@@ -107,7 +107,6 @@ class TabBarTree(ttk.Treeview):
 
     def initialize_commands(self):
         if self.command_names[0]:
-            print(self.command_names)
             for command in self.command_names:
                 self.insert(parent='', index=tk.END, values=[command])
             self.update_command_list()
