@@ -9,6 +9,7 @@ from Tree_Widgets import (ClientListTree,
                           TabBarTree,
                           ClientTabFrame,
                           TabTreeMouseOver)
+from new_tab_window import NewTabWindow
 from math import floor
 
 
@@ -23,7 +24,7 @@ class Configuration(tk.Toplevel):
 
         self.tab_frame = ttk.Frame(self, relief=tk.GROOVE)
         self.side_bar_frame = ttk.Frame(self, relief=tk.GROOVE)
-        self.top_bar_frame = ttk.Frame(self, relief=tk.GROOVE)
+        # self.top_bar_frame = TopFrame(self, relief=tk.GROOVE)
         self.bot_bar_frame = ttk.Frame(self, relief=tk.GROOVE)
 
         self.rowconfigure(0, weight=1)
@@ -117,9 +118,6 @@ class Configuration(tk.Toplevel):
                          [None],
                          [None]]
 
-        # tab1_clients = ["Vb"]
-        # tab1_commands = [[None]]
-
         # Creating Tab 1
         self.tab1_scroll = ScrollFrame(self.tabs,
                                        10,
@@ -153,23 +151,40 @@ class Configuration(tk.Toplevel):
         self.tabs.add(self.tab1_scroll, text='First Tab')
         self.tabs.add(self.tab2_scroll, text='Second Tab')
 
-        self.tabs.grid(sticky='nsew')
+        self.tabs.grid(sticky='nsew', pady=(20, 0))
 
         # Top Bar Configuration
-        self.top_label = ttk.Label(self.top_bar_frame, text="Top Bar")
-        self.top_label.pack(expand=True)
+        # self.top_label = ttk.Label(self.top_bar_frame, text="Top Bar")
+        # self.top_label.pack(expand=True)
+
+        self.button_frame = ttk.Frame(self.tab_frame)
+        self.button_frame.columnconfigure(0, weight=1, uniform='a')
+        self.button_frame.columnconfigure(1, weight=1, uniform='a')
+        self.button_frame.rowconfigure(0, weight=1)
+
+        self.new_button = ttk.Button(self.button_frame,
+                                     text="New Tab",
+                                     command=lambda: NewTabWindow(self.insert_tab, self.insert_another_tab))
+        self.delete_button = ttk.Button(self.button_frame, text="Delete Tab")
+
+        self.new_button.grid(row=0, column=0, sticky='s', padx=5, pady=5)
+        self.delete_button.grid(row=0, column=1, sticky='s', padx=5, pady=5)
+
+        self.button_frame.place(relx=0.8, rely=0.001)
 
         # Bottom Bar Configuration
         self.bot_label = ttk.Label(self.bot_bar_frame, text="Bottom Bar")
         self.bot_label.pack(expand=True)
 
-        self.tab_frame.grid(row=1, column=1, sticky='nsew', padx=(5, 5), pady=(10, 10))
+        # self.tab_frame.grid(row=1, column=1, sticky='nsew', padx=(5, 5), pady=(10, 10))
+        self.tab_frame.grid(row=1, column=1, sticky='nsew', padx=(5, 5))
         self.side_bar_frame.grid(row=0, column=0, sticky='nsew', rowspan=3, padx=(5, 5), pady=(10, 10))
-        self.top_bar_frame.grid(row=0, column=1, sticky='nsew', padx=(5, 5), pady=(10, 10))
+        # self.top_bar_frame.grid(row=0, column=1, sticky='nsew', padx=(5, 5), pady=(10, 10))
+        # self.top_bar_frame.grid(row=0, column=1, sticky='nsew', padx=(5, 5))
         self.bot_bar_frame.grid(row=2, column=1, sticky='nsew', padx=(5, 5), pady=(10, 10))
 
-        style = ttk.Style(self)
-        style.theme_use('clam')
+        # style = ttk.Style(self)
+        # style.theme_use('clam')
 
     def on_tab_selected(self, event):
         selected_tab = event.widget.select()
@@ -183,6 +198,31 @@ class Configuration(tk.Toplevel):
 
         client_dnd.add_dragable(self.clients_tree)
         # print(client_dnd) # memory location
+
+    def insert_tab(self, window_instance, new_tab):
+        if new_tab:
+            tab = ScrollFrame(self.tabs,
+                              10,
+                              1,
+                              self.clients_tree,
+                              self.commands_tree,
+                              self.clients_dictionary,
+                              self.commands_dictionary)
+            self.tabs_list.append(tab)
+            self.tabs.add(tab, text=f'{new_tab}')
+        window_instance.destroy()
+
+    def insert_another_tab(self, new_tab):
+        if new_tab:
+            tab = ScrollFrame(self.tabs,
+                              10,
+                              1,
+                              self.clients_tree,
+                              self.commands_tree,
+                              self.clients_dictionary,
+                              self.commands_dictionary)
+            self.tabs_list.append(tab)
+            self.tabs.add(tab, text=f'{new_tab}')
 
     def insert_client(self, window_instance, new_client):
         if new_client:
@@ -215,8 +255,8 @@ class ScrollFrame(ttk.Frame):
                  commands_tree,
                  clients_dictionary,
                  commands_dictionary,
-                 tab_clients,
-                 tab_commands):
+                 tab_clients=None,
+                 tab_commands=None):
 
         super().__init__(master=parent)
 
