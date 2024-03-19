@@ -16,6 +16,7 @@ from math import floor
 class Configuration(tk.Toplevel):
     def __init__(self):
         super().__init__()
+        self.tab_id = None
         self.title('Configuration')
         self.geometry("1340x600")
         self.resizable(False, False)
@@ -165,7 +166,9 @@ class Configuration(tk.Toplevel):
         self.new_button = ttk.Button(self.button_frame,
                                      text="New Tab",
                                      command=lambda: NewTabWindow(self.insert_tab, self.insert_another_tab))
-        self.delete_button = ttk.Button(self.button_frame, text="Delete Tab")
+        self.delete_button = ttk.Button(self.button_frame,
+                                        text="Delete Tab",
+                                        command=self.delete_tab)
 
         self.new_button.grid(row=0, column=0, sticky='s', padx=5, pady=5)
         self.delete_button.grid(row=0, column=1, sticky='s', padx=5, pady=5)
@@ -187,17 +190,18 @@ class Configuration(tk.Toplevel):
         # style.theme_use('clam')
 
     def on_tab_selected(self, event):
-        selected_tab = event.widget.select()
-        tab_id = self.tabs.index(selected_tab)
-        scroll_frame = self.tabs_list[tab_id]
+        if self.tabs_list:
+            selected_tab = event.widget.select()
+            self.tab_id = self.tabs.index(selected_tab)
+            scroll_frame = self.tabs_list[self.tab_id]
 
-        # todo Verify how class memory is managed. Is the old one being replaced?
-        client_dnd = ClientDragManager(scroll_frame,
-                                       self.clients_dictionary,
-                                       self.commands_dictionary)
+            # todo Verify how class memory is managed. Is the old one being replaced?
+            client_dnd = ClientDragManager(scroll_frame,
+                                           self.clients_dictionary,
+                                           self.commands_dictionary)
 
-        client_dnd.add_dragable(self.clients_tree)
-        # print(client_dnd) # memory location
+            client_dnd.add_dragable(self.clients_tree)
+            # print(client_dnd) # memory location
 
     def insert_tab(self, window_instance, new_tab):
         if new_tab:
@@ -223,6 +227,15 @@ class Configuration(tk.Toplevel):
                               self.commands_dictionary)
             self.tabs_list.append(tab)
             self.tabs.add(tab, text=f'{new_tab}')
+
+    def delete_tab(self):
+        for item in self.tabs.winfo_children():
+            if str(item) == self.tabs.select():
+                item.destroy()
+                del self.tabs_list[self.tab_id]
+                return
+
+        # self.tabs_list.remove()
 
     def insert_client(self, window_instance, new_client):
         if new_client:

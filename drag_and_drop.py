@@ -87,7 +87,6 @@ class CommandDragManager:
                     target.commands.append(command)
                     print(f'{target.command_names}')
                     print(f'{target.commands}')
-
         except:
             pass
         self.tree_selection.clear()
