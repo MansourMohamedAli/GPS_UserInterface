@@ -50,17 +50,17 @@ class Configuration(tk.Toplevel):
         self.client_frame.columnconfigure(1, weight=1, uniform='a')
         self.client_frame.pack(fill='both', expand=True)
 
-        self.clients_dictionary = {'VB1': ('199.199.199.01', 'MAC1'),
-                                   'VB2': ('199.199.199.02', 'MAC2'),
-                                   'VB3': ('199.199.199.03', 'MAC3'),
-                                   'VB4': ('199.199.199.01', 'MAC4'),
-                                   'VB5': ('199.199.199.01', 'MAC1'),
-                                   'VB6': ('199.199.199.02', 'MAC2'),
-                                   'VB7': ('199.199.199.03', 'MAC3'),
-                                   'VB8': ('199.199.199.01', 'MAC4'),
-                                   'VB9': ('199.199.199.01', 'MAC4')}
+        self.clients_from_json = {'VB1': ('199.199.199.01', 'MAC1'),
+                                  'VB2': ('199.199.199.02', 'MAC2'),
+                                  'VB3': ('199.199.199.03', 'MAC3'),
+                                  'VB4': ('199.199.199.01', 'MAC4'),
+                                  'VB5': ('199.199.199.01', 'MAC1'),
+                                  'VB6': ('199.199.199.02', 'MAC2'),
+                                  'VB7': ('199.199.199.03', 'MAC3'),
+                                  'VB8': ('199.199.199.01', 'MAC4'),
+                                  'VB9': ('199.199.199.01', 'MAC4')}
 
-        self.clients_tree = ClientListTree(self.client_frame, self.clients_dictionary, ["Clients"])
+        self.clients_tree = ClientListTree(self.client_frame, self.clients_from_json, ["Clients"])
 
         # New Client Button
         self.new_client_button = ttk.Button(self.client_frame,
@@ -86,14 +86,14 @@ class Configuration(tk.Toplevel):
         self.command_frame.columnconfigure(1, weight=1, uniform='a')
         self.command_frame.pack(fill='both', expand=True)
 
-        self.commands_dictionary = {'Load Graphic 1': '111',
-                                    'Load Graphic 2': '222',
-                                    'Load Graphic 3': '333',
-                                    'Load Graphic 4': '444',
-                                    'Load Graphic 5': '555'}
+        self.commands_from_json = {'Load Graphic 1': '111',
+                                   'Load Graphic 2': '222',
+                                   'Load Graphic 3': '333',
+                                   'Load Graphic 4': '444',
+                                   'Load Graphic 5': '555'}
 
         # Command List Tree
-        self.commands_tree = CommandListTree(self.command_frame, self.commands_dictionary, ["Commands"])
+        self.commands_tree = CommandListTree(self.command_frame, self.commands_from_json, ["Commands"])
         self.new_command_button = ttk.Button(self.command_frame,
                                              text="New",
                                              command=lambda: CommandWindow(self.commands_tree.command_dictionary,
@@ -117,53 +117,24 @@ class Configuration(tk.Toplevel):
         self.tab_frame.rowconfigure(0, weight=1)
         self.tab_frame.columnconfigure(0, weight=1)
 
-        # Initializing Tabs:
-        tab_clients = [["VB1", "VB2", "VB3"], ["VB4", "VB5", "VB6"], ["VB7", "VB8", "VB9"]]
-        tab_commands = [["Load Graphic 1", "Load Graphic 2", "Load Graphic 3"], [None], [None]]
+        tab_clients_from_json = {'Tab 1': ["VB1", "VB2", "VB3"],
+                                 'Tab 2': ["VB4", "VB5", "VB6"],
+                                 'Tab 3': ["VB7", "VB8", "VB9"]}
 
-        tab1_clients = ["VB1", "VB2", "VB3"]
-        tab1_commands = [["Load Graphic 1", "Load Graphic 2", "Load Graphic 3"],
-                         [None],
-                         [None]]
+        tab_commands_from_json = {'1': [["Load_tab1", "Load_tab2", "Load_tab3"], [None], [None]],
+                                  '2': [["Load_tab4", "Load_tab5", "Load_tab6"], [None], [None]],
+                                  '3': [["Load_tab7", "Load_tab8", "Load_tab9"], [None], [None]]}
 
-        # Creating Tab 1
-        self.tab1_scroll = ScrollFrame(self.tabs,
-                                       10,
-                                       1,
-                                       self.clients_tree,
-                                       self.commands_tree,
-                                       self.clients_dictionary,
-                                       self.commands_dictionary,
-                                       tab_clients,
-                                       tab_commands)
-
-        self.tab1_scroll.pack(expand=True, fill='both')
-        self.tabs_list.append(self.tab1_scroll)
-        self.tab1_scroll.initialize_tab_trees()
-
-        # Creating Tab 2
-        # self.tab2_scroll = ScrollFrame(self.tabs,
-        #                                10,
-        #                                1,
-        #                                self.clients_tree,
-        #                                self.commands_tree,
-        #                                self.clients_dictionary,
-        #                                self.commands_dictionary,
-        #                                tab1_clients,
-        #                                tab1_commands)
-        #
-        # self.tab2_scroll.pack(expand=True, fill='both')
-        # self.tabs_list.append(self.tab2_scroll)
-
-        # Adding tabs to Tab Notebook Frame
-        self.tabs.add(self.tab1_scroll, text='First Tab')
-        # self.tabs.add(self.tab2_scroll, text='Second Tab')
+        # Creating Tabs
+        ScrollFrame.from_json(self.tabs,  # passing in notebook for method to instantiate tabs
+                              self.clients_tree,  # clients tree contains all client info
+                              self.commands_tree,  # commands tree contains all client info
+                              self.clients_from_json,
+                              self.commands_from_json,
+                              tab_clients_from_json,
+                              tab_commands_from_json)
 
         self.tabs.grid(sticky='nsew', pady=(20, 0))
-
-        # Top Bar Configuration
-        # self.top_label = ttk.Label(self.top_bar_frame, text="Top Bar")
-        # self.top_label.pack(expand=True)
 
         self.button_frame = ttk.Frame(self.tab_frame)
         self.button_frame.columnconfigure(0, weight=1, uniform='a')
@@ -204,8 +175,8 @@ class Configuration(tk.Toplevel):
 
             # todo Verify how class memory is managed. Is the old one being replaced?
             client_dnd = ClientDragManager(scroll_frame,
-                                           self.clients_dictionary,
-                                           self.commands_dictionary)
+                                           self.clients_from_json,
+                                           self.commands_from_json)
 
             client_dnd.add_dragable(self.clients_tree)
             # print(client_dnd) # memory location
@@ -213,12 +184,10 @@ class Configuration(tk.Toplevel):
     def insert_tab(self, window_instance, new_tab):
         if new_tab:
             tab = ScrollFrame(self.tabs,
-                              10,
-                              1,
                               self.clients_tree,
                               self.commands_tree,
-                              self.clients_dictionary,
-                              self.commands_dictionary)
+                              self.clients_from_json,
+                              self.commands_from_json)
             self.tabs_list.append(tab)
             self.tabs.add(tab, text=f'{new_tab}')
         window_instance.destroy()
@@ -226,12 +195,10 @@ class Configuration(tk.Toplevel):
     def insert_another_tab(self, new_tab):
         if new_tab:
             tab = ScrollFrame(self.tabs,
-                              10,
-                              1,
                               self.clients_tree,
                               self.commands_tree,
-                              self.clients_dictionary,
-                              self.commands_dictionary)
+                              self.clients_from_json,
+                              self.commands_from_json)
             self.tabs_list.append(tab)
             self.tabs.add(tab, text=f'{new_tab}')
 
@@ -271,8 +238,6 @@ class Configuration(tk.Toplevel):
 class ScrollFrame(ttk.Frame):
     def __init__(self,
                  parent,
-                 item_height,
-                 tree_index,
                  clients_tree,
                  commands_tree,
                  clients_dictionary,
@@ -283,9 +248,9 @@ class ScrollFrame(ttk.Frame):
         super().__init__(master=parent)
 
         # widget data
-        self.tree_index = tree_index
-        self.item_height = item_height
-        self.list_height = (self.tree_index * item_height)  # Five items per row
+        self.tree_index = 1
+        self.item_height = 10
+        self.list_height = (self.tree_index * self.item_height)  # Five items per row
         self.clients_tree = clients_tree
         self.commands_tree = commands_tree
         self.clients_dictionary = clients_dictionary
@@ -361,15 +326,54 @@ class ScrollFrame(ttk.Frame):
         self.list_height = height
         # print("Size Updated!")
 
-    def initialize_tab_trees(self):
-        for tab in self.tab_clients:
-            for index, client_name in enumerate(tab):
-                if self.tab_clients[index]:
-                    self.pack_trees([client_name, ],
-                                    self.clients_dictionary,
-                                    self.commands_dictionary,
-                                    self.tab_commands[index])
-                    print(client_name, self.tab_commands[index])
+    @classmethod
+    def from_json(cls,
+                  tabs,
+                  clients_tree,
+                  commands_tree,
+                  clients_dictionary,
+                  commands_dictionary,
+                  tab_clients_from_json,
+                  tab_commands_from_json):
+
+        for index, (tab_name, client) in enumerate(tab_clients_from_json.items()):
+            tab = cls(tabs,
+                      clients_tree,
+                      commands_tree,
+                      clients_dictionary,
+                      commands_dictionary)
+
+            print(tab_commands_from_json[str(index + 1)])
+            # cls.pack_trees(tab,
+            #                client,
+            #                clients_dictionary,
+            #                commands_dictionary,
+            #                tab_commands_from_json[str(index + 1)])
+
+            tab.pack(expand=True, fill='both')
+            tabs.add(tab, text=tab_name)
+
+        return cls(tabs,
+                   clients_tree,
+                   commands_tree,
+                   clients_dictionary,
+                   commands_dictionary,
+                   tab_clients_from_json,
+                   tab_commands_from_json)
+
+    # def initialize_tab_trees(self):
+    #     command_counter = 0
+    #     for tab in self.tab_clients:
+    #         print(tab)
+    #         for tree_index, client_name in enumerate(tab):
+    #             if self.tab_clients[tree_index]:
+    #                 print(client_name)
+    #                 self.pack_trees([client_name, ],
+    #                                 self.clients_dictionary,
+    #                                 self.commands_dictionary,
+    #                                 self.tab_commands[tree_index])
+    #
+    #                 print(client_name, self.tab_commands[tree_index])
 
     def pack_trees(self, client_name, clients_dictionary, commands_dictionary, command_names=None):
         client_tab_frame = ClientTabFrame(self.scroll_frame, self.client_tab_tree_index)

@@ -67,9 +67,10 @@ class CommandListTree(ttk.Treeview):
 
 
 class TabBarTree(ttk.Treeview):
-    def __init__(self, parent, tree_index, client_name, command_names, clients_dictionary, commands_dictionary):
-        super().__init__(master=parent, columns=client_name, show='headings')
-        self.headings = client_name
+    def __init__(self, parent, tree_index, tab_client_from_json, tab_commands_from_json, clients_dictionary,
+                 commands_dictionary):
+        super().__init__(master=parent, columns=tab_client_from_json, show='headings')
+        self.headings = tab_client_from_json
         self.parent = parent
         self.get_tree_headings()
         self.bind('<Delete>', self.delete_row)
@@ -77,11 +78,9 @@ class TabBarTree(ttk.Treeview):
         self.tree_index = tree_index
         self.row = None
         self.column = None
-        self.client_name = None
         self.ip_address = None
         self.mac_address = None
-        self.client_name = client_name
-        self.command_names = command_names
+        self.command_names = tab_commands_from_json
         self.commands = list()
 
         self.clients_dictionary = clients_dictionary
@@ -102,31 +101,27 @@ class TabBarTree(ttk.Treeview):
         self.bind('<<TreeviewSelect>>', self.disable_scroll)
         self.scroll_state = True
 
-    def initialize_client_info(self):
-        self.ip_address, self.mac_address = self.clients_dictionary[self.client_name[0]]
+    # @classmethod
+    # def from_json(cls,
+    #               parent,
+    #               tree_index,
+    #               tab_client_from_json,
+    #               tab_commands_from_json,
+    #               clients_dictionary,
+    #               commands_dictionary):
+    #
+    #     return
 
-    # def initialize_commands(self):
-    #     if self.command_names[0]:
-    #         for command in self.command_names:
-    #             self.insert(parent='', index=tk.END, values=[command])
-    #         self.update_command_list()
-    #     else:
-    #         self.command_names = list()
+    def initialize_client_info(self):
+        self.ip_address, self.mac_address = self.clients_dictionary[self.headings[0]]
 
     def initialize_commands(self):
         if self.command_names[0]:
             for command in self.command_names:
                 self.insert(parent='', index=tk.END, values=[command])
-            self.update_command_list()
+            # self.update_command_list()
         else:
             self.command_names = list()
-
-
-    # def initialize_commands(self):
-    #     for command_list in self.command_names:
-    #         for command in command_list:
-    #             self.insert(parent='', index=tk.END, values=[command])
-    #     self.update_command_list()
 
     def enable_scroll(self, event):
         if not self.scroll_state:
@@ -312,9 +307,9 @@ class TabTreeMouseOver:
         tree_pad_x = 5
         tree_pad_y = 0
         client_tab_frame.grid(row=row, column=column,
-                          padx=tree_pad_x,
-                          pady=tree_pad_y,
-                          sticky="nsew")
+                              padx=tree_pad_x,
+                              pady=tree_pad_y,
+                              sticky="nsew")
 
     def insert_command(self, window_instance, new_command):
         if new_command:
