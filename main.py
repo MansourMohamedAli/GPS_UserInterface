@@ -3,7 +3,7 @@ from tkinter import ttk
 from configuration import Configuration
 from send_command import send_command
 import socket
-import os
+import json
 
 host = socket.gethostname()
 ip_address = socket.gethostbyname(host)
@@ -35,7 +35,8 @@ class Menu(ttk.Frame):
         self.menu_button_4 = ttk.Button(self, text='Button 4')
         self.menu_button_5 = ttk.Button(self, text='Button 5')
         self.menu_button_6 = ttk.Button(self, text='Button 6')
-        self.config_button = ttk.Button(self, text='Configuration', command=Configuration)
+        self.config_button = ttk.Button(self, text='Configuration',
+                                        command=self.read_configuration)
 
         # create the grid
         self.columnconfigure(0, weight=1, uniform='a')
@@ -57,6 +58,15 @@ class Menu(ttk.Frame):
 
         style = ttk.Style(self)
         style.theme_use('alt')
+
+    @staticmethod
+    def read_configuration():
+        with open('commandconfig.json') as f:
+            json_data = json.load(f)
+        Configuration.from_json(json_data)
+
+        # with open('commandconfig_dumptest.json', 'w') as f2:
+        #     json.dump(data, f2, indent=2)
 
 
 App('Glass Panel Control', (200, 200))

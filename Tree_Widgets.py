@@ -116,12 +116,12 @@ class TabBarTree(ttk.Treeview):
         self.ip_address, self.mac_address = self.clients_dictionary[self.headings[0]]
 
     def initialize_commands(self):
-        if self.command_names[0]:
+        if self.command_names:
             for command in self.command_names:
                 self.insert(parent='', index=tk.END, values=[command])
             # self.update_command_list()
-        else:
-            self.command_names = list()
+        # else:
+        #     self.command_names = list()
 
     def enable_scroll(self, event):
         if not self.scroll_state:
@@ -142,25 +142,25 @@ class TabBarTree(ttk.Treeview):
         selected_items = self.selection()
         for item in selected_items:
             self.delete(item)
-        self.update_command_list()
+        # self.update_command_list()
 
-    def update_command_list(self):
-        """
-        Duplicate commands are allowed in the tree and using the .remove() method will always
-        remove the first occurrence in a list. To get around this issue and allow the removal
-        of later occurrences, The command_names and commands list are cleared. Then the
-        command_names list is populated in order using the Tkinter get_children() method. Finally,
-        the command_tree dictionary is searched using the command_name as a key and the appropriate
-        command is added in the correct order back to the commands list.
-        :return: None
-        """
-        self.command_names.clear()
-        self.commands.clear()
-        for item in self.get_children():
-            command_name = self.item(item)['values'][0]
-            self.command_names.append(command_name)
-            command = self.commands_dictionary[command_name]
-            self.commands.append(command)
+    # def update_command_list(self):
+    #     """
+    #     Duplicate commands are allowed in the tree and using the .remove() method will always
+    #     remove the first occurrence in a list. To get around this issue and allow the removal
+    #     of later occurrences, The command_names and commands list are cleared. Then the
+    #     command_names list is populated in order using the Tkinter get_children() method. Finally,
+    #     the command_tree dictionary is searched using the command_name as a key and the appropriate
+    #     command is added in the correct order back to the commands list.
+    #     :return: None
+    #     """
+    #     self.command_names.clear()
+    #     self.commands.clear()
+    #     for item in self.get_children():
+    #         command_name = self.item(item)['values'][0]
+    #         self.command_names.append(command_name)
+    #         command = self.commands_dictionary[command_name]
+    #         self.commands.append(command)
 
 
 class ClientTabFrame(ttk.Frame):
