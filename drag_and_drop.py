@@ -77,12 +77,13 @@ class CommandDragManager:
             if target.tree_name == "tab_tree":
                 for command_name in self.tree_selection:
                     target.insert(parent='', index=tk.END, values=[command_name])
+
                     # Commands Dictionary for matching command name
                     command_value = self.commands_tree.command_dictionary[command_name]
+
                     # Add command names and commands to two separate lists.
                     # I want to allow duplicate commands so a dictionary wouldn't work.
                     target.command_name_value_pair.append([command_name, command_value])
-                    print(f'{target.command_name_value_pair}')
-        except AttributeError as e:
-            print(e)
+        except AttributeError:
+            pass
         self.tree_selection.clear()

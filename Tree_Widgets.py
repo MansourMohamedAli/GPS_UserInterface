@@ -9,10 +9,8 @@ class ClientListTree(ttk.Treeview):
         super().__init__(master=parent, columns=headings, show='headings')
         self.headings = headings
         self.parent = parent
-        self.get_tree_headings()
         self.bind('<Delete>', self.delete_row_keyboard_button)
         self.client_dictionary = client_dictionary
-        # self.insert_clients()
 
     @classmethod
     def from_json(cls, parent, client_dictionary, heading):
@@ -21,10 +19,6 @@ class ClientListTree(ttk.Treeview):
             if new_client:
                 cls.insert(tree, parent='', index=tk.END, values=[new_client])
         return tree
-
-    def get_tree_headings(self):
-        for heading in self.headings:
-            self.heading(heading, text=str(heading))
 
     def delete_row_keyboard_button(self, event):
         self.delete_row()
@@ -51,7 +45,14 @@ class CommandListTree(ttk.Treeview):
         self.get_tree_headings()
         self.bind('<Delete>', self.delete_row_keyboard_button)
         self.command_dictionary = command_dictionary
-        self.insert_commands()
+
+    @classmethod
+    def from_json(cls, parent, command_dictionary, heading):
+        tree = cls(parent, command_dictionary, heading)
+        for new_command in command_dictionary:
+            if new_command:
+                cls.insert(tree, parent='', index=tk.END, values=[new_command])
+        return tree
 
     def get_tree_headings(self):
         for heading in self.headings:
@@ -67,11 +68,6 @@ class CommandListTree(ttk.Treeview):
             command_name = command_full_tree_info['values'][0]
             del self.command_dictionary[command_name]
             self.delete(command)
-
-    def insert_commands(self):
-        for new_command in self.command_dictionary:
-            if new_command:
-                self.insert(parent='', index=tk.END, values=[new_command])
 
 
 class TabBarTree(ttk.Treeview):

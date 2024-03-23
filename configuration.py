@@ -81,7 +81,7 @@ class Configuration(tk.Toplevel):
         self.command_frame.pack(fill='both', expand=True)
 
         # Command List Tree
-        self.commands_tree = CommandListTree(self.command_frame, self.commands_dictionary, ["Commands"])
+        self.commands_tree = CommandListTree.from_json(self.command_frame, self.commands_dictionary, ["Commands"])
         # Making command tree items draggable.
         command_dnd = CommandDragManager(self.commands_tree)
         command_dnd.add_dragable(self.commands_tree)
@@ -256,8 +256,6 @@ class ScrollFrame(ttk.Frame):
                                lambda event: self.canvas.yview_scroll(-int(event.delta / 60), "units"))
         self.bind('<Configure>', self.update_scroll_area_resize_event)
 
-        # command_dnd = CommandDragManager(self.commands_tree)
-        # command_dnd.add_dragable(self.commands_tree)
 
     def update_scroll_area_resize_event(self, event):
         """Resizing Currently Disabled"""
