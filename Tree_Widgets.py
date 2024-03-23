@@ -67,30 +67,16 @@ class CommandListTree(ttk.Treeview):
 
 
 class TabBarTree(ttk.Treeview):
-    def __init__(self, parent, tree_index, tab_client_from_json, tab_commands_from_json, clients_dictionary,
-                 commands_dictionary):
-        super().__init__(master=parent, columns=tab_client_from_json, show='headings')
-        self.headings = tab_client_from_json
+    def __init__(self, parent, client_name, ip_address, mac_address, command_name_value_pair):
+        super().__init__(master=parent, columns=client_name, show='headings')
+        self.headings = client_name
         self.parent = parent
         self.get_tree_headings()
         self.bind('<Delete>', self.delete_row)
         self.tree_name = "tab_tree"
-        self.tree_index = tree_index
-        self.row = None
-        self.column = None
-        self.ip_address = None
-        self.mac_address = None
-        self.command_name_value_pair = tab_commands_from_json
-
-        self.clients_dictionary = clients_dictionary
-        self.commands_dictionary = commands_dictionary
-
-        self.initialize_client_info()
-        self.initialize_commands()
-        # print(self.command_names)
-        # print(self.commands)
-
-        # print(self.ip_address, self.mac_address)
+        self.ip_address = ip_address
+        self.mac_address = mac_address
+        self.command_name_value_pair = command_name_value_pair
 
         self.no_scroll_tags = self.bindtags()
         # Adding new tag for frame to allow scroll on TabTree and background.
@@ -100,29 +86,39 @@ class TabBarTree(ttk.Treeview):
         self.bind('<<TreeviewSelect>>', self.disable_scroll)
         self.scroll_state = True
 
-    # @classmethod
-    # def from_json(cls,
-    #               parent,
-    #               tree_index,
-    #               tab_client_from_json,
-    #               tab_commands_from_json,
-    #               clients_dictionary,
-    #               commands_dictionary):
-    #
-    #     return
+    @classmethod
+    def from_json(cls,
+                  parent,
+                  clients_dictionary,
+                  client_name,
+                  command_name_value_pair):
+        """
+        Initializes tree in scroll frame "Tab Tree". Assigns tree heading with client name
+        and initializes IP and MAC address using the client_dictionary.
 
-    def initialize_client_info(self):
-        self.ip_address, self.mac_address = self.clients_dictionary[self.headings[0]]
+        :param parent: The Client Tab Frame the tree is packed into.
+        :param clients_dictionary: Dictionary containing IP, MAC definitions.
+        :param client_name: The name of the client that this tree is made for.
+        :param command_name_value_pair: A list of Command Name, Command Value pairs. This is
+        passed here because the tree will modify it (adding and removing commands).
+        :return: New TabBarTree instance.
+        """
+        ip_address, mac_address = clients_dictionary[client_name[0]]
 
-    def initialize_commands(self):
-        if self.command_name_value_pair[0]:
-            for name, value in self.command_name_value_pair:
-                self.insert(parent='', index=tk.END, values=[name])
-            # self.update_command_list()
+        tree = cls(parent,
+                   client_name,
+                   ip_address,
+                   mac_address,
+                   command_name_value_pair)
+
+        if command_name_value_pair[0]:
+            for name, value in command_name_value_pair:
+                cls.insert(tree, parent='', index=tk.END, values=[name])  # Insert name on to tree.
         else:
             # This clears the "None" that appears at the beginning of the list.
             # This line should execute when a new client is dropped in scroll frame.
-            self.command_name_value_pair = list()
+            cls.command_name_value_pair = list()
+        return tree
 
     def enable_scroll(self, event):
         if not self.scroll_state:

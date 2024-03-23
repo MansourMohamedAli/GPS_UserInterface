@@ -339,22 +339,12 @@ class ScrollFrame(ttk.Frame):
             tab.pack(expand=True, fill='both')
             tabs.add(tab, text=tab_name)
 
-        # return cls(tabs,
-        #            clients_tree,
-        #            commands_tree,
-        #            clients_dictionary,
-        #            commands_dictionary,
-        #            tab_clients,
-        #            tab_commands)
-
-    def pack_trees(self, client, tab_commands, clients_dictionary, commands_dictionary):
+    def pack_trees(self, client_name, tab_commands, clients_dictionary, commands_dictionary):
         client_tab_frame = ClientTabFrame(self.scroll_frame, self.client_tab_tree_index)
-        client_tab_tree = TabBarTree(client_tab_frame,
-                                     self.client_tab_tree_index,
-                                     client,
-                                     tab_commands,
-                                     clients_dictionary,
-                                     commands_dictionary)
+        client_tab_tree = TabBarTree.from_json(client_tab_frame,
+                                               clients_dictionary,
+                                               client_name,
+                                               tab_commands)
         client_tab_frame_row, client_tab_frame_col = self.assign_row_column(client_tab_tree, self.client_tab_tree_index)
         self.scroll_frame.rowconfigure(client_tab_frame_row, minsize=260)
         client_tab_tree.pack(expand=False, fill='both')
