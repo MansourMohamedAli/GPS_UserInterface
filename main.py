@@ -61,9 +61,14 @@ class Menu(ttk.Frame):
 
     @staticmethod
     def read_configuration():
-        with open('commandconfig.json') as f:
-            json_data = json.load(f)
-        Configuration.from_json(json_data)
+        try:
+            with open('commandconfig.json') as f:
+                json_data = json.load(f)
+            Configuration.from_json(json_data)
+        except FileNotFoundError as e:
+            print(e)
+        except json.decoder.JSONDecodeError as e:
+            print(e)
 
         # with open('commandconfig_dumptest.json', 'w') as f2:
         #     json.dump(data, f2, indent=2)

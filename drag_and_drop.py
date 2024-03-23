@@ -85,6 +85,6 @@ class CommandDragManager:
                     # I want to allow duplicate commands so a dictionary wouldn't work.
                     target.command_name_value_pair.append([command_name, command_value])
                     print(f'{target.command_name_value_pair}')
-        except:
-            pass
+        except AttributeError as e:
+            print(e)
         self.tree_selection.clear()

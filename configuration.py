@@ -147,12 +147,9 @@ class Configuration(tk.Toplevel):
 
     @classmethod
     def from_json(cls, json_data):
-        try:
-            active_config = (json_data['active_config'])
-            config = (json_data['configurations'][active_config])
-            return cls(config['clients'], config['commands'], config['tab_clients'], config['tab_commands'])
-        except:
-            print("Error reading configuration file.")
+        active_config = (json_data['active_config'])
+        config = (json_data['configurations'][active_config])
+        return cls(config['clients'], config['commands'], config['tab_clients'], config['tab_commands'])
 
     def on_tab_selected(self, event):
         if self.tabs_list:
