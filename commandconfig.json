@@ -33,9 +33,9 @@
         },
         "tab_commands":
         {
-          "1": [["Load_tab1", "Load_tab2", "Load_tab3"], ["test"], [null]],
-          "2": [["Load_tab4", "Load_tab5", "Load_tab6"], [null], [null]],
-          "3": [["Load_tab7", "Load_tab8", "Load_tab9"], [null], [null]]
+          "1": [["VB1 Command 1", "VB1 Command 2", "VB1 Command 3"], ["VB1 Command 2", "VB2 Command 2", "VB3 Command 3"], ["VB3 Command 1", "VB3 Command 2", "VB3 Command 3"]],
+          "2": [["VB4 Command 1", "VB4 Command 2", "VB4 Command 3"], ["VB5 Command 2"], ["VB6 Command 1", "VB6 Command 2", "VB6 Command 3"]],
+          "3": [["VB7 Command 1", "VB7 Command 2", "VB7 Command 3"], ["VB8 Command 2", "VB8 Command 2", "VB8 Command 3"], ["VB9 Command 1"]]
         }
       }
     }

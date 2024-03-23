@@ -323,42 +323,22 @@ class ScrollFrame(ttk.Frame):
                   commands_tree,
                   clients_dictionary,
                   commands_dictionary,
-                  tab_clients_from_json,
-                  tab_commands_from_json):
+                  tab_clients,
+                  tab_commands):
 
-        for index, (tab_name, clients) in enumerate(tab_clients_from_json.items()):
+        for index, (tab_name, clients) in enumerate(tab_clients.items()):
             tab = cls(tabs,
                       clients_tree,
                       commands_tree,
                       clients_dictionary,
                       commands_dictionary)
-            # print(clients)
-            # print(tab_commands_from_json[str(index + 1)][index])
 
-            for client in clients:
-                # print(client)
-                commands = tab_commands_from_json[str(index + 1)][index]
-                print(f'Tab: {tab_name}, Client {client}, commands: {commands}')
-
-
-
-            # for i, ((k, v), (k2, v2)) in enumerate(zip(tab_clients_from_json.items(), tab_commands_from_json.items())):
-            #     # print(tab, v)
-            #     pass
-
-
-
-                # client = None
-                # for client in clients:
-                #     for client_commands in tab_commands_from_json[str(index + 1)]:
-
-                # for command in client_commands:
-                #     print(command)
-                #     cls.pack_trees(tab,
-                #                    [client],
-                #                    clients_dictionary,
-                #                    commands_dictionary,
-                #                    tab_commands_from_json[str(index + 1)][index][i])
+            for i, client in enumerate(clients):
+                cls.pack_trees(tab,
+                               [client],
+                               clients_dictionary,
+                               commands_dictionary,
+                               tab_commands[str(index + 1)][i])
 
             tab.pack(expand=True, fill='both')
             tabs.add(tab, text=tab_name)
