@@ -107,13 +107,15 @@ class Configuration(tk.Toplevel):
         self.tab_frame.columnconfigure(0, weight=1)
 
         # Creating Tabs
-        ScrollFrame.from_json(self.tabs,  # passing in notebook for method to instantiate tabs
-                              self.clients_tree,  # clients tree contains all client info
-                              self.commands_tree,  # commands tree contains all client info
-                              self.clients,
-                              self.commands,
-                              self.tab_clients,
-                              self.tab_commands)
+        tab = ScrollFrame.from_json(self.tabs,  # passing in notebook for method to instantiate tabs
+                                    self.clients_tree,  # clients tree contains all client info
+                                    self.commands_tree,  # commands tree contains all client info
+                                    self.clients,
+                                    self.commands,
+                                    self.tab_clients,
+                                    self.tab_commands,
+                                    self.tabs_list)
+        self.tabs_list.append(tab)
 
         self.tabs.grid(sticky='nsew', pady=(20, 0))
 
@@ -147,15 +149,12 @@ class Configuration(tk.Toplevel):
 
     @classmethod
     def from_json(cls, json_data):
-        active_config = (json_data['active_config'])
-        config = (json_data['configurations'][active_config])
-
-        # print(config['clients'])
-        # print(config['commands'])
-        # print(config['tab_clients'])
-        # print(config['tab_commands'])
-
-        return cls(config['clients'], config['commands'], config['tab_clients'], config['tab_commands'])
+        try:
+            active_config = (json_data['active_config'])
+            config = (json_data['configurations'][active_config])
+            return cls(config['clients'], config['commands'], config['tab_clients'], config['tab_commands'])
+        except:
+            print("Error reading configuration file.")
 
     def on_tab_selected(self, event):
         if self.tabs_list:
@@ -324,7 +323,8 @@ class ScrollFrame(ttk.Frame):
                   clients_dictionary,
                   commands_dictionary,
                   tab_clients,
-                  tab_commands):
+                  tab_commands,
+                  tab_list):
 
         for index, (tab_name, clients) in enumerate(tab_clients.items()):
             tab = cls(tabs,
@@ -332,13 +332,14 @@ class ScrollFrame(ttk.Frame):
                       commands_tree,
                       clients_dictionary,
                       commands_dictionary)
+            tab_list.append(tab)
 
             for i, client in enumerate(clients):
                 cls.pack_trees(tab,
                                [client],
+                               tab_commands[str(index + 1)][i],
                                clients_dictionary,
-                               commands_dictionary,
-                               tab_commands[str(index + 1)][i])
+                               commands_dictionary)
 
             tab.pack(expand=True, fill='both')
             tabs.add(tab, text=tab_name)
@@ -348,15 +349,15 @@ class ScrollFrame(ttk.Frame):
         #            commands_tree,
         #            clients_dictionary,
         #            commands_dictionary,
-        #            tab_clients_from_json,
-        #            tab_commands_from_json)
+        #            tab_clients,
+        #            tab_commands)
 
-    def pack_trees(self, client_name, clients_dictionary, commands_dictionary, command_names=None):
+    def pack_trees(self, client, tab_commands, clients_dictionary, commands_dictionary):
         client_tab_frame = ClientTabFrame(self.scroll_frame, self.client_tab_tree_index)
         client_tab_tree = TabBarTree(client_tab_frame,
                                      self.client_tab_tree_index,
-                                     client_name,
-                                     command_names,
+                                     client,
+                                     tab_commands,
                                      clients_dictionary,
                                      commands_dictionary)
         client_tab_frame_row, client_tab_frame_col = self.assign_row_column(client_tab_tree, self.client_tab_tree_index)

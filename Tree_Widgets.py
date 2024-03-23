@@ -116,7 +116,7 @@ class TabBarTree(ttk.Treeview):
         self.ip_address, self.mac_address = self.clients_dictionary[self.headings[0]]
 
     def initialize_commands(self):
-        if self.command_names:
+        if self.command_names[0]:
             for command in self.command_names:
                 self.insert(parent='', index=tk.END, values=[command])
             # self.update_command_list()

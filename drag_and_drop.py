@@ -41,7 +41,7 @@ class ClientDragManager:
         target_frame = str(self.target_frame) + ".!frame"
         if target_str == target_frame:
             for item in self.tree_selection:
-                self.target_frame.pack_trees([item, ], self.clients_dictionary, self.commands_dictionary, [None])
+                self.target_frame.pack_trees([item, ], [None], self.clients_dictionary, self.commands_dictionary)
         self.tree_selection.clear()
 
 
