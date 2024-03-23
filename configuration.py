@@ -11,7 +11,6 @@ from Tree_Widgets import (ClientListTree,
                           TabTreeMouseOver)
 from new_tab_window import NewTabWindow
 from math import floor
-import json
 
 
 class Configuration(tk.Toplevel):
@@ -107,15 +106,14 @@ class Configuration(tk.Toplevel):
         self.tab_frame.columnconfigure(0, weight=1)
 
         # Creating Tabs
-        tab = ScrollFrame.from_json(self.tabs,  # passing in notebook for method to instantiate tabs
-                                    self.clients_tree,  # clients tree contains all client info
-                                    self.commands_tree,  # commands tree contains all client info
-                                    self.clients,
-                                    self.commands,
-                                    self.tab_clients,
-                                    self.tab_commands,
-                                    self.tabs_list)
-        self.tabs_list.append(tab)
+        ScrollFrame.from_json(self.tabs,  # passing in notebook for method to instantiate tabs
+                              self.clients_tree,  # clients tree contains all client info
+                              self.commands_tree,  # commands tree contains all client info
+                              self.clients,
+                              self.commands,
+                              self.tab_clients,
+                              self.tab_commands,  # list containing list of command name, command pairs.
+                              self.tabs_list)
 
         self.tabs.grid(sticky='nsew', pady=(20, 0))
 

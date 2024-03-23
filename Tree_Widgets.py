@@ -80,8 +80,7 @@ class TabBarTree(ttk.Treeview):
         self.column = None
         self.ip_address = None
         self.mac_address = None
-        self.command_names = tab_commands_from_json
-        self.commands = list()
+        self.command_name_value_pair = tab_commands_from_json
 
         self.clients_dictionary = clients_dictionary
         self.commands_dictionary = commands_dictionary
@@ -116,12 +115,14 @@ class TabBarTree(ttk.Treeview):
         self.ip_address, self.mac_address = self.clients_dictionary[self.headings[0]]
 
     def initialize_commands(self):
-        if self.command_names[0]:
-            for command in self.command_names:
-                self.insert(parent='', index=tk.END, values=[command])
+        if self.command_name_value_pair[0]:
+            for name, value in self.command_name_value_pair:
+                self.insert(parent='', index=tk.END, values=[name])
             # self.update_command_list()
-        # else:
-        #     self.command_names = list()
+        else:
+            # This clears the "None" that appears at the beginning of the list.
+            # This line should execute when a new client is dropped in scroll frame.
+            self.command_name_value_pair = list()
 
     def enable_scroll(self, event):
         if not self.scroll_state:
@@ -139,10 +140,21 @@ class TabBarTree(ttk.Treeview):
             self.heading(h, text=str(h))
 
     def delete_row(self, event):
+        print(self.command_name_value_pair)
         selected_items = self.selection()
-        for item in selected_items:
-            self.delete(item)
-        # self.update_command_list()
+        for row in selected_items:
+            index = self.get_selected_row_number(row)
+            del self.command_name_value_pair[index]
+            self.delete(row)
+        print(self.command_name_value_pair)
+
+    def get_selected_row_number(self, row):
+        """
+        Converts Tkinter 'I00*' notation to an integer.
+        :param row: Tkinter row number
+        :return: integer row number
+        """
+        return self.index(row)
 
     # def update_command_list(self):
     #     """

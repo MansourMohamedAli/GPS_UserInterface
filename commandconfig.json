@@ -9,12 +9,12 @@
           "VB1": ["199.199.199.01", "MAC1"],
           "VB2": ["199.199.199.02", "MAC2"],
           "VB3": ["199.199.199.03", "MAC3"],
-          "VB4": ["199.199.199.01", "MAC4"],
-          "VB5": ["199.199.199.01", "MAC1"],
-          "VB6": ["199.199.199.02", "MAC2"],
-          "VB7": ["199.199.199.03", "MAC3"],
-          "VB8": ["199.199.199.01", "MAC4"],
-          "VB9": ["199.199.199.01", "MAC4"]
+          "VB4": ["199.199.199.04", "MAC4"],
+          "VB5": ["199.199.199.05", "MAC5"],
+          "VB6": ["199.199.199.06", "MAC6"],
+          "VB7": ["199.199.199.07", "MAC7"],
+          "VB8": ["199.199.199.08", "MAC8"],
+          "VB9": ["199.199.199.09", "MAC9"]
 
         },
         "commands":
@@ -33,9 +33,23 @@
         },
         "tab_commands":
         {
-          "1": [["VB1 Command 1", "VB1 Command 2", "VB1 Command 3"], ["VB1 Command 2", "VB2 Command 2", "VB3 Command 3"], ["VB3 Command 1", "VB3 Command 2", "VB3 Command 3"]],
-          "2": [["VB4 Command 1", "VB4 Command 2", "VB4 Command 3"], ["VB5 Command 2"], ["VB6 Command 1", "VB6 Command 2", "VB6 Command 3"]],
-          "3": [["VB7 Command 1", "VB7 Command 2", "VB7 Command 3"], ["VB8 Command 2", "VB8 Command 2", "VB8 Command 3"], ["VB9 Command 1"]]
+          "1": [
+            [["VB1 Command Name 1","VB1 Tree command 1"], ["VB1 Command Name 2", "VB1 Tree command 2"], ["VB1 Command Name 3", "VB1 Tree command 3"]],
+            [["VB2 Command Name 1","VB2 Tree command 1"], ["VB2 Command Name 2", "VB2 Tree command 2"], ["VB2 Command Name 3", "VB2 Tree command 3"]],
+            [["VB3 Command Name 1","VB3 Tree command 1"], ["VB3 Command Name 2", "VB3 Tree command 2"], ["VB3 Command Name 3", "VB3 Tree command 3"]]
+          ],
+
+          "2": [
+            [["VB4 Command Name 1","VB4 Tree command 1"], ["VB4 Command Name 2", "VB4 Tree command 2"], ["VB4 Command Name 3", "VB4 Tree command 3"]],
+            [["VB5 Command Name 1","VB5 Tree command 1"], ["VB5 Command Name 2", "VB5 Tree command 2"], ["VB5 Command Name 3", "VB5 Tree command 3"]],
+            [["VB6 Command Name 1","VB6 Tree command 1"], ["VB6 Command Name 2", "VB6 Tree command 2"], ["VB6 Command Name 3", "VB6 Tree command 3"]]
+          ],
+
+          "3": [
+            [["VB7 Command Name 1","VB7 Tree command 1"], ["VB7 Command Name 2", "VB7 Tree command 2"], ["VB7 Command Name 3", "VB7 Tree command 3"]],
+            [["VB8 Command Name 1","VB8 Tree command 1"], ["VB8 Command Name 2", "VB8 Tree command 2"], ["VB8 Command Name 3", "VB8 Tree command 3"]],
+            [["VB9 Command Name 1","VB9 Tree command 1"], ["VB9 Command Name 2", "VB9 Tree command 2"], ["VB9 Command Name 3", "VB9 Tree command 3"]]
+          ]
         }
       }
     }
