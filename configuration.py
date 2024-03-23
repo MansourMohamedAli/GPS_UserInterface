@@ -14,18 +14,18 @@ from math import floor
 
 
 class Configuration(tk.Toplevel):
-    def __init__(self, clients, commands, tab_clients, tab_commands):
+    def __init__(self, clients_dictionary, commands_dictionary, tab_clients_dictionary, tab_commands_dictionary):
         super().__init__()
         self.tab_id = None
         self.title('Configuration')
         self.geometry("1340x600")
         self.resizable(False, False)
         # self.minsize(400, 300)
+        self.clients_dictionary = clients_dictionary
+        self.commands_dictionary = commands_dictionary
+        self.tab_clients_dictionary = tab_clients_dictionary
+        self.tab_commands_dictionary = tab_commands_dictionary
         self.tabs_list = list()
-        self.clients = clients
-        self.commands = commands
-        self.tab_clients = tab_clients
-        self.tab_commands = tab_commands
 
         self.tab_frame = ttk.Frame(self, relief=tk.GROOVE)
         self.side_bar_frame = ttk.Frame(self, relief=tk.GROOVE)
@@ -54,7 +54,7 @@ class Configuration(tk.Toplevel):
         self.client_frame.columnconfigure(1, weight=1, uniform='a')
         self.client_frame.pack(fill='both', expand=True)
 
-        self.clients_tree = ClientListTree(self.client_frame, self.clients, ["Clients"])
+        self.clients_tree = ClientListTree.from_json(self.client_frame, self.clients_dictionary, ["Clients"])
 
         # New Client Button
         self.new_client_button = ttk.Button(self.client_frame,
@@ -81,7 +81,11 @@ class Configuration(tk.Toplevel):
         self.command_frame.pack(fill='both', expand=True)
 
         # Command List Tree
-        self.commands_tree = CommandListTree(self.command_frame, self.commands, ["Commands"])
+        self.commands_tree = CommandListTree(self.command_frame, self.commands_dictionary, ["Commands"])
+        # Making command tree items draggable.
+        command_dnd = CommandDragManager(self.commands_tree)
+        command_dnd.add_dragable(self.commands_tree)
+
         self.new_command_button = ttk.Button(self.command_frame,
                                              text="New",
                                              command=lambda: CommandWindow(self.commands_tree.command_dictionary,
@@ -107,12 +111,9 @@ class Configuration(tk.Toplevel):
 
         # Creating Tabs
         ScrollFrame.from_json(self.tabs,  # passing in notebook for method to instantiate tabs
-                              self.clients_tree,  # clients tree contains all client info
-                              self.commands_tree,  # commands tree contains all client info
-                              self.clients,
-                              self.commands,
-                              self.tab_clients,
-                              self.tab_commands,  # list containing list of command name, command pairs.
+                              self.clients_dictionary,
+                              self.tab_clients_dictionary,
+                              self.tab_commands_dictionary,  # list containing list of command name, command pairs.
                               self.tabs_list)
 
         self.tabs.grid(sticky='nsew', pady=(20, 0))
@@ -159,8 +160,7 @@ class Configuration(tk.Toplevel):
 
             # todo Verify how class memory is managed. Is the old one being replaced?
             client_dnd = ClientDragManager(scroll_frame,
-                                           self.clients,
-                                           self.commands)
+                                           self.clients_dictionary)
 
             client_dnd.add_dragable(self.clients_tree)
             # print(client_dnd) # memory location
@@ -168,10 +168,10 @@ class Configuration(tk.Toplevel):
     def insert_tab(self, window_instance, new_tab):
         if new_tab:
             tab = ScrollFrame(self.tabs,
-                              self.clients_tree,
-                              self.commands_tree,
-                              self.clients,
-                              self.commands)
+                              self.clients_dictionary,
+                              self.tab_clients_dictionary,
+                              self.commands_dictionary,
+                              self.commands_dictionary)
             self.tabs_list.append(tab)
             self.tabs.add(tab, text=f'{new_tab}')
         window_instance.destroy()
@@ -181,8 +181,8 @@ class Configuration(tk.Toplevel):
             tab = ScrollFrame(self.tabs,
                               self.clients_tree,
                               self.commands_tree,
-                              self.clients,
-                              self.commands)
+                              self.clients_dictionary,
+                              self.commands_dictionary)
             self.tabs_list.append(tab)
             self.tabs.add(tab, text=f'{new_tab}')
 
@@ -222,12 +222,7 @@ class Configuration(tk.Toplevel):
 class ScrollFrame(ttk.Frame):
     def __init__(self,
                  parent,
-                 clients_tree,
-                 commands_tree,
-                 clients_dictionary,
-                 commands_dictionary,
-                 tab_clients=None,
-                 tab_commands=None):
+                 clients_dictionary):
 
         super().__init__(master=parent)
 
@@ -235,12 +230,7 @@ class ScrollFrame(ttk.Frame):
         self.tree_index = 1
         self.item_height = 10
         self.list_height = (self.tree_index * self.item_height)  # Five items per row
-        self.clients_tree = clients_tree
-        self.commands_tree = commands_tree
         self.clients_dictionary = clients_dictionary
-        self.commands_dictionary = commands_dictionary
-        self.tab_clients = tab_clients
-        self.tab_commands = tab_commands
 
         self.client_tab_tree_index = 0
         self.client_tab_frame_list = list()
@@ -266,8 +256,8 @@ class ScrollFrame(ttk.Frame):
                                lambda event: self.canvas.yview_scroll(-int(event.delta / 60), "units"))
         self.bind('<Configure>', self.update_scroll_area_resize_event)
 
-        command_dnd = CommandDragManager(self.commands_tree)
-        command_dnd.add_dragable(self.commands_tree)
+        # command_dnd = CommandDragManager(self.commands_tree)
+        # command_dnd.add_dragable(self.commands_tree)
 
     def update_scroll_area_resize_event(self, event):
         """Resizing Currently Disabled"""
@@ -313,33 +303,25 @@ class ScrollFrame(ttk.Frame):
     @classmethod
     def from_json(cls,
                   tabs,
-                  clients_tree,
-                  commands_tree,
                   clients_dictionary,
-                  commands_dictionary,
                   tab_clients,
                   tab_commands,
                   tab_list):
 
         for index, (tab_name, clients) in enumerate(tab_clients.items()):
-            tab = cls(tabs,
-                      clients_tree,
-                      commands_tree,
-                      clients_dictionary,
-                      commands_dictionary)
+            tab = cls(tabs, clients_dictionary)
             tab_list.append(tab)
 
             for i, client in enumerate(clients):
                 cls.pack_trees(tab,
                                [client],
                                tab_commands[str(index + 1)][i],
-                               clients_dictionary,
-                               commands_dictionary)
+                               clients_dictionary)
 
             tab.pack(expand=True, fill='both')
             tabs.add(tab, text=tab_name)
 
-    def pack_trees(self, client_name, tab_commands, clients_dictionary, commands_dictionary):
+    def pack_trees(self, client_name, tab_commands, clients_dictionary):
         client_tab_frame = ClientTabFrame(self.scroll_frame, self.client_tab_tree_index)
         client_tab_tree = TabBarTree.from_json(client_tab_frame,
                                                clients_dictionary,

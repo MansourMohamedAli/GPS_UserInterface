@@ -12,7 +12,15 @@ class ClientListTree(ttk.Treeview):
         self.get_tree_headings()
         self.bind('<Delete>', self.delete_row_keyboard_button)
         self.client_dictionary = client_dictionary
-        self.insert_clients()
+        # self.insert_clients()
+
+    @classmethod
+    def from_json(cls, parent, client_dictionary, heading):
+        tree = cls(parent, client_dictionary, heading)
+        for new_client in client_dictionary:
+            if new_client:
+                cls.insert(tree, parent='', index=tk.END, values=[new_client])
+        return tree
 
     def get_tree_headings(self):
         for heading in self.headings:

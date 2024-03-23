@@ -4,14 +4,12 @@ import tkinter as tk
 class ClientDragManager:
     def __init__(self,
                  target_frame,
-                 clients_dictionary,
-                 commands_dictionary):
+                 clients_dictionary):
 
         self.widget = None
         self.tree_selection = list()
         self.target_frame = target_frame
         self.clients_dictionary = clients_dictionary
-        self.commands_dictionary = commands_dictionary
 
     def add_dragable(self, widget):
         self.widget = widget
@@ -41,7 +39,7 @@ class ClientDragManager:
         target_frame = str(self.target_frame) + ".!frame"
         if target_str == target_frame:
             for item in self.tree_selection:
-                self.target_frame.pack_trees([item, ], [None], self.clients_dictionary, self.commands_dictionary)
+                self.target_frame.pack_trees([item, ], [None], self.clients_dictionary)
         self.tree_selection.clear()
 
 
