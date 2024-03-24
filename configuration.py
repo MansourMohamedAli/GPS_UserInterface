@@ -12,7 +12,7 @@ class Configuration(tk.Toplevel):
         self.tab_id = None
         self.title('Configuration')
         self.geometry("1340x600")
-        self.resizable(False, False)
+        # self.resizable(False, False)
         # self.minsize(400, 300)
         self.clients_dictionary = clients_dictionary
         self.commands_dictionary = commands_dictionary
@@ -20,10 +20,12 @@ class Configuration(tk.Toplevel):
         self.tab_commands_dictionary = tab_commands_dictionary
         self.tabs_list = list()
 
-        self.tab_frame = ttk.Frame(self, relief=tk.GROOVE)
-        self.side_bar_frame = ttk.Frame(self, relief=tk.GROOVE)
-        # self.top_bar_frame = TopFrame(self, relief=tk.GROOVE)
-        self.bot_bar_frame = ttk.Frame(self, relief=tk.GROOVE)
+        self.tab_frame = ttk.Frame(self)
+        self.side_bar_frame = ttk.Frame(self)
+        self.bot_bar_frame = ttk.Frame(self)
+
+        # self.side_bar_frame = ttk.Frame(self, relief=tk.GROOVE)
+        # self.bot_bar_frame = ttk.Frame(self, relief=tk.GROOVE)
 
         self.rowconfigure(0, weight=1)
         self.rowconfigure(1, weight=10)
@@ -66,8 +68,6 @@ class Configuration(tk.Toplevel):
         self.new_client_button.grid(row=1, column=0, padx=5, pady=5)
         self.delete_client_button.grid(row=1, column=1, padx=5, pady=5)
 
-        # self.bot_side_bar_frame = ttk.Frame(self.side_bar_frame)
-        # self.bot_side_bar_frame.grid(row=1, columnspan=2, padx=10, pady=10, sticky="nsew")
         self.command_frame = ttk.Frame(self.side_bar_frame)
         self.command_frame.columnconfigure(0, weight=1, uniform='a')
         self.command_frame.columnconfigure(1, weight=1, uniform='a')
@@ -101,16 +101,9 @@ class Configuration(tk.Toplevel):
         self.tabs.bind("<<NotebookTabChanged>>", self.on_tab_selected)
         self.tab_frame.rowconfigure(0, weight=1)
         self.tab_frame.columnconfigure(0, weight=1)
-
-        # Creating Tabs
-        ScrollFrame.from_json(self.tabs,  # passing in notebook for method to instantiate tabs
-                              self.clients_dictionary,
-                              self.tab_clients_dictionary,
-                              self.tab_commands_dictionary,
-                              # list containing list of command name, command pairs.
-                              self.tabs_list)
         self.tabs.grid(sticky='nsew', pady=(20, 0))
 
+        # New and Delete Buttons for tabs.
         self.button_frame = ttk.Frame(self.tab_frame)
         self.button_frame.columnconfigure(0, weight=1, uniform='a')
         self.button_frame.columnconfigure(1, weight=1, uniform='a')
@@ -132,26 +125,18 @@ class Configuration(tk.Toplevel):
         self.bot_label = ttk.Label(self.bot_bar_frame, text="Bottom Bar")
         self.bot_label.pack(expand=True)
 
+        # inserting frames on to configuration top level.
         self.tab_frame.grid(row=1, column=1, sticky='nsew', padx=(5, 5))
         self.side_bar_frame.grid(row=0, column=0, sticky='nsew', rowspan=3, padx=(5, 5), pady=(10, 10))
         self.bot_bar_frame.grid(row=2, column=1, sticky='nsew', padx=(5, 5), pady=(10, 10))
 
-        # Initializing first tab scroll area
-        self.init_scroll_area(self.tabs_list[0])
-
-    @staticmethod
-    def init_scroll_area(tab):
-        """
-        The height for the scroll area can only be set after the tab_frame is packed.
-        This means that the first tab_frame that is instantiated will not properly be set.
-        Because each additional scroll area for the tab is set after the tab_frame is initialized
-        they do not have this issue.
-        :param tab: Tab configuration window opens first.
-        :return: None
-        """
-        tab.update_idletasks()
-        height = tab.winfo_height()
-        tab.canvas_configure(height)
+        # Creating Tabs
+        ScrollFrame.from_json(self.tabs,  # passing in notebook for method to instantiate tabs
+                              self.clients_dictionary,
+                              self.tab_clients_dictionary,
+                              self.tab_commands_dictionary,
+                              # list containing list of command name, command pairs.
+                              self.tabs_list)
 
     @classmethod
     def from_json(cls, json_data):
@@ -227,10 +212,11 @@ class ScrollFrame(ttk.Frame):
         super().__init__(master=parent)
 
         # widget data
-        self.list_height = 0  # Five items per row
+        # self.list_height = 0  # Five items per row
         self.clients_dictionary = clients_dictionary
-
+        self.item_height = 10
         self.client_tab_tree_index = 0
+        self.list_height = (self.client_tab_tree_index * self.item_height)  # Five items per row
         self.client_tab_frame_list = list()
 
         # canvas
@@ -256,6 +242,8 @@ class ScrollFrame(ttk.Frame):
 
     def update_scroll_area_resize_event(self, event):
         """Resizing Currently Disabled"""
+        print(f'List Height: {self.list_height}, Frame Height {self.winfo_height()}')
+        # print(self.winfo_height())
         if self.list_height >= self.winfo_height():
             height = self.list_height
             self.canvas.bind_class('scroll_frame_widgets', '<MouseWheel>',
@@ -273,6 +261,8 @@ class ScrollFrame(ttk.Frame):
             width=self.winfo_width(),
             height=height)
         self.canvas_configure(height)
+        # self.list_height = height
+        print(f"Size Updated!: {self.list_height}")
 
     def update_scroll_area(self, new_height):
         if new_height >= self.winfo_height():
