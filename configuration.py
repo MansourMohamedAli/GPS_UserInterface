@@ -39,10 +39,10 @@ class Configuration(tk.Toplevel):
         self.side_bar_frame.columnconfigure(0, weight=1, uniform='a')
         self.side_bar_frame.columnconfigure(1, weight=1, uniform='a')
 
-        self.mid_side_bar_frame = ttk.Frame(self.side_bar_frame)
-        self.mid_side_bar_frame.grid(row=0, columnspan=2, padx=10, pady=10, sticky="nsew")
+        # self.mid_side_bar_frame = ttk.Frame(self.side_bar_frame)
+        # self.mid_side_bar_frame.grid(row=0, columnspan=2, padx=10, pady=10, sticky="nsew")
 
-        self.client_frame = ttk.Frame(self.mid_side_bar_frame)
+        self.client_frame = ttk.Frame(self.side_bar_frame)
         self.client_frame.columnconfigure(0, weight=1, uniform='a')
         self.client_frame.columnconfigure(1, weight=1, uniform='a')
         self.client_frame.pack(fill='both', expand=True)
@@ -66,9 +66,9 @@ class Configuration(tk.Toplevel):
         self.new_client_button.grid(row=1, column=0, padx=5, pady=5)
         self.delete_client_button.grid(row=1, column=1, padx=5, pady=5)
 
-        self.bot_side_bar_frame = ttk.Frame(self.side_bar_frame)
-        self.bot_side_bar_frame.grid(row=1, columnspan=2, padx=10, pady=10, sticky="nsew")
-        self.command_frame = ttk.Frame(self.bot_side_bar_frame)
+        # self.bot_side_bar_frame = ttk.Frame(self.side_bar_frame)
+        # self.bot_side_bar_frame.grid(row=1, columnspan=2, padx=10, pady=10, sticky="nsew")
+        self.command_frame = ttk.Frame(self.side_bar_frame)
         self.command_frame.columnconfigure(0, weight=1, uniform='a')
         self.command_frame.columnconfigure(1, weight=1, uniform='a')
         self.command_frame.pack(fill='both', expand=True)
@@ -106,9 +106,9 @@ class Configuration(tk.Toplevel):
         ScrollFrame.from_json(self.tabs,  # passing in notebook for method to instantiate tabs
                               self.clients_dictionary,
                               self.tab_clients_dictionary,
-                              self.tab_commands_dictionary,  # list containing list of command name, command pairs.
+                              self.tab_commands_dictionary,
+                              # list containing list of command name, command pairs.
                               self.tabs_list)
-
         self.tabs.grid(sticky='nsew', pady=(20, 0))
 
         self.button_frame = ttk.Frame(self.tab_frame)
@@ -132,12 +132,26 @@ class Configuration(tk.Toplevel):
         self.bot_label = ttk.Label(self.bot_bar_frame, text="Bottom Bar")
         self.bot_label.pack(expand=True)
 
-        # self.tab_frame.grid(row=1, column=1, sticky='nsew', padx=(5, 5), pady=(10, 10))
         self.tab_frame.grid(row=1, column=1, sticky='nsew', padx=(5, 5))
         self.side_bar_frame.grid(row=0, column=0, sticky='nsew', rowspan=3, padx=(5, 5), pady=(10, 10))
-        # self.top_bar_frame.grid(row=0, column=1, sticky='nsew', padx=(5, 5), pady=(10, 10))
-        # self.top_bar_frame.grid(row=0, column=1, sticky='nsew', padx=(5, 5))
         self.bot_bar_frame.grid(row=2, column=1, sticky='nsew', padx=(5, 5), pady=(10, 10))
+
+        # Initializing first tab scroll area
+        self.init_scroll_area(self.tabs_list[0])
+
+    @staticmethod
+    def init_scroll_area(tab):
+        """
+        The height for the scroll area can only be set after the tab_frame is packed.
+        This means that the first tab_frame that is instantiated will not properly be set.
+        Because each additional scroll area for the tab is set after the tab_frame is initialized
+        they do not have this issue.
+        :param tab: Tab configuration window opens first.
+        :return: None
+        """
+        tab.update_idletasks()
+        height = tab.winfo_height()
+        tab.canvas_configure(height)
 
     @classmethod
     def from_json(cls, json_data):
@@ -213,7 +227,7 @@ class ScrollFrame(ttk.Frame):
         super().__init__(master=parent)
 
         # widget data
-        self.list_height = None  # Five items per row
+        self.list_height = 0  # Five items per row
         self.clients_dictionary = clients_dictionary
 
         self.client_tab_tree_index = 0
@@ -258,6 +272,7 @@ class ScrollFrame(ttk.Frame):
             anchor='nw',
             width=self.winfo_width(),
             height=height)
+        self.canvas_configure(height)
 
     def update_scroll_area(self, new_height):
         if new_height >= self.winfo_height():
@@ -276,9 +291,18 @@ class ScrollFrame(ttk.Frame):
             anchor='nw',
             width=self.winfo_width(),
             height=height)
+        self.canvas_configure(height)
 
+    def canvas_configure(self, height):
         self.canvas.configure(scrollregion=(0, 0, self.winfo_width(), height))
-        self.list_height = height
+
+    def create_canvas_window(self, height):
+        self.canvas.create_window(
+            (0, 0),
+            window=self.scroll_frame,
+            anchor='nw',
+            width=self.winfo_width(),
+            height=height)
 
     @classmethod
     def from_json(cls,
@@ -309,7 +333,7 @@ class ScrollFrame(ttk.Frame):
                                                tab_commands)
         client_tab_frame_row, client_tab_frame_col = self.assign_row_column(client_tab_tree, self.client_tab_tree_index)
         self.scroll_frame.rowconfigure(client_tab_frame_row, minsize=260)
-        client_tab_tree.pack(expand=False, fill='both')
+        client_tab_tree.grid(row=0, sticky='nsew')
 
         TabTreeMouseOver(client_tab_frame,
                          self.client_tab_frame_list,
@@ -335,6 +359,12 @@ class ScrollFrame(ttk.Frame):
 
     @staticmethod
     def assign_row_column(client_tab_frame, client_tab_frame_index):
+        """
+        ScrollFrame needs to be in charge of managing its trees.
+        :param client_tab_frame: ScrollFrame attribute, Frame that tree and buttons are packed.
+        :param client_tab_frame_index: ScrollFrame attribute.
+        :return: row and column for frame that contains tree and buttons,
+        """
         client_tab_frame.row = (floor(client_tab_frame_index / 5)) + 1
         client_tab_frame.column = (client_tab_frame_index % 5) + 1
         return client_tab_frame.row, client_tab_frame.column

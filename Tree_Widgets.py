@@ -6,7 +6,7 @@ from add_button_dlg import CommandWindow
 
 class ClientListTree(ttk.Treeview):
     def __init__(self, parent, client_dictionary, headings):
-        super().__init__(master=parent, columns=headings, show='headings')
+        super().__init__(master=parent, columns=headings, show='headings', bootstyle='primary')
         self.headings = headings
         self.parent = parent
         self.bind('<Delete>', self.delete_row_keyboard_button)
@@ -42,7 +42,7 @@ class ClientListTree(ttk.Treeview):
 
 class CommandListTree(ttk.Treeview):
     def __init__(self, parent, command_dictionary, headings):
-        super().__init__(master=parent, columns=headings, show='headings')
+        super().__init__(master=parent, columns=headings, show='headings', bootstyle='primary')
         self.headings = headings
         self.parent = parent
         self.bind('<Delete>', self.delete_row_keyboard_button)
@@ -73,7 +73,7 @@ class CommandListTree(ttk.Treeview):
 
 class TabBarTree(ttk.Treeview):
     def __init__(self, parent, client_name, ip_address, mac_address, command_name_value_pair):
-        super().__init__(master=parent, columns=client_name, show='headings')
+        super().__init__(master=parent, columns=client_name, show='headings', bootstyle='warning')
         self.headings = client_name
         self.parent = parent
         self.get_tree_headings()
@@ -162,6 +162,9 @@ class ClientTabFrame(ttk.Frame):
     def __init__(self, parent, index):
         super().__init__(master=parent)
         self.index = index
+        self.rowconfigure(0, weight=7, uniform='a')
+        self.rowconfigure(1, weight=1, uniform='a')
+        self.columnconfigure(0, weight=1, uniform='a')
 
 
 class TabTreeMouseOver:
@@ -207,10 +210,10 @@ class TabTreeMouseOver:
                                         width=5,
                                         command=self.delete_client)
 
-        self.move_left_button.grid(row=0, column=0)
-        self.new_button.grid(row=0, column=1)
-        self.delete_button.grid(row=0, column=2)
-        self.move_right_button.grid(row=0, column=3)
+        self.move_left_button.grid(row=0, column=0, sticky='nsew')
+        self.new_button.grid(row=0, column=1, sticky='nsew')
+        self.delete_button.grid(row=0, column=2, sticky='nsew')
+        self.move_right_button.grid(row=0, column=3, sticky='nsew')
 
         scroll_tags = self.move_left_button.bindtags() + ("scroll_frame_widgets",)
         self.move_left_button.bindtags(scroll_tags)
@@ -223,12 +226,12 @@ class TabTreeMouseOver:
 
     def mouse_over(self, event):
         # self.button_frame.pack(side="bottom")
-        self.button_frame.pack()
+        self.button_frame.grid(row=1, sticky='nsew')
         scroll_tags = self.button_frame.bindtags() + ("scroll_frame_widgets",)
         self.button_frame.bindtags(scroll_tags)
 
     def mouse_leave(self, event):
-        self.button_frame.pack_forget()
+        self.button_frame.grid_forget()
 
     def move_right(self):
         self.shift_index_up()
