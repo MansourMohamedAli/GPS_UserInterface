@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from math import floor
-from command_window import CommandWindow
+from add_button_dlg import CommandWindow
 
 
 class ClientListTree(ttk.Treeview):

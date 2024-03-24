@@ -1,15 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
-from command_window import CommandWindow
-from client_window import ClientWindow
-from drag_and_drop import (CommandDragManager,
-                           ClientDragManager)
-from Tree_Widgets import (ClientListTree,
-                          CommandListTree,
-                          TabBarTree,
-                          ClientTabFrame,
-                          TabTreeMouseOver)
-from new_tab_window import NewTabWindow
+from add_button_dlg import CommandWindow, ClientWindow, NewTabWindow
+from drag_and_drop import CommandDragManager, ClientDragManager
+from Tree_Widgets import ClientListTree, CommandListTree, TabBarTree, ClientTabFrame, TabTreeMouseOver
 from math import floor
 
 
@@ -220,7 +213,9 @@ class ScrollFrame(ttk.Frame):
         super().__init__(master=parent)
 
         # widget data
+        self.list_height = None  # Five items per row
         self.clients_dictionary = clients_dictionary
+
         self.client_tab_tree_index = 0
         self.client_tab_frame_list = list()
 
@@ -284,7 +279,6 @@ class ScrollFrame(ttk.Frame):
 
         self.canvas.configure(scrollregion=(0, 0, self.winfo_width(), height))
         self.list_height = height
-        # print("Size Updated!")
 
     @classmethod
     def from_json(cls,
@@ -354,6 +348,7 @@ class BottomFrame(ttk.Frame):
         super().__init__()
 
         # self.save_button = ttk.Button(self, text="Save", command=lambda: self.save_pressed())
+
         self.run_button = ttk.Button(self, text="Run", command=lambda: self.run_pressed())
         self.run_button.pack()
 
