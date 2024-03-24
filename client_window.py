@@ -76,6 +76,3 @@ class ClientWindow(tk.Toplevel):
         else:
             print("Client Already Exists")
             return None
-
-
-

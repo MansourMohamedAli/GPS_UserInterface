@@ -291,7 +291,7 @@ class TabTreeMouseOver:
             row, column = self.get_row_and_column(client_tab_frame.index)
             self.repack_client_frame(client_tab_frame, row, column)
 
-        # drop tab tree index by one so next client dragged and dropped doesn't skip # a number
+        # drop tab tree index by one so next client dragged and dropped doesn't skip a number
         self.m_reduce_tab_tree_index()
         # Get index of last frame as that is what determines the scroll area. Or I could count items in frame list.
         last_frame = len(self.client_tab_frame_list)

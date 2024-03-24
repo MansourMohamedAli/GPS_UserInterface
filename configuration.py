@@ -168,10 +168,7 @@ class Configuration(tk.Toplevel):
     def insert_tab(self, window_instance, new_tab):
         if new_tab:
             tab = ScrollFrame(self.tabs,
-                              self.clients_dictionary,
-                              self.tab_clients_dictionary,
-                              self.commands_dictionary,
-                              self.commands_dictionary)
+                              self.clients_dictionary)
             self.tabs_list.append(tab)
             self.tabs.add(tab, text=f'{new_tab}')
         window_instance.destroy()
@@ -179,10 +176,7 @@ class Configuration(tk.Toplevel):
     def insert_another_tab(self, new_tab):
         if new_tab:
             tab = ScrollFrame(self.tabs,
-                              self.clients_tree,
-                              self.commands_tree,
-                              self.clients_dictionary,
-                              self.commands_dictionary)
+                              self.clients_tree)
             self.tabs_list.append(tab)
             self.tabs.add(tab, text=f'{new_tab}')
 
@@ -193,7 +187,6 @@ class Configuration(tk.Toplevel):
                 if str(item) == self.tabs.select():
                     item.destroy()
                     del self.tabs_list[self.tab_id]
-                    print(self.tabs_list)
                     return
 
     def insert_client(self, window_instance, new_client):
@@ -255,7 +248,6 @@ class ScrollFrame(ttk.Frame):
         self.canvas.bind_class('scroll_frame_widgets', '<MouseWheel>',
                                lambda event: self.canvas.yview_scroll(-int(event.delta / 60), "units"))
         self.bind('<Configure>', self.update_scroll_area_resize_event)
-
 
     def update_scroll_area_resize_event(self, event):
         """Resizing Currently Disabled"""
