@@ -18,6 +18,9 @@ class ClientListTree(ttk.Treeview):
         for new_client in client_dictionary:
             if new_client:
                 cls.insert(tree, parent='', index=tk.END, values=[new_client])
+            #  Initialize Tree Title
+            for heading in tree.headings:
+                tree.heading(heading, text=str(heading))
         return tree
 
     def delete_row_keyboard_button(self, event):
@@ -42,7 +45,6 @@ class CommandListTree(ttk.Treeview):
         super().__init__(master=parent, columns=headings, show='headings')
         self.headings = headings
         self.parent = parent
-        self.get_tree_headings()
         self.bind('<Delete>', self.delete_row_keyboard_button)
         self.command_dictionary = command_dictionary
 
@@ -52,11 +54,10 @@ class CommandListTree(ttk.Treeview):
         for new_command in command_dictionary:
             if new_command:
                 cls.insert(tree, parent='', index=tk.END, values=[new_command])
+        #  Initialize Tree Title
+        for heading in tree.headings:
+            tree.heading(heading, text=str(heading))
         return tree
-
-    def get_tree_headings(self):
-        for heading in self.headings:
-            self.heading(heading, text=str(heading))
 
     def delete_row_keyboard_button(self, event):
         self.delete_row()
@@ -155,24 +156,6 @@ class TabBarTree(ttk.Treeview):
         :return: integer row number
         """
         return self.index(row)
-
-    # def update_command_list(self):
-    #     """
-    #     Duplicate commands are allowed in the tree and using the .remove() method will always
-    #     remove the first occurrence in a list. To get around this issue and allow the removal
-    #     of later occurrences, The command_names and commands list are cleared. Then the
-    #     command_names list is populated in order using the Tkinter get_children() method. Finally,
-    #     the command_tree dictionary is searched using the command_name as a key and the appropriate
-    #     command is added in the correct order back to the commands list.
-    #     :return: None
-    #     """
-    #     self.command_names.clear()
-    #     self.commands.clear()
-    #     for item in self.get_children():
-    #         command_name = self.item(item)['values'][0]
-    #         self.command_names.append(command_name)
-    #         command = self.commands_dictionary[command_name]
-    #         self.commands.append(command)
 
 
 class ClientTabFrame(ttk.Frame):

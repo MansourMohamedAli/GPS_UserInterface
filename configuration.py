@@ -148,22 +148,22 @@ class Configuration(tk.Toplevel):
 
     @classmethod
     def from_json(cls, json_data):
-        active_config = (json_data['active_config'])
-        config = (json_data['configurations'][active_config])
-        return cls(config['clients'], config['commands'], config['tab_clients'], config['tab_commands'])
+        try:
+            active_config = (json_data['active_config'])
+            config = (json_data['configurations'][active_config])
+            return cls(config['clients'], config['commands'], config['tab_clients'], config['tab_commands'])
+        except KeyError as e:
+            print(f'Key {e} is incorrect.')
 
     def on_tab_selected(self, event):
         if self.tabs_list:
             selected_tab = event.widget.select()
             self.tab_id = self.tabs.index(selected_tab)
             scroll_frame = self.tabs_list[self.tab_id]
-
             # todo Verify how class memory is managed. Is the old one being replaced?
             client_dnd = ClientDragManager(scroll_frame,
                                            self.clients_dictionary)
-
             client_dnd.add_dragable(self.clients_tree)
-            # print(client_dnd) # memory location
 
     def insert_tab(self, window_instance, new_tab):
         if new_tab:
@@ -220,11 +220,7 @@ class ScrollFrame(ttk.Frame):
         super().__init__(master=parent)
 
         # widget data
-        self.tree_index = 1
-        self.item_height = 10
-        self.list_height = (self.tree_index * self.item_height)  # Five items per row
         self.clients_dictionary = clients_dictionary
-
         self.client_tab_tree_index = 0
         self.client_tab_frame_list = list()
 
@@ -358,7 +354,6 @@ class BottomFrame(ttk.Frame):
         super().__init__()
 
         # self.save_button = ttk.Button(self, text="Save", command=lambda: self.save_pressed())
-
         self.run_button = ttk.Button(self, text="Run", command=lambda: self.run_pressed())
         self.run_button.pack()
 
