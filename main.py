@@ -1,18 +1,19 @@
 import tkinter as tk
-from tkinter import ttk
+# from tkinter import ttk
 from configuration import Configuration
 from send_command import send_command
 import socket
 import json
+import ttkbootstrap as ttk
 
 host = socket.gethostname()
 ip_address = socket.gethostbyname(host)
 
 
-class App(tk.Tk):
-    def __init__(self, title, dimensions):
+class App(ttk.Window):
+    def __init__(self, title, dimensions, theme):
         # main setup
-        super().__init__()
+        super().__init__(themename=theme)
         self.title(title)
         self.geometry(f"{dimensions[0]}x{dimensions[1]}")
         self.minsize(200, 200)
@@ -56,8 +57,8 @@ class Menu(ttk.Frame):
         self.menu_button_6.grid(row=2, column=1, sticky='nsew', columnspan=1, padx=(5, 10), pady=(10, 10))
         self.config_button.grid(row=3, column=0, sticky='nsew', columnspan=2, padx=(5, 10), pady=(10, 10))
 
-        style = ttk.Style(self)
-        style.theme_use('alt')
+        # style = ttk.Style(self)
+        # style.theme_use('alt')
 
     @staticmethod
     def read_configuration():
@@ -74,4 +75,4 @@ class Menu(ttk.Frame):
         #     json.dump(data, f2, indent=2)
 
 
-App('Glass Panel Control', (200, 200))
+App('Glass Panel Control', (200, 200), 'darkly')

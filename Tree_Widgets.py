@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk
+import ttkbootstrap as ttk
 from math import floor
 from add_button_dlg import CommandWindow
 
@@ -222,7 +222,8 @@ class TabTreeMouseOver:
         self.button_frame.bindtags(scroll_tags)
 
     def mouse_over(self, event):
-        self.button_frame.pack(side="bottom")
+        # self.button_frame.pack(side="bottom")
+        self.button_frame.pack()
         scroll_tags = self.button_frame.bindtags() + ("scroll_frame_widgets",)
         self.button_frame.bindtags(scroll_tags)
 

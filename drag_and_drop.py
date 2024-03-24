@@ -1,6 +1,5 @@
 import tkinter as tk
 
-
 class ClientDragManager:
     def __init__(self,
                  target_frame,
