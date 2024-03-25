@@ -1,7 +1,7 @@
 import tkinter as tk
 import ttkbootstrap as ttk
 from math import floor
-from add_button_dlg import CommandWindow
+from add_button_dlg import TabCommandDlg
 
 
 class ClientListTree(ttk.Treeview):
@@ -200,11 +200,10 @@ class TabTreeMouseOver:
         self.new_button = ttk.Button(self.button_frame,
                                      text="+",
                                      width=5,
-                                     command=lambda: CommandWindow(self.client_tab_tree.tab_tree_dictionary,
+                                     command=lambda: TabCommandDlg(self.client_tab_tree.command_name_value_pair,
                                                                    self.insert_command,
                                                                    self.insert_another_command,
                                                                    ))
-
         self.delete_button = ttk.Button(self.button_frame,
                                         text=u"\U0001F5D1",
                                         width=5,
@@ -312,9 +311,9 @@ class TabTreeMouseOver:
 
     def insert_command(self, window_instance, new_command):
         if new_command:
-            self.client_tab_tree.insert(parent='', index=tk.END, values=new_command)
+            self.client_tab_tree.insert(parent='', index=tk.END, values=new_command[0])
         window_instance.destroy()
 
     def insert_another_command(self, new_command):
         if new_command:
-            self.client_tab_tree.insert(parent='', index=tk.END, values=new_command)
+            self.client_tab_tree.insert(parent='', index=tk.END, values=new_command[0])
