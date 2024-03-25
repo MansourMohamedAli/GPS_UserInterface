@@ -101,7 +101,8 @@ class Configuration(tk.Toplevel):
         self.tabs.bind("<<NotebookTabChanged>>", self.on_tab_selected)
         self.tab_frame.rowconfigure(0, weight=1)
         self.tab_frame.columnconfigure(0, weight=1)
-        self.tabs.grid(sticky='nsew', pady=(20, 0))
+        # self.tabs.grid(sticky='nsew', pady=(20, 0))
+        self.tabs.grid(sticky='nsew', pady=15)
 
         # New and Delete Buttons for tabs.
         self.button_frame = ttk.Frame(self.tab_frame)
@@ -119,7 +120,7 @@ class Configuration(tk.Toplevel):
         self.new_button.grid(row=0, column=0, sticky='s', padx=5, pady=5)
         self.delete_button.grid(row=0, column=1, sticky='s', padx=5, pady=5)
 
-        self.button_frame.place(relx=0.8, rely=0.001)
+        self.button_frame.place(relx=0.8, rely=0)
 
         # Bottom Bar Configuration
         self.bot_label = ttk.Label(self.bot_bar_frame, text="Bottom Bar")
@@ -128,7 +129,8 @@ class Configuration(tk.Toplevel):
         # inserting frames on to configuration top level.
         self.tab_frame.grid(row=1, column=1, sticky='nsew', padx=(5, 5))
         self.side_bar_frame.grid(row=0, column=0, sticky='nsew', rowspan=3, padx=(5, 5), pady=(10, 10))
-        self.bot_bar_frame.grid(row=2, column=1, sticky='nsew', padx=(5, 5), pady=(10, 10))
+        # self.bot_bar_frame.grid(row=2, column=1, sticky='nsew', padx=(5, 5), pady=(10, 10))
+        self.bot_bar_frame.grid(row=2, column=1, sticky='nsew')
 
         # Creating Tabs
         ScrollFrame.from_json(self.tabs,  # passing in notebook for method to instantiate tabs
@@ -216,7 +218,7 @@ class ScrollFrame(ttk.Frame):
         self.client_tab_tree_index = 0
         self.client_tab_frame_list = list()
         # canvas
-        self.canvas = tk.Canvas(self, background='red')
+        self.canvas = tk.Canvas(self)
         self.canvas.pack(expand=True, fill='both')
 
         # display frame
@@ -327,7 +329,7 @@ class ScrollFrame(ttk.Frame):
                          self.update_scroll_area)
 
         tree_pad_x = 5
-        tree_pad_y = 0
+        tree_pad_y = 5
 
         client_tab_frame.grid(row=client_tab_frame_row, column=client_tab_frame_col,
                               padx=tree_pad_x,

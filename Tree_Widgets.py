@@ -73,7 +73,7 @@ class CommandListTree(ttk.Treeview):
 
 class TabBarTree(ttk.Treeview):
     def __init__(self, parent, client_name, ip_address, mac_address, command_name_value_pair):
-        super().__init__(master=parent, columns=client_name, show='headings', bootstyle='warning')
+        super().__init__(master=parent, columns=client_name, show='headings', bootstyle='info')
         self.headings = client_name
         self.parent = parent
         self.get_tree_headings()
@@ -304,7 +304,7 @@ class TabTreeMouseOver:
     @staticmethod
     def repack_client_frame(client_tab_frame, row, column):
         tree_pad_x = 5
-        tree_pad_y = 0
+        tree_pad_y = 5
         client_tab_frame.grid(row=row, column=column,
                               padx=tree_pad_x,
                               pady=tree_pad_y,
