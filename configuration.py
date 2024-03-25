@@ -12,7 +12,7 @@ class Configuration(tk.Toplevel):
         self.tab_id = None
         self.title('Configuration')
         self.geometry("1340x600")
-        # self.resizable(False, False)
+        self.resizable(False, True)
         # self.minsize(400, 300)
         self.clients_dictionary = clients_dictionary
         self.commands_dictionary = commands_dictionary
@@ -208,17 +208,13 @@ class ScrollFrame(ttk.Frame):
     def __init__(self,
                  parent,
                  clients_dictionary):
-
         super().__init__(master=parent)
 
         # widget data
-        # self.list_height = 0  # Five items per row
+        self.list_height = 0
         self.clients_dictionary = clients_dictionary
-        self.item_height = 10
         self.client_tab_tree_index = 0
-        self.list_height = (self.client_tab_tree_index * self.item_height)  # Five items per row
         self.client_tab_frame_list = list()
-
         # canvas
         self.canvas = tk.Canvas(self, background='red')
         self.canvas.pack(expand=True, fill='both')
@@ -242,7 +238,6 @@ class ScrollFrame(ttk.Frame):
 
     def update_scroll_area_resize_event(self, event):
         """Resizing Currently Disabled"""
-        print(f'List Height: {self.list_height}, Frame Height {self.winfo_height()}')
         # print(self.winfo_height())
         if self.list_height >= self.winfo_height():
             height = self.list_height
@@ -261,8 +256,6 @@ class ScrollFrame(ttk.Frame):
             width=self.winfo_width(),
             height=height)
         self.canvas_configure(height)
-        # self.list_height = height
-        print(f"Size Updated!: {self.list_height}")
 
     def update_scroll_area(self, new_height):
         if new_height >= self.winfo_height():
@@ -281,7 +274,9 @@ class ScrollFrame(ttk.Frame):
             anchor='nw',
             width=self.winfo_width(),
             height=height)
+        self.list_height = height
         self.canvas_configure(height)
+        print(self.list_height)
 
     def canvas_configure(self, height):
         self.canvas.configure(scrollregion=(0, 0, self.winfo_width(), height))
@@ -322,7 +317,7 @@ class ScrollFrame(ttk.Frame):
                                                client_name,
                                                tab_commands)
         client_tab_frame_row, client_tab_frame_col = self.assign_row_column(client_tab_tree, self.client_tab_tree_index)
-        self.scroll_frame.rowconfigure(client_tab_frame_row, minsize=260)
+        self.scroll_frame.rowconfigure(client_tab_frame_row)
         client_tab_tree.grid(row=0, sticky='nsew')
 
         TabTreeMouseOver(client_tab_frame,
