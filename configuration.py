@@ -36,10 +36,7 @@ class Configuration(tk.Toplevel):
         # Side Bar Configuration
         self.side_bar_frame.rowconfigure(0, weight=1, uniform='a')
         self.side_bar_frame.rowconfigure(1, weight=1, uniform='a')
-
-        # self.side_bar_frame.rowconfigure(2, weight=10, uniform='a')
         self.side_bar_frame.columnconfigure(0, weight=1, uniform='a')
-        self.side_bar_frame.columnconfigure(1, weight=1, uniform='a')
 
         # self.mid_side_bar_frame = ttk.Frame(self.side_bar_frame)
         # self.mid_side_bar_frame.grid(row=0, columnspan=2, padx=10, pady=10, sticky="nsew")
@@ -47,7 +44,7 @@ class Configuration(tk.Toplevel):
         self.client_frame = ttk.Frame(self.side_bar_frame)
         self.client_frame.columnconfigure(0, weight=1, uniform='a')
         self.client_frame.columnconfigure(1, weight=1, uniform='a')
-        self.client_frame.pack(fill='both', expand=True)
+        self.client_frame.grid(row=0, column=0, sticky='nsew')
 
         self.clients_tree = ClientListTree.from_json(self.client_frame, self.clients_dictionary, ["Clients"])
 
@@ -64,14 +61,15 @@ class Configuration(tk.Toplevel):
                                                command=lambda: self.delete_row(self.clients_tree))
 
         # Adding command section to sidebar.
-        self.clients_tree.grid(row=0, columnspan=2)
+        # self.clients_tree.grid(row=0, columnspan=2)
+        self.clients_tree.grid(row=0, columnspan=2, sticky='nsew')
         self.new_client_button.grid(row=1, column=0, padx=5, pady=5)
         self.delete_client_button.grid(row=1, column=1, padx=5, pady=5)
 
         self.command_frame = ttk.Frame(self.side_bar_frame)
         self.command_frame.columnconfigure(0, weight=1, uniform='a')
         self.command_frame.columnconfigure(1, weight=1, uniform='a')
-        self.command_frame.pack(fill='both', expand=True)
+        self.command_frame.grid(row=1, column=0, sticky='nsew')
 
         # Command List Tree
         self.commands_tree = CommandListTree.from_json(self.command_frame, self.commands_dictionary, ["Commands"])
@@ -91,7 +89,8 @@ class Configuration(tk.Toplevel):
                                                 command=lambda: self.delete_row(self.commands_tree))
 
         # Adding command section to sidebar.
-        self.commands_tree.grid(row=0, columnspan=2)
+        # self.commands_tree.grid(row=0, columnspan=2)
+        self.commands_tree.grid(row=0, columnspan=2, sticky='nsew')
         self.new_command_button.grid(row=1, column=0, padx=5, pady=5)
         self.delete_command_button.grid(row=1, column=1, padx=5, pady=5)
 
@@ -128,9 +127,9 @@ class Configuration(tk.Toplevel):
 
         # inserting frames on to configuration top level.
         self.tab_frame.grid(row=1, column=1, sticky='nsew', padx=(5, 5))
+        # self.side_bar_frame.grid(row=0, column=0, sticky='nsew', rowspan=3, padx=(5, 5), pady=(10, 10))
         self.side_bar_frame.grid(row=0, column=0, sticky='nsew', rowspan=3, padx=(5, 5), pady=(10, 10))
-        # self.bot_bar_frame.grid(row=2, column=1, sticky='nsew', padx=(5, 5), pady=(10, 10))
-        self.bot_bar_frame.grid(row=2, column=1, sticky='nsew')
+        self.bot_bar_frame.grid(row=2, column=1, sticky='nsew', padx=(5, 5), pady=(10, 10))
 
         # Creating Tabs
         ScrollFrame.from_json(self.tabs,  # passing in notebook for method to instantiate tabs
@@ -239,8 +238,6 @@ class ScrollFrame(ttk.Frame):
         self.bind('<Configure>', self.update_scroll_area_resize_event)
 
     def update_scroll_area_resize_event(self, event):
-        """Resizing Currently Disabled"""
-        # print(self.winfo_height())
         if self.list_height >= self.winfo_height():
             height = self.list_height
             self.canvas.bind_class('scroll_frame_widgets', '<MouseWheel>',
@@ -278,7 +275,6 @@ class ScrollFrame(ttk.Frame):
             height=height)
         self.list_height = height
         self.canvas_configure(height)
-        print(self.list_height)
 
     def canvas_configure(self, height):
         self.canvas.configure(scrollregion=(0, 0, self.winfo_width(), height))

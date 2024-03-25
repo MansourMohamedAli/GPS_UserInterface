@@ -162,7 +162,7 @@ class ClientTabFrame(ttk.Frame):
     def __init__(self, parent, index):
         super().__init__(master=parent)
         self.index = index
-        self.rowconfigure(0, weight=7, uniform='a')
+        self.rowconfigure(0, weight=6, uniform='a')
         self.rowconfigure(1, weight=1, uniform='a')
         self.columnconfigure(0, weight=1, uniform='a')
 
