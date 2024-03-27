@@ -1,5 +1,6 @@
 from ctypes import CDLL, c_int, c_char_p
 import os
+import json
 
 absolute_path = os.path.dirname(__file__)
 relative_path = "GlassPanel\\SendCmd\\SendCmdClient\\Debug\\SendCmdClient.dll"
@@ -15,3 +16,4 @@ def send_command(client_name, command):
     byte_string = command_string.encode('utf-8')  # convert to bytes
     command = c_char_p(byte_string)
     send_cmd_func(command)
+
