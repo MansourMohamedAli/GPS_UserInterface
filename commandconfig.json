@@ -6,16 +6,33 @@
       {
         "clients":
         {
-          "VB1": ["199.199.199.01", "MAC1"],
-          "VB2": ["199.199.199.02", "MAC2"],
-          "VB3": ["199.199.199.03", "MAC3"],
-          "VB4": ["199.199.199.04", "MAC4"],
-          "VB5": ["199.199.199.05", "MAC5"],
-          "VB6": ["199.199.199.06", "MAC6"],
-          "VB7": ["199.199.199.07", "MAC7"],
-          "VB8": ["199.199.199.08", "MAC8"],
-          "VB9": ["199.199.199.09", "MAC9"]
-
+          "VB1":  ["199.199.199.01", "MAC1"],
+          "VB2":  ["199.199.199.02", "MAC2"],
+          "VB3":  ["199.199.199.03", "MAC3"],
+          "VB4":  ["199.199.199.04", "MAC4"],
+          "VB5":  ["199.199.199.05", "MAC5"],
+          "VB6":  ["199.199.199.06", "MAC6"],
+          "VB7":  ["199.199.199.07", "MAC7"],
+          "VB8":  ["199.199.199.08", "MAC8"],
+          "VB9":  ["199.199.199.09", "MAC9"],
+          "VB10": ["199.199.199.10", "MAC10"],
+          "VB11": ["199.199.199.11", "MAC11"],
+          "VB12": ["199.199.199.12", "MAC12"],
+          "VB13": ["199.199.199.13", "MAC13"],
+          "VB14": ["199.199.199.14", "MAC14"],
+          "VB15": ["199.199.199.15", "MAC15"],
+          "VB16": ["199.199.199.16", "MAC16"],
+          "VB17": ["199.199.199.17", "MAC17"],
+          "VB18": ["199.199.199.18", "MAC18"],
+          "VB19": ["199.199.199.19", "MAC19"],
+          "VB20": ["199.199.199.20", "MAC20"],
+          "VB21": ["199.199.199.21", "MAC21"],
+          "VB22": ["199.199.199.22", "MAC22"],
+          "VB23": ["199.199.199.23", "MAC23"],
+          "VB24": ["199.199.199.24", "MAC24"],
+          "VB25": ["199.199.199.25", "MAC25"],
+          "VB26": ["199.199.199.26", "MAC26"],
+          "VB27": ["199.199.199.27", "MAC27"]
         },
         "commands":
         {
@@ -29,7 +46,11 @@
         {
           "Tab 1": ["VB1", "VB2", "VB3"],
           "Tab 2": ["VB4", "VB5", "VB6"],
-          "Tab 3": ["VB7", "VB8", "VB9"]
+          "Tab 3": ["VB7", "VB8", "VB9"],
+          "Tab 4": ["VB10", "VB11"],
+          "Tab 5": ["VB12", "VB13", "VB14"],
+          "Tab 6": ["VB15", "VB16", "VB17", "VB18", "VB19", "VB20", "VB21", "VB22", "VB23", "VB24", "VB25", "VB26"],
+          "Tab 7": ["VB27"]
         },
         "tab_commands":
         {
@@ -49,6 +70,34 @@
             [["VB7 Command Name 1","VB7 Tree command 1"], ["VB7 Command Name 2", "VB7 Tree command 2"], ["VB7 Command Name 3", "VB7 Tree command 3"]],
             [["VB8 Command Name 1","VB8 Tree command 1"], ["VB8 Command Name 2", "VB8 Tree command 2"], ["VB8 Command Name 3", "VB8 Tree command 3"]],
             [["VB9 Command Name 1","VB9 Tree command 1"], ["VB9 Command Name 2", "VB9 Tree command 2"], ["VB9 Command Name 3", "VB9 Tree command 3"]]
+          ],
+          "4": [
+            [["VB10 Command Name 1","VB10 Tree command 1"], ["VB10 Command Name 2", "VB10 Tree command 2"], ["VB10 Command Name 3", "VB10 Tree command 3"]],
+            [["VB11 Command Name 1","VB11 Tree command 1"], ["VB11 Command Name 2", "VB11 Tree command 2"], ["VB11 Command Name 3", "VB11 Tree command 3"]]
+          ],
+
+          "5": [
+            [["VB12 Command Name 1","VB12 Tree command 1"], ["VB12 Command Name 2", "VB12 Tree command 2"], ["VB12 Command Name 3", "VB12 Tree command 3"]],
+            [["VB13 Command Name 1","VB13 Tree command 1"], ["VB13 Command Name 2", "VB13 Tree command 2"], ["VB13 Command Name 3", "VB13 Tree command 3"]],
+            [["VB14 Command Name 1","VB14 Tree command 1"], ["VB14 Command Name 2", "VB14 Tree command 2"], ["VB14 Command Name 3", "VB14 Tree command 3"]]
+          ],
+
+          "6": [
+            [["VB15 Command Name 1","VB15 Tree command 1"], ["VB15 Command Name 2", "VB15 Tree command 2"], ["VB15 Command Name 3", "VB15 Tree command 3"]],
+            [["VB16 Command Name 1","VB16 Tree command 1"], ["VB16 Command Name 2", "VB16 Tree command 2"], ["VB16 Command Name 3", "VB16 Tree command 3"]],
+            [["VB17 Command Name 1","VB17 Tree command 1"], ["VB17 Command Name 2", "VB17 Tree command 2"], ["VB17 Command Name 3", "VB17 Tree command 3"]],
+            [["VB18 Command Name 1","VB18 Tree command 1"], ["VB18 Command Name 2", "VB18 Tree command 2"], ["VB18 Command Name 3", "VB18 Tree command 3"]],
+            [["VB19 Command Name 1","VB19 Tree command 1"], ["VB19 Command Name 2", "VB19 Tree command 2"], ["VB19 Command Name 3", "VB19 Tree command 3"]],
+            [["VB20 Command Name 1","VB20 Tree command 1"], ["VB20 Command Name 2", "VB20 Tree command 2"], ["VB20 Command Name 3", "VB20 Tree command 3"]],
+            [["VB21 Command Name 1","VB21 Tree command 1"], ["VB21 Command Name 2", "VB21 Tree command 2"], ["VB21 Command Name 3", "VB21 Tree command 3"]],
+            [["VB22 Command Name 1","VB22 Tree command 1"], ["VB22 Command Name 2", "VB22 Tree command 2"], ["VB22 Command Name 3", "VB22 Tree command 3"]],
+            [["VB23 Command Name 1","VB23 Tree command 1"], ["VB23 Command Name 2", "VB23 Tree command 2"], ["VB23 Command Name 3", "VB23 Tree command 3"]],
+            [["VB24 Command Name 1","VB24 Tree command 1"], ["VB24 Command Name 2", "VB24 Tree command 2"], ["VB24 Command Name 3", "VB24 Tree command 3"]],
+            [["VB25 Command Name 1","VB25 Tree command 1"], ["VB25 Command Name 2", "VB25 Tree command 2"], ["VB25 Command Name 3", "VB25 Tree command 3"]],
+            [["VB26 Command Name 1","VB26 Tree command 1"], ["VB26 Command Name 2", "VB26 Tree command 2"], ["VB26 Command Name 3", "VB26 Tree command 3"]]
+          ],
+          "7": [
+            [["VB27 Command Name 1","VB27 Tree command 1"], ["VB27 Command Name 2", "VB27 Tree command 2"], ["VB27 Command Name 3", "VB27 Tree command 3"]]
           ]
         }
       }
