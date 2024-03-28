@@ -59,9 +59,10 @@ class Menu(ttk.Frame):
         config = self.load_active_config()
         commands = self.get_active_commands(config)
         clients = self.get_clients(config)
-        self.command_to_client_map(clients, commands)
-        self.pack_buttons(config)
-
+        buttons_list = CommandButtons.from_dictionary(self, self.tab_client_command_map(clients, commands))
+        # print(buttons_list)
+        self.pack_buttons(buttons_list)
+        # print(buttons_list)
     @staticmethod
     def read_configuration():
         try:
@@ -86,40 +87,50 @@ class Menu(ttk.Frame):
         except json.decoder.JSONDecodeError as e:
             print(e)
 
-    def get_active_commands(self, active_config):
+    @staticmethod
+    def get_active_commands(active_config):
         return active_config['tab_commands']
 
-    def get_clients(self, active_config):
+    @staticmethod
+    def get_clients(active_config):
         return active_config['tab_clients']
 
-    def command_to_client_map(self, tab_clients, tab_commands):
-        clients_total_list = list()
-        commands_total_list = list()
-        tab_dict = dict
+    @staticmethod
+    def tab_client_command_map(tab_clients, tab_commands):
+        tab_dict = dict()
         for tab_index, (tab_name, client_list) in enumerate(tab_clients.items()):
+            clients_in_tab = list()
+            commands_in_tab = list()
             for i, client in enumerate(client_list):
                 command_kv = tab_commands[str(tab_index + 1)][i]
                 commands_list = list()
                 for pair in command_kv:
                     commands_list.append(pair[1])
-                commands_total_list.append(commands_list)
-                clients_total_list.append(client)
-            # print(clients_total_list)
-        return clients_total_list, commands_total_list
+                commands_in_tab.append(commands_list)
+                clients_in_tab.append(client)
+            tab_dict[tab_name] = [clients_in_tab, commands_in_tab]
+        return tab_dict
 
-    def pack_buttons(self, config):
-        for b in config['tab_clients']:
-            button = ttk.Button(self, text=b)
-            button.grid()
+    def pack_buttons(self, buttons_list):
+        for button in buttons_list:
+            button.pack()
 
 
 class CommandButtons(ttk.Button):
     """
-    Buttons will be instantiated with info client and command info.
+    Buttons will be instantiated with client, and command info built in.
     """
+    def __init__(self, parent, button_name, clients, commands):
+        super().__init__(master=parent, text=button_name)
+        self.clients = clients
+        self.commands = commands
 
-    def __init__(self, parent, client, commands):
-        pass
-
+    @classmethod
+    def from_dictionary(cls, parent, tab_dict):
+        buttons_list = list()
+        for button_name, client_commands in tab_dict.items():
+            button = cls(parent, button_name, client_commands[0], client_commands[1])
+            buttons_list.append(button)
+        return buttons_list
 
 App('Glass Panel Control', (200, 200), 'darkly')
