@@ -8,7 +8,7 @@ full_path = os.path.join(absolute_path, relative_path)
 clibrary = CDLL(full_path, winmode=0)
 
 
-def send_command(client_name, command):
+def SendCMDClient(client_name, command):
     send_cmd_func = clibrary.send_cmd
     send_cmd_func.argtypes = [c_char_p]
     send_cmd_func.restype = c_int

@@ -1,7 +1,7 @@
 import tkinter as tk
 # from tkinter import ttk
 from configuration import Configuration
-from send_command import send_command
+from send_command import SendCMDClient
 import socket
 import json
 import ttkbootstrap as ttk
@@ -16,8 +16,8 @@ class App(ttk.Window):
         super().__init__(themename=theme)
         self.title(title)
         self.geometry(f"{dimensions[0]}x{dimensions[1]}")
-        self.minsize(200, 200)
-        self.maxsize(300, 300)
+        self.minsize(200, 320)
+        # self.maxsize(300, 300)
 
         # Widgets
         self.menu = Menu(self)
@@ -30,31 +30,17 @@ class Menu(ttk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
         self.place(x=0, y=0, relwidth=1, relheight=1)
-        self.menu_button_1 = ttk.Button(self, text='Button 1', command=lambda: send_command(ip_address, "dir"))
-        self.menu_button_2 = ttk.Button(self, text='Button 2')
-        self.menu_button_3 = ttk.Button(self, text='Button 3')
-        self.menu_button_4 = ttk.Button(self, text='Button 4')
-        self.menu_button_5 = ttk.Button(self, text='Button 5')
-        self.menu_button_6 = ttk.Button(self, text='Button 6')
+        # self.menu_button_1 = ttk.Button(self, text='Button 1', command=lambda: SendCMDClient(ip_address, "dir"))
         self.config_button = ttk.Button(self, text='Configuration', command=self.read_configuration)
 
         # create the grid
         self.columnconfigure(0, weight=1, uniform='a')
-        self.columnconfigure(1, weight=1, uniform='a')
 
-        self.rowconfigure(0, weight=1, uniform='a')
-        self.rowconfigure(1, weight=1, uniform='a')
-        self.rowconfigure(2, weight=1, uniform='a')
-        self.rowconfigure(3, weight=1, uniform='a')
-
-        # place the widgets
-        # self.menu_button_1.grid(row=0, column=0, sticky='nsew', columnspan=1, padx=(10, 5), pady=(10, 10))
-        # self.menu_button_2.grid(row=0, column=1, sticky='nsew', columnspan=1, padx=(5, 10), pady=(10, 10))
-        # self.menu_button_3.grid(row=1, column=0, sticky='nsew', columnspan=1, padx=(10, 5), pady=(10, 10))
-        # self.menu_button_4.grid(row=1, column=1, sticky='nsew', columnspan=1, padx=(5, 10), pady=(10, 10))
-        # self.menu_button_5.grid(row=2, column=0, sticky='nsew', columnspan=1, padx=(10, 5), pady=(10, 10))
-        # self.menu_button_6.grid(row=2, column=1, sticky='nsew', columnspan=1, padx=(5, 10), pady=(10, 10))
-        # self.config_button.grid(row=3, column=0, sticky='nsew', columnspan=2, padx=(5, 10), pady=(10, 10))
+        # self.columnconfigure(1, weight=1, uniform='a')
+        # self.rowconfigure(0, weight=1, uniform='a')
+        # self.rowconfigure(1, weight=1, uniform='a')
+        # self.rowconfigure(2, weight=1, uniform='a')
+        # self.rowconfigure(3, weight=1, uniform='a')
 
         config = self.load_active_config()
         commands = self.get_active_commands(config)
@@ -62,6 +48,7 @@ class Menu(ttk.Frame):
         buttons_list = CommandButtons.from_dictionary(self, self.tab_client_command_map(clients, commands))
         # print(buttons_list)
         self.pack_buttons(buttons_list)
+        self.config_button.grid(sticky='nsew', padx=5, pady=5)
         # print(buttons_list)
     @staticmethod
     def read_configuration():
@@ -113,7 +100,7 @@ class Menu(ttk.Frame):
 
     def pack_buttons(self, buttons_list):
         for button in buttons_list:
-            button.pack()
+            button.grid(sticky='nsew', padx=5, pady=5)
 
 
 class CommandButtons(ttk.Button):
@@ -124,7 +111,14 @@ class CommandButtons(ttk.Button):
         super().__init__(master=parent, text=button_name)
         self.clients = clients
         self.commands = commands
+        self.bind('<ButtonPress-1>', self.send_cmd)
 
+    def send_cmd(self, event):
+        for client, commands in zip(self.clients, self.commands):
+            for command in commands:
+                # print(f'SendCmdClient.exe {client} "{command}"')
+                # SendCMDClient(client, command)
+                SendCMDClient(ip_address, command)
     @classmethod
     def from_dictionary(cls, parent, tab_dict):
         buttons_list = list()
@@ -132,5 +126,6 @@ class CommandButtons(ttk.Button):
             button = cls(parent, button_name, client_commands[0], client_commands[1])
             buttons_list.append(button)
         return buttons_list
+
 
 App('Glass Panel Control', (200, 200), 'darkly')
