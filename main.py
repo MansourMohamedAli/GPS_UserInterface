@@ -15,18 +15,18 @@ class App(ttk.Window):
         super().__init__(themename=theme)
         self.title(title)
         self.geometry(f"{dimensions[0]}x{dimensions[1]}")
-        self.minsize(200, 320)
+        self.minsize(200, 50)
+        self.resizable(False, False)
         # self.maxsize(300, 300)
+
 
         config = self.load_active_config()
         commands = self.get_active_commands(config)
         clients = self.get_clients(config)
         tab_dict = self.tab_client_command_map(clients, commands)
 
-        # buttons_list = CommandButtons.from_dictionary(self, self.tab_client_command_map(clients, commands))
-
         # Widgets
-        self.menu = Menu(self, tab_dict, 50)
+        self.menu = Menu(self, tab_dict, 39)
         # Run
         self.mainloop()
 
@@ -84,10 +84,8 @@ class Menu(ttk.Frame):
     def __init__(self, parent, tab_dict, item_height):
         super().__init__(parent)
         # widget data
-
         self.tab_dict = tab_dict
-        self.buttons_list = CommandButtons.from_dictionary(self, tab_dict)
-        item_number = len(self.buttons_list)
+        item_number = len(tab_dict)
         self.list_height = item_number * item_height
 
         self.place(x=0, y=0, relwidth=1, relheight=1)
@@ -100,6 +98,7 @@ class Menu(ttk.Frame):
 
         # display frame
         self.frame = ttk.Frame(self)
+        # self.frame.columnconfigure()
         self.create_item().pack(expand=True, fill='both', pady=5, padx=5)
 
         # scrollbar
@@ -131,25 +130,31 @@ class Menu(ttk.Frame):
 
     def create_item(self):
         frame = ttk.Frame(self.frame)
-        # frame.rowconfigure(0, weight=1)
-        # frame.columnconfigure(0, weight=1)
-        buttons_list = CommandButtons.from_dictionary(frame, self.tab_dict)
-        self.pack_buttons(buttons_list)
+        # self.update()
+        # print(self.winfo_width())
+        buttons_list = CommandButtons.from_dictionary(frame, self.tab_dict, 26)
+        self.grid_buttons(buttons_list)
         return frame
 
     @staticmethod
-    def pack_buttons(buttons_list):
+    def grid_buttons(buttons_list):
         for button in buttons_list:
             button.grid(sticky='nsew', padx=5, pady=5)
 
+#f = Frame(master, height=32, width=32)
+#f.pack_propagate(0) # don't shrink
+#f.pack()
+#
+#b = Button(f, text="Sure!")
+#b.pack(fill=BOTH, expand=1)
 
 class CommandButtons(ttk.Button):
     """
     Buttons will be instantiated with client, and command info built in.
     """
 
-    def __init__(self, parent, button_name, clients, commands):
-        super().__init__(master=parent, text=button_name)
+    def __init__(self, parent, button_name, clients, commands, width):
+        super().__init__(master=parent, text=button_name, width=width)
         self.clients = clients
         self.commands = commands
         self.bind('<ButtonPress-1>', self.send_cmd)
@@ -160,12 +165,12 @@ class CommandButtons(ttk.Button):
                 SendCMDClient(ip_address, command)
 
     @classmethod
-    def from_dictionary(cls, parent, tab_dict):
+    def from_dictionary(cls, parent, tab_dict, width):
         buttons_list = list()
         for button_name, client_commands in tab_dict.items():
-            button = cls(parent, button_name, client_commands[0], client_commands[1])
+            button = cls(parent, button_name, client_commands[0], client_commands[1], width)
             buttons_list.append(button)
         return buttons_list
 
 
-App('Glass Panel Control', (200, 200), 'darkly')
+App('Glass Panel Control', (200, 290), 'darkly')
