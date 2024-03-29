@@ -16,9 +16,8 @@ class App(ttk.Window):
         self.title(title)
         self.geometry(f"{dimensions[0]}x{dimensions[1]}")
         self.minsize(200, 50)
-        self.resizable(False, False)
+        # self.resizable(False, False)
         # self.maxsize(300, 300)
-
 
         config = self.load_active_config()
         commands = self.get_active_commands(config)
@@ -130,15 +129,13 @@ class Menu(ttk.Frame):
 
     def create_item(self):
         frame = ttk.Frame(self.frame)
-        # self.update()
-        # print(self.winfo_width())
-        buttons_list = CommandButtons.from_dictionary(frame, self.tab_dict, 26)
-        self.grid_buttons(buttons_list)
+        button_frames_list = CommandButtons.from_dictionary(self.tab_dict, frame)
+        self.grid_button_frames(button_frames_list)
         return frame
 
     @staticmethod
-    def grid_buttons(buttons_list):
-        for button in buttons_list:
+    def grid_button_frames(button_frames_list):
+        for button in button_frames_list:
             button.grid(sticky='nsew', padx=5, pady=5)
 
 #f = Frame(master, height=32, width=32)
@@ -148,13 +145,14 @@ class Menu(ttk.Frame):
 #b = Button(f, text="Sure!")
 #b.pack(fill=BOTH, expand=1)
 
+
 class CommandButtons(ttk.Button):
     """
     Buttons will be instantiated with client, and command info built in.
     """
 
-    def __init__(self, parent, button_name, clients, commands, width):
-        super().__init__(master=parent, text=button_name, width=width)
+    def __init__(self, parent, button_name, clients, commands):
+        super().__init__(master=parent, text=button_name)
         self.clients = clients
         self.commands = commands
         self.bind('<ButtonPress-1>', self.send_cmd)
@@ -165,12 +163,13 @@ class CommandButtons(ttk.Button):
                 SendCMDClient(ip_address, command)
 
     @classmethod
-    def from_dictionary(cls, parent, tab_dict, width):
-        buttons_list = list()
+    def from_dictionary(cls, tab_dict, menu_frame):
+        button_frames_list = list()
         for button_name, client_commands in tab_dict.items():
-            button = cls(parent, button_name, client_commands[0], client_commands[1], width)
-            buttons_list.append(button)
-        return buttons_list
+            button_frame = ttk.Frame(menu_frame)
+            cls(button_frame, button_name, client_commands[0], client_commands[1]).pack(expand=True, fill="both")
+            button_frames_list. append(button_frame)
+        return button_frames_list
 
 
 App('Glass Panel Control', (200, 290), 'darkly')
