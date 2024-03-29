@@ -98,7 +98,7 @@ class Menu(ttk.Frame):
         # display frame
         self.frame = ttk.Frame(self)
         # self.frame.columnconfigure()
-        self.create_item()
+        self.create_item().pack(expand=True, fill='both', pady=5, padx=5)
 
         # scrollbar
         self.scrollbar = ttk.Scrollbar(self, orient='vertical', command=self.canvas.yview)
@@ -128,22 +128,17 @@ class Menu(ttk.Frame):
             height=height)
 
     def create_item(self):
-        self.update_idletasks()
         frame = ttk.Frame(self.frame)
         # grid layout
         frame.columnconfigure(0, weight=1)
-        button_frames_list, buttons_list = CommandButtons.from_dictionary(self.tab_dict, frame)
-        frame.pack(expand=True, fill='both', pady=5, padx=5)
+        button_frames_list = CommandButtons.from_dictionary(self.tab_dict, frame)
         self.grid_button_frames(button_frames_list)
-        for button in buttons_list:
-            button.pack(expand=True, fill='both')
-        print(frame.winfo_width())
-        # return frame
+        return frame
 
     @staticmethod
     def grid_button_frames(button_frames_list):
-        for button_frame in button_frames_list:
-            button_frame.grid(sticky='nsew', padx=5, pady=5)
+        for button in button_frames_list:
+            button.grid(sticky='nsew', padx=5, pady=5)
 
 #f = Frame(master, height=32, width=32)
 #f.pack_propagate(0) # don't shrink
@@ -172,13 +167,11 @@ class CommandButtons(ttk.Button):
     @classmethod
     def from_dictionary(cls, tab_dict, menu_frame):
         button_frames_list = list()
-        buttons_list = list()
         for button_name, client_commands in tab_dict.items():
             button_frame = ttk.Frame(menu_frame)
-            button = cls(button_frame, button_name, client_commands[0], client_commands[1])
+            cls(button_frame, button_name, client_commands[0], client_commands[1]).pack(expand=True, fill="both")
             button_frames_list. append(button_frame)
-            buttons_list.append(button)
-        return button_frames_list, buttons_list
+        return button_frames_list
 
 
 App('Glass Panel Control', (200, 290), 'darkly')
