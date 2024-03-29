@@ -18,26 +18,17 @@ class App(ttk.Window):
         self.minsize(200, 320)
         # self.maxsize(300, 300)
 
-        # Widgets
-        self.menu = Menu(self)
-
-        # Run
-        self.mainloop()
-
-
-class Menu(ttk.Frame):
-    def __init__(self, parent):
-        super().__init__(parent)
-        self.place(x=0, y=0, relwidth=1, relheight=1)
-        self.config_button = ttk.Button(self, text='Configuration', command=self.read_configuration)
-        # create the grid
-        self.columnconfigure(0, weight=1, uniform='a')
         config = self.load_active_config()
         commands = self.get_active_commands(config)
         clients = self.get_clients(config)
-        buttons_list = CommandButtons.from_dictionary(self, self.tab_client_command_map(clients, commands))
-        self.pack_buttons(buttons_list)
-        self.config_button.grid(sticky='nsew', padx=5, pady=5)
+        tab_dict = self.tab_client_command_map(clients, commands)
+
+        # buttons_list = CommandButtons.from_dictionary(self, self.tab_client_command_map(clients, commands))
+
+        # Widgets
+        self.menu = Menu(self, tab_dict, 50)
+        # Run
+        self.mainloop()
 
     @staticmethod
     def read_configuration():
@@ -50,7 +41,8 @@ class Menu(ttk.Frame):
         except json.decoder.JSONDecodeError as e:
             print(e)
 
-    def load_active_config(self):
+    @staticmethod
+    def load_active_config():
         try:
             with open('commandconfig.json') as f:
                 json_data = json.load(f)
@@ -86,6 +78,64 @@ class Menu(ttk.Frame):
                 clients_in_tab.append(client)
             tab_dict[tab_name] = [clients_in_tab, commands_in_tab]
         return tab_dict
+
+
+class Menu(ttk.Frame):
+    def __init__(self, parent, tab_dict, item_height):
+        super().__init__(parent)
+        # widget data
+
+        self.tab_dict = tab_dict
+        self.buttons_list = CommandButtons.from_dictionary(self, tab_dict)
+        item_number = len(self.buttons_list)
+        self.list_height = item_number * item_height
+
+        self.place(x=0, y=0, relwidth=1, relheight=1)
+        self.config_button = ttk.Button(self, text='Configuration')
+        self.columnconfigure(0, weight=1, uniform='a')
+
+        # canvas
+        self.canvas = tk.Canvas(self, background='red', scrollregion=(0, 0, self.winfo_width(), self.list_height))
+        self.canvas.pack(expand=True, fill='both')
+
+        # display frame
+        self.frame = ttk.Frame(self)
+        self.create_item().pack(expand=True, fill='both', pady=5, padx=5)
+
+        # scrollbar
+        self.scrollbar = ttk.Scrollbar(self, orient='vertical', command=self.canvas.yview)
+        self.canvas.configure(yscrollcommand=self.scrollbar.set)
+        self.scrollbar.place(relx=1, rely=0, relheight=1, anchor='ne')
+
+        # events
+        self.canvas.bind_all('<MouseWheel>', lambda event: self.canvas.yview_scroll(-int(event.delta / 60), "units"))
+        self.bind('<Configure>', self.update_size)
+
+    def update_size(self, event):
+        if self.list_height >= self.winfo_height():
+            height = self.list_height
+            self.canvas.bind_all('<MouseWheel>',
+                                 lambda event: self.canvas.yview_scroll(-int(event.delta / 60), "units"))
+            self.scrollbar.place(relx=1, rely=0, relheight=1, anchor='ne')
+        else:
+            height = self.winfo_height()
+            self.canvas.unbind_all('<MouseWheel>')
+            self.scrollbar.place_forget()
+
+        self.canvas.create_window(
+            (0, 0),
+            window=self.frame,
+            anchor='nw',
+            width=self.winfo_width(),
+            height=height)
+
+    def create_item(self):
+        frame = ttk.Frame(self.frame)
+        # frame.rowconfigure(0, weight=1)
+        # frame.columnconfigure(0, weight=1)
+        buttons_list = CommandButtons.from_dictionary(frame, self.tab_dict)
+        self.pack_buttons(buttons_list)
+        return frame
 
     @staticmethod
     def pack_buttons(buttons_list):
