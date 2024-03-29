@@ -8,6 +8,7 @@ import ttkbootstrap as ttk
 host = socket.gethostname()
 ip_address = socket.gethostbyname(host)
 
+
 class App(ttk.Window):
     def __init__(self, title, dimensions, theme):
         # main setup
@@ -28,26 +29,16 @@ class Menu(ttk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
         self.place(x=0, y=0, relwidth=1, relheight=1)
-        # self.menu_button_1 = ttk.Button(self, text='Button 1', command=lambda: SendCMDClient(ip_address, "dir"))
         self.config_button = ttk.Button(self, text='Configuration', command=self.read_configuration)
-
         # create the grid
         self.columnconfigure(0, weight=1, uniform='a')
-
-        # self.columnconfigure(1, weight=1, uniform='a')
-        # self.rowconfigure(0, weight=1, uniform='a')
-        # self.rowconfigure(1, weight=1, uniform='a')
-        # self.rowconfigure(2, weight=1, uniform='a')
-        # self.rowconfigure(3, weight=1, uniform='a')
-
         config = self.load_active_config()
         commands = self.get_active_commands(config)
         clients = self.get_clients(config)
         buttons_list = CommandButtons.from_dictionary(self, self.tab_client_command_map(clients, commands))
-        # print(buttons_list)
         self.pack_buttons(buttons_list)
         self.config_button.grid(sticky='nsew', padx=5, pady=5)
-        # print(buttons_list)
+
     @staticmethod
     def read_configuration():
         try:
@@ -96,7 +87,8 @@ class Menu(ttk.Frame):
             tab_dict[tab_name] = [clients_in_tab, commands_in_tab]
         return tab_dict
 
-    def pack_buttons(self, buttons_list):
+    @staticmethod
+    def pack_buttons(buttons_list):
         for button in buttons_list:
             button.grid(sticky='nsew', padx=5, pady=5)
 
@@ -105,6 +97,7 @@ class CommandButtons(ttk.Button):
     """
     Buttons will be instantiated with client, and command info built in.
     """
+
     def __init__(self, parent, button_name, clients, commands):
         super().__init__(master=parent, text=button_name)
         self.clients = clients
@@ -114,9 +107,8 @@ class CommandButtons(ttk.Button):
     def send_cmd(self, event):
         for client, commands in zip(self.clients, self.commands):
             for command in commands:
-                # print(f'SendCmdClient.exe {client} "{command}"')
-                # SendCMDClient(client, command)
                 SendCMDClient(ip_address, command)
+
     @classmethod
     def from_dictionary(cls, parent, tab_dict):
         buttons_list = list()
