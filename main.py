@@ -129,6 +129,8 @@ class Menu(ttk.Frame):
 
     def create_item(self):
         frame = ttk.Frame(self.frame)
+        # grid layout
+        frame.columnconfigure(0, weight=1)
         button_frames_list = CommandButtons.from_dictionary(self.tab_dict, frame)
         self.grid_button_frames(button_frames_list)
         return frame
