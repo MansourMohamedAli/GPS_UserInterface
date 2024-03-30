@@ -15,9 +15,9 @@ class App(ttk.Window):
         super().__init__(themename=theme)
         self.title(title)
         self.geometry(f"{dimensions[0]}x{dimensions[1]}")
-        self.minsize(200, 50)
+        self.minsize(300, 75)
         # self.resizable(False, False)
-        # self.maxsize(300, 300)
+        self.maxsize(400, 500)
 
         config = self.load_active_config()
         commands = self.get_active_commands(config)
@@ -28,17 +28,6 @@ class App(ttk.Window):
         self.menu = Menu(self, tab_dict, 39)
         # Run
         self.mainloop()
-
-    @staticmethod
-    def read_configuration():
-        try:
-            with open('commandconfig.json') as f:
-                json_data = json.load(f)
-            Configuration.from_json(json_data)
-        except FileNotFoundError as e:
-            print(e)
-        except json.decoder.JSONDecodeError as e:
-            print(e)
 
     @staticmethod
     def load_active_config():
@@ -84,7 +73,7 @@ class Menu(ttk.Frame):
         super().__init__(parent)
         # widget data
         self.tab_dict = tab_dict
-        item_number = len(tab_dict)
+        item_number = len(tab_dict) + 1  # Plus one for configuration button.
         self.list_height = item_number * item_height
 
         self.place(x=0, y=0, relwidth=1, relheight=1)
@@ -97,7 +86,6 @@ class Menu(ttk.Frame):
 
         # display frame
         self.frame = ttk.Frame(self)
-        # self.frame.columnconfigure()
         self.create_item().pack(expand=True, fill='both', pady=5, padx=5)
 
         # scrollbar
@@ -133,19 +121,38 @@ class Menu(ttk.Frame):
         frame.columnconfigure(0, weight=1)
         button_frames_list = CommandButtons.from_dictionary(self.tab_dict, frame)
         self.grid_button_frames(button_frames_list)
+        self.configuration_button(frame)
+        # config_button_frame = ttk.Frame(frame)
+        # self.config_button = ttk.Button(config_button_frame, text='Configuration',
+        #                                 command=Configuration)
+        # self.config_button.pack(expand=True, fill='both')
+        # config_button_frame.grid(sticky='nsew', padx=5, pady=5)
+
         return frame
+
+    def configuration_button(self, frame):
+        config_button_frame = ttk.Frame(frame)
+        config_button = ttk.Button(config_button_frame, text='Configuration',
+                                   command=self.read_configuration)
+        config_button.pack(expand=True, fill='both')
+        config_button_frame.grid(sticky='nsew', padx=5, pady=5)
+
+    @staticmethod
+    def read_configuration():
+        try:
+            with open('commandconfig.json') as f:
+                json_data = json.load(f)
+            Configuration.from_json(json_data)
+        except FileNotFoundError as e:
+            print(e)
+        except json.decoder.JSONDecodeError as e:
+            print(e)
 
     @staticmethod
     def grid_button_frames(button_frames_list):
-        for button in button_frames_list:
-            button.grid(sticky='nsew', padx=5, pady=5)
 
-#f = Frame(master, height=32, width=32)
-#f.pack_propagate(0) # don't shrink
-#f.pack()
-#
-#b = Button(f, text="Sure!")
-#b.pack(fill=BOTH, expand=1)
+        for button_frame in button_frames_list:
+            button_frame.grid(sticky='nsew', padx=5, pady=5)
 
 
 class CommandButtons(ttk.Button):
@@ -170,7 +177,7 @@ class CommandButtons(ttk.Button):
         for button_name, client_commands in tab_dict.items():
             button_frame = ttk.Frame(menu_frame)
             cls(button_frame, button_name, client_commands[0], client_commands[1]).pack(expand=True, fill="both")
-            button_frames_list. append(button_frame)
+            button_frames_list.append(button_frame)
         return button_frames_list
 
 

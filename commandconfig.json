@@ -32,7 +32,9 @@
           "VB24": ["199.199.199.24", "MAC24"],
           "VB25": ["199.199.199.25", "MAC25"],
           "VB26": ["199.199.199.26", "MAC26"],
-          "VB27": ["199.199.199.27", "MAC27"]
+          "VB27": ["199.199.199.27", "MAC27"],
+          "VB28": ["199.199.199.28", "MAC26"],
+          "VB29": ["199.199.199.29", "MAC27"]
         },
         "commands":
         {
@@ -50,7 +52,9 @@
           "Tab 4": ["VB10", "VB11"],
           "Tab 5": ["VB12", "VB13", "VB14"],
           "Tab 6": ["VB15", "VB16", "VB17", "VB18", "VB19", "VB20", "VB21", "VB22", "VB23", "VB24", "VB25", "VB26"],
-          "Tab 7": ["VB27"]
+          "Tab 7": ["VB27"],
+          "Tab 8": ["VB28"],
+          "Tab 9": ["VB29"]
         },
         "tab_commands":
         {
@@ -98,6 +102,12 @@
           ],
           "7": [
             [["VB27 Command Name 1","VB27 Tree command 1"], ["VB27 Command Name 2", "VB27 Tree command 2"], ["VB27 Command Name 3", "VB27 Tree command 3"]]
+          ],
+          "8": [
+            [["VB27 Command Name 1","VB28 Tree command 1"], ["VB28 Command Name 2", "VB28 Tree command 2"], ["VB28 Command Name 3", "VB28 Tree command 3"]]
+          ],
+          "9": [
+            [["VB29 Command Name 1","VB29 Tree command 1"], ["VB29 Command Name 2", "VB29 Tree command 2"], ["VB29 Command Name 3", "VB29 Tree command 3"]]
           ]
         }
       }
