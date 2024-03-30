@@ -1,6 +1,6 @@
 import tkinter as tk
 from configuration import Configuration
-from send_command import SendCMDClient
+from send_command import send_cmd_client
 import socket
 import json
 import ttkbootstrap as ttk
@@ -15,7 +15,7 @@ class App(ttk.Window):
         super().__init__(themename=theme)
         self.title(title)
         self.geometry(f"{dimensions[0]}x{dimensions[1]}")
-        self.minsize(300, 75)
+        self.minsize(100, 100)
         # self.resizable(False, False)
         self.maxsize(400, 500)
 
@@ -121,13 +121,8 @@ class Menu(ttk.Frame):
         frame.columnconfigure(0, weight=1)
         button_frames_list = CommandButtons.from_dictionary(self.tab_dict, frame)
         self.grid_button_frames(button_frames_list)
+        # Creating configuration button and putting at bottom.
         self.configuration_button(frame)
-        # config_button_frame = ttk.Frame(frame)
-        # self.config_button = ttk.Button(config_button_frame, text='Configuration',
-        #                                 command=Configuration)
-        # self.config_button.pack(expand=True, fill='both')
-        # config_button_frame.grid(sticky='nsew', padx=5, pady=5)
-
         return frame
 
     def configuration_button(self, frame):
@@ -169,7 +164,7 @@ class CommandButtons(ttk.Button):
     def send_cmd(self, event):
         for client, commands in zip(self.clients, self.commands):
             for command in commands:
-                SendCMDClient(ip_address, command)
+                send_cmd_client(ip_address, command)
 
     @classmethod
     def from_dictionary(cls, tab_dict, menu_frame):
@@ -181,4 +176,4 @@ class CommandButtons(ttk.Button):
         return button_frames_list
 
 
-App('Glass Panel Control', (200, 290), 'darkly')
+App('Glass Panel Control', (400, 500), 'darkly')

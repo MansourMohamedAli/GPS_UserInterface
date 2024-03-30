@@ -24,9 +24,6 @@ class Configuration(tk.Toplevel):
         self.side_bar_frame = ttk.Frame(self)
         self.bot_bar_frame = ttk.Frame(self)
 
-        # self.side_bar_frame = ttk.Frame(self, relief=tk.GROOVE)
-        # self.bot_bar_frame = ttk.Frame(self, relief=tk.GROOVE)
-
         self.rowconfigure(0, weight=1)
         self.rowconfigure(1, weight=10)
         self.rowconfigure(2, weight=1)
@@ -37,9 +34,6 @@ class Configuration(tk.Toplevel):
         self.side_bar_frame.rowconfigure(0, weight=1, uniform='a')
         self.side_bar_frame.rowconfigure(1, weight=1, uniform='a')
         self.side_bar_frame.columnconfigure(0, weight=1, uniform='a')
-
-        # self.mid_side_bar_frame = ttk.Frame(self.side_bar_frame)
-        # self.mid_side_bar_frame.grid(row=0, columnspan=2, padx=10, pady=10, sticky="nsew")
 
         self.client_frame = ttk.Frame(self.side_bar_frame)
         self.client_frame.columnconfigure(0, weight=1, uniform='a')
@@ -61,7 +55,6 @@ class Configuration(tk.Toplevel):
                                                command=lambda: self.delete_row(self.clients_tree))
 
         # Adding command section to sidebar.
-        # self.clients_tree.grid(row=0, columnspan=2)
         self.clients_tree.grid(row=0, columnspan=2, sticky='nsew')
         self.new_client_button.grid(row=1, column=0, padx=5, pady=5)
         self.delete_client_button.grid(row=1, column=1, padx=5, pady=5)
@@ -89,18 +82,15 @@ class Configuration(tk.Toplevel):
                                                 command=lambda: self.delete_row(self.commands_tree))
 
         # Adding command section to sidebar.
-        # self.commands_tree.grid(row=0, columnspan=2)
         self.commands_tree.grid(row=0, columnspan=2, sticky='nsew')
         self.new_command_button.grid(row=1, column=0, padx=5, pady=5)
         self.delete_command_button.grid(row=1, column=1, padx=5, pady=5)
 
         # Tab Frame configuration
-        # self.tabs = ttk.Notebook(self.tab_frame, width=1080, height=self.tab_frame.winfo_height())
         self.tabs = ttk.Notebook(self.tab_frame, width=1080)
         self.tabs.bind("<<NotebookTabChanged>>", self.on_tab_selected)
         self.tab_frame.rowconfigure(0, weight=1)
         self.tab_frame.columnconfigure(0, weight=1)
-        # self.tabs.grid(sticky='nsew', pady=(20, 0))
         self.tabs.grid(sticky='nsew', pady=15)
 
         # New and Delete Buttons for tabs.

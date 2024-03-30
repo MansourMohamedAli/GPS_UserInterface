@@ -1,6 +1,5 @@
 from ctypes import CDLL, c_int, c_char_p
 import os
-import json
 
 absolute_path = os.path.dirname(__file__)
 relative_path = "GlassPanel\\SendCmd\\SendCmdClient\\Debug\\SendCmdClient.dll"
@@ -8,7 +7,7 @@ full_path = os.path.join(absolute_path, relative_path)
 clibrary = CDLL(full_path, winmode=0)
 
 
-def SendCMDClient(client_name, command):
+def send_cmd_client(client_name, command):
     send_cmd_func = clibrary.send_cmd
     send_cmd_func.argtypes = [c_char_p]
     send_cmd_func.restype = c_int
