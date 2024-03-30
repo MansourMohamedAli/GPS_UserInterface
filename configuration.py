@@ -245,6 +245,7 @@ class ScrollFrame(ttk.Frame):
             width=self.winfo_width(),
             height=height)
         self.canvas_configure(height)
+        print(self.list_height)
 
     def update_scroll_area(self, new_height):
         if new_height >= self.winfo_height():
@@ -326,6 +327,7 @@ class ScrollFrame(ttk.Frame):
         self.scroll_frame.update_idletasks()
         scroll_frame_height = (client_tab_frame.winfo_height() * client_tab_frame_row
                                + ((client_tab_frame_row * 2) * tree_pad_y))
+        print(scroll_frame_height)
         self.update_scroll_area(scroll_frame_height)
         self.client_tab_frame_list.append(client_tab_frame)
         self.client_tab_tree_index += 1
