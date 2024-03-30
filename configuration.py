@@ -245,7 +245,6 @@ class ScrollFrame(ttk.Frame):
             width=self.winfo_width(),
             height=height)
         self.canvas_configure(height)
-        print(self.list_height)
 
     def update_scroll_area(self, new_height):
         if new_height >= self.winfo_height():
@@ -300,6 +299,7 @@ class ScrollFrame(ttk.Frame):
             tabs.add(tab, text=tab_name)
 
     def pack_trees(self, client_name, tab_commands, clients_dictionary):
+        # todo simplify code below. client_tab_tree and TabTreeMouseOver can called from ClientTabFrame Class.
         client_tab_frame = ClientTabFrame(self.scroll_frame, self.client_tab_tree_index)
         client_tab_tree = TabBarTree.from_json(client_tab_frame,
                                                clients_dictionary,
@@ -327,7 +327,6 @@ class ScrollFrame(ttk.Frame):
         self.scroll_frame.update_idletasks()
         scroll_frame_height = (client_tab_frame.winfo_height() * client_tab_frame_row
                                + ((client_tab_frame_row * 2) * tree_pad_y))
-        print(scroll_frame_height)
         self.update_scroll_area(scroll_frame_height)
         self.client_tab_frame_list.append(client_tab_frame)
         self.client_tab_tree_index += 1
