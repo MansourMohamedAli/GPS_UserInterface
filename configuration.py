@@ -11,8 +11,8 @@ class Configuration(tk.Toplevel):
         super().__init__()
         self.tab_id = None
         self.title('Configuration')
-        self.geometry("1340x600")
-        self.resizable(False, True)
+        self.geometry("1340x600")  # For 1920x1080
+        self.resizable(True, True)
         # self.minsize(400, 300)
         self.clients_dictionary = clients_dictionary
         self.commands_dictionary = commands_dictionary
@@ -22,13 +22,14 @@ class Configuration(tk.Toplevel):
 
         self.tab_frame = ttk.Frame(self)
         self.side_bar_frame = ttk.Frame(self)
-        self.bot_bar_frame = ttk.Frame(self)
+        # self.bot_bar_frame = ttk.Frame(self)
 
         self.rowconfigure(0, weight=1)
         self.rowconfigure(1, weight=10)
         self.rowconfigure(2, weight=1)
         self.columnconfigure(0, weight=1)
-        self.columnconfigure(1, weight=1)
+        self.columnconfigure(1, weight=1)  # For 1920x1080
+        # self.columnconfigure(1, weight=5)
 
         # Side Bar Configuration
         self.side_bar_frame.rowconfigure(0, weight=1, uniform='a')
@@ -111,23 +112,17 @@ class Configuration(tk.Toplevel):
 
         self.button_frame.place(relx=0.8, rely=0)
 
-        # Bottom Bar Configuration
-        self.bot_label = ttk.Label(self.bot_bar_frame, text="Bottom Bar")
-        self.bot_label.pack(expand=True)
-
         # inserting frames on to configuration top level.
         self.tab_frame.grid(row=1, column=1, sticky='nsew', padx=(5, 5))
-        # self.side_bar_frame.grid(row=0, column=0, sticky='nsew', rowspan=3, padx=(5, 5), pady=(10, 10))
         self.side_bar_frame.grid(row=0, column=0, sticky='nsew', rowspan=3, padx=(5, 5), pady=(10, 10))
-        self.bot_bar_frame.grid(row=2, column=1, sticky='nsew', padx=(5, 5), pady=(10, 10))
+        BottomFrame(self).grid(row=2, column=1, sticky='nsew', padx=(5, 5), pady=(10, 10))
 
         # Creating Tabs
         ScrollFrame.from_json(self.tabs,  # passing in notebook for method to instantiate tabs
                               self.clients_dictionary,
                               self.tab_clients_dictionary,
                               self.tab_commands_dictionary,
-                              # list containing list of command name, command pairs.
-                              self.tabs_list)
+                              self.tabs_list)  # list containing list of command name, command pairs.
 
     @classmethod
     def from_json(cls, json_data):
@@ -348,16 +343,25 @@ class ScrollFrame(ttk.Frame):
 
 
 class BottomFrame(ttk.Frame):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent):
+        super().__init__(master=parent)
 
-        # self.save_button = ttk.Button(self, text="Save", command=lambda: self.save_pressed())
+        self.rowconfigure(0, weight=1)
+        self.columnconfigure((0, 1), weight=1, uniform='a')
 
-        self.run_button = ttk.Button(self, text="Run", command=lambda: self.run_pressed())
-        self.run_button.pack()
+        self.move_left_button = ttk.Button(self, text="Left", command=lambda: self.move_left())
+        self.move_right_button = ttk.Button(self, text="Right", command=lambda: self.move_right())
+        # self.delete_button = ttk.Button(self, text="Save", command=lambda: self.delete())
 
-    def save_pressed(self):
+        self.move_left_button.grid(row=0, column=0)
+        self.move_right_button.grid(row=0, column=1)
+        # self.delete_button.grid(row=0, column=2)
+
+    def move_left(self):
         pass
 
-    def run_pressed(self):
+    def move_right(self):
+        pass
+
+    def delete(self):
         pass

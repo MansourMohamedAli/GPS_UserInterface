@@ -17,7 +17,8 @@ class App(ttk.Window):
         self.geometry(f"{dimensions[0]}x{dimensions[1]}")
         self.minsize(100, 100)
         # self.resizable(False, False)
-        self.maxsize(400, 500)
+        # self.maxsize(400, 500) # For 1920x1080
+        self.maxsize(400, 700)
 
         config = self.load_active_config()
         commands = self.get_active_commands(config)
@@ -119,10 +120,10 @@ class Menu(ttk.Frame):
         frame = ttk.Frame(self.frame)
         # grid layout
         frame.columnconfigure(0, weight=1)
+        self.configuration_button(frame)
         button_frames_list = CommandButtons.from_dictionary(self.tab_dict, frame)
         self.grid_button_frames(button_frames_list)
         # Creating configuration button and putting at bottom.
-        self.configuration_button(frame)
         return frame
 
     def configuration_button(self, frame):

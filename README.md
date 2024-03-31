@@ -13,6 +13,7 @@ To Do:
 8. Rename Tabs
 9. File Open to select another JSON.
 10. Allow only one one of each window to open.
+11. Scaling and resolution on diffent monitors.
 
 
 Lower Priority:
@@ -22,9 +23,12 @@ Lower Priority:
 	- ScrollFrame should only worry about packing ClientTabFrame.
 	- ClientTabFrame will handle packing TabBarTree and TabTreeMouseOver into itself.
 
-Optional:
+- Refactor Configuration Class. Create new classes for each frame.
+
+Eventually:
 - Lightmode/Darkmode.
 - Output window
+- Give use ability to change color of each tab tree for visual grouping.
 
 
 
