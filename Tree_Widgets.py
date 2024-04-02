@@ -85,7 +85,8 @@ class TabBarTree(ttk.Treeview):
 
         self.no_scroll_tags = self.bindtags()
         # Adding new tag for frame to allow scroll on TabTree and background.
-        self.scroll_tags = self.bindtags() + ("scroll_frame_widgets",)
+        # self.scroll_tags = self.bindtags() + ("scroll_frame_widgets",)
+        self.scroll_tags = self.bindtags() + ("tab_tree_widget",)
         self.bindtags(self.scroll_tags)
         self.bind('<ButtonPress-1>', self.enable_scroll)
         self.bind('<<TreeviewSelect>>', self.disable_scroll)

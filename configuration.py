@@ -19,6 +19,8 @@ class Configuration(tk.Toplevel):
         self.tab_clients_dictionary = tab_clients_dictionary
         self.tab_commands_dictionary = tab_commands_dictionary
         self.tabs_list = list()
+        self.active_scroll_frame = None
+        self.active_tab_tree_frame = None
 
         self.tab_frame = ttk.Frame(self)
         self.side_bar_frame = ttk.Frame(self)
@@ -87,13 +89,34 @@ class Configuration(tk.Toplevel):
         self.delete_command_button.grid(row=1, column=1, padx=5, pady=5)
 
         # Tab Frame configuration
+        self.tab_frame.rowconfigure(0, weight=10)
+        self.tab_frame.rowconfigure(1, weight=1)
+        self.tab_frame.columnconfigure(0, weight=1)
+        self.tab_frame.columnconfigure(1, weight=1)
+        self.tab_frame.columnconfigure(2, weight=1)
+
         self.tabs = ttk.Notebook(self.tab_frame, width=1080)
         self.tabs.bind("<<NotebookTabChanged>>", self.on_tab_selected)
-        self.tab_frame.rowconfigure(0, weight=1)
-        self.tab_frame.columnconfigure(0, weight=1)
-        self.tabs.grid(sticky='nsew', pady=15)
+
+        # Tree Control Buttons
+        self.move_left_button = ttk.Button(self.tab_frame, text="Left", command=lambda: self.move_left(),
+                                           bootstyle="outline")
+        self.delete_button = ttk.Button(self.tab_frame, text="Delete", command=lambda: self.delete_tree(),
+                                        bootstyle="outline")
+        self.move_right_button = ttk.Button(self.tab_frame, text="Right", command=lambda: self.move_right(),
+                                            bootstyle="outline")
+
+        # self.move_left_button.configure(state='disabled')
+        # self.delete_button.configure(state='disabled')
+        # self.move_right_button.configure(state='disabled')
 
         # New and Delete Buttons for tabs.
+        self.tabs.grid(row=0, column=0, columnspan=3, sticky='nsew', pady=(15, 0))
+        self.move_left_button.grid(row=1, column=0, sticky='new')
+        self.delete_button.grid(row=1, column=1, sticky='new')
+        self.move_right_button.grid(row=1, column=2, sticky='new')
+
+        # Packing Tab Frame Widgets
         self.button_frame = ttk.Frame(self.tab_frame)
         self.button_frame.columnconfigure(0, weight=1, uniform='a')
         self.button_frame.columnconfigure(1, weight=1, uniform='a')
@@ -129,6 +152,21 @@ class Configuration(tk.Toplevel):
                               # list containing list of command name, command pairs.
                               self.tabs_list)
 
+        self.bind_class('tab_tree_widget', '<Button-1>', self.store_tab_tree_frame)
+
+    def store_tab_tree_frame(self, event):
+        x, y = event.widget.winfo_pointerxy()
+        self.active_tab_tree_frame = event.widget.winfo_containing(x, y).master
+
+    def move_left(self):
+        print(self.active_tab_tree_frame)
+
+    def move_right(self):
+        pass
+
+    def delete_tree(self):
+        pass
+
     @classmethod
     def from_json(cls, json_data):
         try:
@@ -147,6 +185,9 @@ class Configuration(tk.Toplevel):
             client_dnd = ClientDragManager(scroll_frame,
                                            self.clients_dictionary)
             client_dnd.add_dragable(self.clients_tree)
+            self.active_scroll_frame = scroll_frame
+
+
 
     def insert_tab(self, window_instance, new_tab):
         if new_tab:
@@ -362,4 +403,4 @@ class BottomFrame(ttk.Frame):
     def run_pressed(self):
         pass
 
-#B TEST
+# B TEST
