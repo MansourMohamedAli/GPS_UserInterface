@@ -9,6 +9,7 @@ from math import floor
 class Configuration(tk.Toplevel):
     def __init__(self, clients_dictionary, commands_dictionary, tab_clients_dictionary, tab_commands_dictionary):
         super().__init__()
+
         self.tab_id = None
         self.title('Configuration')
         self.geometry("1340x600")
@@ -21,6 +22,7 @@ class Configuration(tk.Toplevel):
         self.tabs_list = list()
         self.active_scroll_frame = None
         self.active_tab_tree_frame = None
+        self.client_tab_frame_list = None
 
         self.tab_frame = ttk.Frame(self)
         self.side_bar_frame = ttk.Frame(self)
@@ -101,7 +103,7 @@ class Configuration(tk.Toplevel):
         # Tree Control Buttons
         self.move_left_button = ttk.Button(self.tab_frame, text="Left", command=lambda: self.move_left(),
                                            bootstyle="outline")
-        self.delete_button = ttk.Button(self.tab_frame, text="Delete", command=lambda: self.delete_tree(),
+        self.delete_button = ttk.Button(self.tab_frame, text="Delete", command=lambda: self.delete_client(),
                                         bootstyle="outline")
         self.move_right_button = ttk.Button(self.tab_frame, text="Right", command=lambda: self.move_right(),
                                             bootstyle="outline")
@@ -158,14 +160,94 @@ class Configuration(tk.Toplevel):
         x, y = event.widget.winfo_pointerxy()
         self.active_tab_tree_frame = event.widget.winfo_containing(x, y).master
 
-    def move_left(self):
-        print(self.active_tab_tree_frame)
-
     def move_right(self):
-        pass
+        self.shift_index_up()
+        self.re_sort(self.client_tab_frame_list)
+        self.unpack_client_frame()
+        for client_tab_frame in self.client_tab_frame_list:
+            row, column = self.get_row_and_column(client_tab_frame.index)
+            self.repack_client_frame(client_tab_frame, row, column)
 
-    def delete_tree(self):
-        pass
+    def move_left(self):
+        self.shift_index_down()
+        self.re_sort(self.client_tab_frame_list)
+        self.unpack_client_frame()
+        for client_tab_frame in self.client_tab_frame_list:
+            row, column = self.get_row_and_column(client_tab_frame.index)
+            self.repack_client_frame(client_tab_frame, row, column)
+
+    def delete_client(self):
+        self.unpack_client_frame()
+        for index, client_tab_frame in enumerate(self.client_tab_frame_list):
+            if client_tab_frame.index == self.active_tab_tree_frame.index:
+                del self.client_tab_frame_list[index]
+
+        for client_tab_frame in self.client_tab_frame_list:
+            if client_tab_frame.index > self.active_tab_tree_frame.index:
+                client_tab_frame.index -= 1
+
+        self.re_sort(self.client_tab_frame_list)
+        for client_tab_frame in self.client_tab_frame_list:
+            row, column = self.get_row_and_column(client_tab_frame.index)
+            self.repack_client_frame(client_tab_frame, row, column)
+
+        # drop tab tree index by one so next client dragged and dropped doesn't skip a number
+        self.active_scroll_frame.reduce_tab_tree_index()
+        # Get index of last frame as that is what determines the scroll area. Or I could count items in frame list.
+        last_frame = len(self.client_tab_frame_list) - 1
+        last_row, last_column = self.get_row_and_column(last_frame)
+        scroll_frame_height = (self.active_tab_tree_frame.winfo_height() * last_row
+                               + (last_row * 10))  # Row multiplied by pad (5 top + 5 bottom)
+        self.active_scroll_frame.update_scroll_area(scroll_frame_height)
+
+    def shift_index_up(self):
+        try:
+            if self.active_tab_tree_frame.index < self.client_tab_frame_list[-1].index:  # Making sure frame is not last.
+                for client_tab_frame in self.client_tab_frame_list:
+                    if client_tab_frame.index == (self.active_tab_tree_frame.index + 1):  # One above
+                        client_tab_frame.index -= 1
+                self.active_tab_tree_frame.index += 1
+        except IndexError or AttributeError:
+            pass
+
+    def shift_index_down(self):
+        for client_tab_frame in self.client_tab_frame_list:
+            if client_tab_frame.index == (self.active_tab_tree_frame.index - 1):  # One below
+                client_tab_frame.index += 1
+        self.active_tab_tree_frame.index -= 1
+        self.active_tab_tree_frame.index = max(self.active_tab_tree_frame.index, 0)  # Limit to 0
+
+    def unpack_client_frame(self):
+        for frame in self.client_tab_frame_list:
+            frame.grid_forget()
+
+    @staticmethod
+    def re_sort(client_tab_frame_list):
+        return client_tab_frame_list.sort(key=lambda x: x.index)
+
+    @staticmethod
+    def repack_client_frame(client_tab_frame, row, column):
+        tree_pad_x = 5
+        tree_pad_y = 5
+        client_tab_frame.grid(row=row, column=column,
+                              padx=tree_pad_x,
+                              pady=tree_pad_y,
+                              sticky="nsew")
+
+    @staticmethod
+    def get_row_and_column(client_frame_index):
+        row = (floor(client_frame_index / 5)) + 1
+        column = (client_frame_index % 5) + 1
+        return row, column
+
+    # def move_left(self):
+    #     print(self.active_tab_tree_frame)
+
+    # def move_right(self):
+    #     pass
+
+    # def delete_tree(self):
+    #     pass
 
     @classmethod
     def from_json(cls, json_data):
@@ -186,7 +268,7 @@ class Configuration(tk.Toplevel):
                                            self.clients_dictionary)
             client_dnd.add_dragable(self.clients_tree)
             self.active_scroll_frame = scroll_frame
-
+            self.client_tab_frame_list = scroll_frame.client_tab_frame_list
 
 
     def insert_tab(self, window_instance, new_tab):
