@@ -2,13 +2,15 @@ import tkinter as tk
 import ttkbootstrap as ttk
 from add_button_dlg import CommandWindow, ClientWindow, NewTabWindow
 from drag_and_drop import CommandDragManager, ClientDragManager
-from Tree_Widgets import ClientListTree, CommandListTree, TabBarTree, ClientTabFrame, TabTreeMouseOver
+# from Tree_Widgets import ClientListTree, CommandListTree, TabBarTree, ClientTabFrame, TabTreeMouseOver
+from Tree_Widgets import ClientListTree, CommandListTree, TabBarTree, ClientTabFrame
 from math import floor
 
 
 class Configuration(tk.Toplevel):
     def __init__(self, clients_dictionary, commands_dictionary, tab_clients_dictionary, tab_commands_dictionary):
         super().__init__()
+
         self.tab_id = None
         self.title('Configuration')
         self.geometry("1340x600")
@@ -21,10 +23,11 @@ class Configuration(tk.Toplevel):
         self.tabs_list = list()
         self.active_scroll_frame = None
         self.active_tab_tree_frame = None
+        self.client_tab_frame_list = None
 
         self.tab_frame = ttk.Frame(self)
         self.side_bar_frame = ttk.Frame(self)
-        self.bot_bar_frame = ttk.Frame(self)
+        self.bot_bar_frame = BottomFrame(self)
 
         self.rowconfigure(0, weight=1)
         self.rowconfigure(1, weight=10)
@@ -99,11 +102,11 @@ class Configuration(tk.Toplevel):
         self.tabs.bind("<<NotebookTabChanged>>", self.on_tab_selected)
 
         # Tree Control Buttons
-        self.move_left_button = ttk.Button(self.tab_frame, text="Left", command=lambda: self.move_left(),
+        self.move_left_button = ttk.Button(self.tab_frame, text="\u2B9C", command=lambda: self.move_left(),
                                            bootstyle="outline")
-        self.delete_button = ttk.Button(self.tab_frame, text="Delete", command=lambda: self.delete_tree(),
+        self.delete_button = ttk.Button(self.tab_frame, text="\U0001F5D1", command=lambda: self.delete_client(),
                                         bootstyle="outline")
-        self.move_right_button = ttk.Button(self.tab_frame, text="Right", command=lambda: self.move_right(),
+        self.move_right_button = ttk.Button(self.tab_frame, text="\u2B9E", command=lambda: self.move_right(),
                                             bootstyle="outline")
 
         # self.move_left_button.configure(state='disabled')
@@ -122,21 +125,21 @@ class Configuration(tk.Toplevel):
         self.button_frame.columnconfigure(1, weight=1, uniform='a')
         self.button_frame.rowconfigure(0, weight=1)
 
-        self.new_button = ttk.Button(self.button_frame,
-                                     text="New Tab",
-                                     command=lambda: NewTabWindow(self.insert_tab, self.insert_another_tab))
-        self.delete_button = ttk.Button(self.button_frame,
-                                        text="Delete Tab",
-                                        command=self.delete_tab)
+        self.new_tab_button = ttk.Button(self.button_frame,
+                                         text="New Tab",
+                                         command=lambda: NewTabWindow(self.insert_tab, self.insert_another_tab))
+        self.delete_tab_button = ttk.Button(self.button_frame,
+                                            text="Delete Tab",
+                                            command=self.delete_tab)
 
-        self.new_button.grid(row=0, column=0, sticky='s', padx=5, pady=5)
-        self.delete_button.grid(row=0, column=1, sticky='s', padx=5, pady=5)
+        self.new_tab_button.grid(row=0, column=0, sticky='s', padx=5, pady=5)
+        self.delete_tab_button.grid(row=0, column=1, sticky='s', padx=5, pady=5)
 
         self.button_frame.place(relx=0.8, rely=0)
 
         # Bottom Bar Configuration
-        self.bot_label = ttk.Label(self.bot_bar_frame, text="Bottom Bar")
-        self.bot_label.pack(expand=True)
+        # self.bot_label = ttk.Label(self.bot_bar_frame, text="Bottom Bar")
+        # self.bot_label.pack(expand=True)
 
         # inserting frames on to configuration top level.
         self.tab_frame.grid(row=1, column=1, sticky='nsew', padx=(5, 5))
@@ -152,20 +155,118 @@ class Configuration(tk.Toplevel):
                               # list containing list of command name, command pairs.
                               self.tabs_list)
 
-        self.bind_class('tab_tree_widget', '<Button-1>', self.store_tab_tree_frame)
+        self.buttons_list = [self.move_left_button, self.delete_button, self.move_right_button]
+        self.bind('<Button-1>', self.enable_nav_buttons)
 
-    def store_tab_tree_frame(self, event):
+    def enable_nav_buttons(self, event):
         x, y = event.widget.winfo_pointerxy()
-        self.active_tab_tree_frame = event.widget.winfo_containing(x, y).master
+        target = event.widget.winfo_containing(x, y)
+        master_target = event.widget.winfo_containing(x, y).master
+        if master_target in self.client_tab_frame_list:
+            self.active_tab_tree_frame = master_target
+        elif target in self.buttons_list:
+            pass
+        else:
+            self.active_tab_tree_frame = None
 
-    def move_left(self):
-        print(self.active_tab_tree_frame)
+    def on_start_hover(self, event):
+        if self.active_tab_tree_frame:
+            self.move_left_button.configure(state='enabled')
 
     def move_right(self):
-        pass
+        if self.active_tab_tree_frame:
+            self.shift_index_up()
+            self.re_sort(self.client_tab_frame_list)
+            self.unpack_client_frame()
+            for client_tab_frame in self.client_tab_frame_list:
+                row, column = self.get_row_and_column(client_tab_frame.index)
+                self.repack_client_frame(client_tab_frame, row, column)
 
-    def delete_tree(self):
-        pass
+    def move_left(self):
+        if self.active_tab_tree_frame:
+            self.shift_index_down()
+            self.re_sort(self.client_tab_frame_list)
+            self.unpack_client_frame()
+            for client_tab_frame in self.client_tab_frame_list:
+                row, column = self.get_row_and_column(client_tab_frame.index)
+                self.repack_client_frame(client_tab_frame, row, column)
+
+    def delete_client(self):
+        if self.active_tab_tree_frame:
+            self.unpack_client_frame()
+            for index, client_tab_frame in enumerate(self.client_tab_frame_list):
+                if client_tab_frame.index == self.active_tab_tree_frame.index:
+                    del self.client_tab_frame_list[index]
+
+            for client_tab_frame in self.client_tab_frame_list:
+                if client_tab_frame.index > self.active_tab_tree_frame.index:
+                    client_tab_frame.index -= 1
+
+            self.re_sort(self.client_tab_frame_list)
+            for client_tab_frame in self.client_tab_frame_list:
+                row, column = self.get_row_and_column(client_tab_frame.index)
+                self.repack_client_frame(client_tab_frame, row, column)
+
+            # drop tab tree index by one so next client dragged and dropped doesn't skip a number
+            self.active_scroll_frame.reduce_tab_tree_index()
+            # Get index of last frame as that is what determines the scroll area. Or I could count items in frame list.
+            last_frame = len(self.client_tab_frame_list) - 1
+            last_row, last_column = self.get_row_and_column(last_frame)
+            scroll_frame_height = (self.active_tab_tree_frame.winfo_height() * last_row
+                                   + (last_row * 10))  # Row multiplied by pad (5 top + 5 bottom)
+            self.active_scroll_frame.update_scroll_area(scroll_frame_height)
+
+            # Setting active_tab_tree_frame to none.
+            self.active_tab_tree_frame = None
+
+    def shift_index_up(self):
+        try:
+            if self.active_tab_tree_frame.index < self.client_tab_frame_list[-1].index:  # Making sure frame is not last.
+                for client_tab_frame in self.client_tab_frame_list:
+                    if client_tab_frame.index == (self.active_tab_tree_frame.index + 1):  # One above
+                        client_tab_frame.index -= 1
+                self.active_tab_tree_frame.index += 1
+        except IndexError or AttributeError:
+            pass
+
+    def shift_index_down(self):
+        for client_tab_frame in self.client_tab_frame_list:
+            if client_tab_frame.index == (self.active_tab_tree_frame.index - 1):  # One below
+                client_tab_frame.index += 1
+        self.active_tab_tree_frame.index -= 1
+        self.active_tab_tree_frame.index = max(self.active_tab_tree_frame.index, 0)  # Limit to 0
+
+    def unpack_client_frame(self):
+        for frame in self.client_tab_frame_list:
+            frame.grid_forget()
+
+    @staticmethod
+    def re_sort(client_tab_frame_list):
+        return client_tab_frame_list.sort(key=lambda x: x.index)
+
+    @staticmethod
+    def repack_client_frame(client_tab_frame, row, column):
+        tree_pad_x = 5
+        tree_pad_y = 5
+        client_tab_frame.grid(row=row, column=column,
+                              padx=tree_pad_x,
+                              pady=tree_pad_y,
+                              sticky="nsew")
+
+    @staticmethod
+    def get_row_and_column(client_frame_index):
+        row = (floor(client_frame_index / 5)) + 1
+        column = (client_frame_index % 5) + 1
+        return row, column
+
+    # def move_left(self):
+    #     print(self.active_tab_tree_frame)
+
+    # def move_right(self):
+    #     pass
+
+    # def delete_tree(self):
+    #     pass
 
     @classmethod
     def from_json(cls, json_data):
@@ -186,8 +287,7 @@ class Configuration(tk.Toplevel):
                                            self.clients_dictionary)
             client_dnd.add_dragable(self.clients_tree)
             self.active_scroll_frame = scroll_frame
-
-
+            self.client_tab_frame_list = scroll_frame.client_tab_frame_list
 
     def insert_tab(self, window_instance, new_tab):
         if new_tab:
@@ -209,6 +309,7 @@ class Configuration(tk.Toplevel):
         if len(self.tabs.winfo_children()) > 1:
             for item in self.tabs.winfo_children():
                 if str(item) == self.tabs.select():
+                    # todo Mouse wheel throwing errors after deleting tab.
                     item.destroy()
                     del self.tabs_list[self.tab_id]
                     return
@@ -350,11 +451,11 @@ class ScrollFrame(ttk.Frame):
         self.scroll_frame.rowconfigure(client_tab_frame_row)
         client_tab_tree.grid(row=0, sticky='nsew')
 
-        TabTreeMouseOver(client_tab_frame,
-                         self.client_tab_frame_list,
-                         client_tab_tree,
-                         self.reduce_tab_tree_index,
-                         self.update_scroll_area)
+        # TabTreeMouseOver(client_tab_frame,
+        #                  self.client_tab_frame_list,
+        #                  client_tab_tree,
+        #                  self.reduce_tab_tree_index,
+        #                  self.update_scroll_area)
 
         tree_pad_x = 5
         tree_pad_y = 5
@@ -389,13 +490,15 @@ class ScrollFrame(ttk.Frame):
 
 
 class BottomFrame(ttk.Frame):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent):
+        super().__init__(master=parent)
 
-        # self.save_button = ttk.Button(self, text="Save", command=lambda: self.save_pressed())
+        self.columnconfigure(0, weight=1)
+        self.columnconfigure(1, weight=1)
+        self.rowconfigure(0, weight=1)
 
-        self.run_button = ttk.Button(self, text="Run", command=lambda: self.run_pressed())
-        self.run_button.pack()
+        self.save_button = ttk.Button(self, text="Save", command=lambda: self.save_pressed())
+        self.save_button.grid(row=0, column=1)
 
     def save_pressed(self):
         pass
