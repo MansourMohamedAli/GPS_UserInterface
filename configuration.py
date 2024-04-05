@@ -2,8 +2,7 @@ import tkinter as tk
 import ttkbootstrap as ttk
 from add_button_dlg import CommandWindow, ClientWindow, NewTabWindow
 from drag_and_drop import CommandDragManager, ClientDragManager
-# from Tree_Widgets import ClientListTree, CommandListTree, TabBarTree, ClientTabFrame, TabTreeMouseOver
-from Tree_Widgets import ClientListTree, CommandListTree, TabBarTree, ClientTabFrame
+from Tree_Widgets import ClientListTree, CommandListTree, TabBarTree, ClientTabFrame, TabTreeMouseOver
 from math import floor
 
 
@@ -309,7 +308,7 @@ class Configuration(tk.Toplevel):
         if len(self.tabs.winfo_children()) > 1:
             for item in self.tabs.winfo_children():
                 if str(item) == self.tabs.select():
-                    # todo Mouse wheel throwing errors after deleting tab.
+                    item.pack_forget()  # To prevent scroll errors.
                     item.destroy()
                     del self.tabs_list[self.tab_id]
                     return
@@ -451,11 +450,8 @@ class ScrollFrame(ttk.Frame):
         self.scroll_frame.rowconfigure(client_tab_frame_row)
         client_tab_tree.grid(row=0, sticky='nsew')
 
-        # TabTreeMouseOver(client_tab_frame,
-        #                  self.client_tab_frame_list,
-        #                  client_tab_tree,
-        #                  self.reduce_tab_tree_index,
-        #                  self.update_scroll_area)
+        TabTreeMouseOver(client_tab_frame,
+                         client_tab_tree)
 
         tree_pad_x = 5
         tree_pad_y = 5
@@ -506,4 +502,3 @@ class BottomFrame(ttk.Frame):
     def run_pressed(self):
         pass
 
-# B TEST
