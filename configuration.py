@@ -13,25 +13,29 @@ class ConfigurationManager(ttk.Toplevel):
         self.title('Configuration')
         self.geometry("1340x600")
         self.resizable(False, True)
+        self.configurations = configurations
 
-        # self.configurations = configurations
-        active_config_name = configurations['active_config']
-        active_config_data = (configurations['configurations'][active_config_name])
+        active_config_name = self.configurations['active_config']
+        active_config_data = self.configurations['configurations'][active_config_name]
 
         # Menu
         menu = WindowMenu()
         self.configure(menu=menu)
 
         # Configuration
-        config_frame = Configuration.from_json(self, active_config_data)
-        config_frame.pack(expand=True, fill='both')
+        config_names = list(self.configurations['configurations'].keys())
+        config_frame = Configuration.from_active_config(self,
+                                                        active_config_data,
+                                                        config_names)
+        config_frame.pack(expand=True,
+                          fill='both')
+
 
     @classmethod
     def from_json(cls, json_name):
         try:
             with open(json_name) as f:
-                configurations = json.load(f)
-                cls(configurations)
+                cls(json.load(f))
         except FileNotFoundError as e:
             print(e)
         except json.decoder.JSONDecodeError as e:
@@ -39,10 +43,16 @@ class ConfigurationManager(ttk.Toplevel):
 
 
 class Configuration(ttk.Frame):
-    def __init__(self, parent, clients_dictionary, commands_dictionary, tab_clients_dictionary,
-                 tab_commands_dictionary):
+    def __init__(self,
+                 parent,
+                 clients_dictionary,
+                 commands_dictionary,
+                 tab_clients_dictionary,
+                 tab_commands_dictionary,
+                 config_names):
         super().__init__(master=parent)
         self.tab_id = None
+
         # self.minsize(400, 300)
         self.clients_dictionary = clients_dictionary
         self.commands_dictionary = commands_dictionary
@@ -52,6 +62,7 @@ class Configuration(ttk.Frame):
         self.active_scroll_frame = None
         self.active_tab_tree_frame = None
         self.client_tab_frame_list = None
+        # print(config_names)
 
         self.tab_frame = ttk.Frame(self)
         self.side_bar_frame = ttk.Frame(self)
@@ -81,15 +92,25 @@ class Configuration(ttk.Frame):
 
         # Combobox
         self.config_dropdown_frame = ttk.Label(self.config_frame)
-        items = ['1', '2', '3']
+        items = config_names
         food_string = tk.StringVar(value=items[0])
         combo = ttk.Combobox(self.config_dropdown_frame, textvariable=food_string)
         combo.configure(values=items)
         combo.pack(expand=True, fill='x', side='top')
 
+        self.config_button_frame = ttk.Frame(self.config_frame)
+        self.config_button_frame.columnconfigure((0, 1), weight=1)
+        self.load_config_button = ttk.Button(self.config_button_frame,
+                                             text="Load",
+                                             command=lambda: self.change_configuration(combo.get()))
+        self.delete_config_button = ttk.Button(self.config_button_frame, text="delete")
+        self.load_config_button.grid(row=0, column=0)
+        self.delete_config_button.grid(row=0, column=1)
+
         # packing title and dropdown frame to config frame.
         self.config_title_frame.grid(row=0, sticky='nsew')
         self.config_dropdown_frame.grid(row=1, sticky='nsew')
+        self.config_button_frame.grid(row=2, sticky='nsew')
 
         # attaching to sidebar frame.
         self.config_frame.grid(row=0, column=0, sticky='nsew')
@@ -99,7 +120,9 @@ class Configuration(ttk.Frame):
         self.client_frame.columnconfigure(1, weight=1, uniform='a')
         self.client_frame.grid(row=1, column=0, sticky='nsew')
 
-        self.clients_tree = ClientListTree.from_json(self.client_frame, self.clients_dictionary, ["Clients"])
+        self.clients_tree = ClientListTree.from_json(self.client_frame,
+                                                     self.clients_dictionary,
+                                                     ["Clients"])
 
         # New Client Button
         self.new_client_button = ttk.Button(self.client_frame,
@@ -215,24 +238,25 @@ class Configuration(ttk.Frame):
         self.bind('<Button-1>', self.enable_nav_buttons)
 
     def change_configuration(self, configuration_name):
-        try:
-            with open('commandconfig.json') as f:
-                json_data = json.load(f)
-            Configuration.from_json(json_data)
-        except FileNotFoundError as e:
-            print(e)
-        except json.decoder.JSONDecodeError as e:
-            print(e)
+        pass
+        # try:
+        #     with open('commandconfig.json') as f:
+        #         json_data = json.load(f)
+        #     Configuration.from_json(json_data)
+        # except FileNotFoundError as e:
+        #     print(e)
+        # except json.decoder.JSONDecodeError as e:
+        #     print(e)
 
     @classmethod
-    def from_json(cls, parent, active_config_data):
+    def from_active_config(cls, parent, active_config_data, config_names):
         try:
-            # print(active_config_data)
             return cls(parent,
                        active_config_data['clients'],
                        active_config_data['commands'],
                        active_config_data['tab_clients'],
-                       active_config_data['tab_commands'])
+                       active_config_data['tab_commands'],
+                       config_names)
         except KeyError as e:
             print(f'Key {e} is incorrect.')
 
