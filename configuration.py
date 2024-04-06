@@ -26,23 +26,39 @@ class Configuration(tk.Toplevel):
 
         self.tab_frame = ttk.Frame(self)
         self.side_bar_frame = ttk.Frame(self)
-        self.bot_bar_frame = BottomFrame(self)
 
-        self.rowconfigure(0, weight=1)
         self.rowconfigure(1, weight=10)
-        self.rowconfigure(2, weight=1)
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=1)
 
+        # Menu
+        menu = WindowMenu()
+        self.configure(menu=menu)
+
         # Side Bar Configuration
-        self.side_bar_frame.rowconfigure(0, weight=1, uniform='a')
+        self.side_bar_frame.rowconfigure(0, weight=1)
         self.side_bar_frame.rowconfigure(1, weight=1, uniform='a')
+        self.side_bar_frame.rowconfigure(2, weight=1, uniform='a')
         self.side_bar_frame.columnconfigure(0, weight=1, uniform='a')
+
+        self.side_bar_title_frame = ttk.Frame(self.side_bar_frame)
+        self.side_bar_title = ttk.Label(self.side_bar_title_frame, text="Select Configuration")
+        self.side_bar_title.pack(side='top')
+
+        # Combobox
+        items = ('Ice cream', 'Pizza', 'Broccoli')
+        food_string = tk.StringVar(value=items[0])
+        combo = ttk.Combobox(self.side_bar_title_frame, textvariable=food_string)
+        # combo['values'] = items
+        combo.configure(values=items)
+        combo.pack(fill='x', side='top')
+
+        self.side_bar_title_frame.grid(row=0, column=0, sticky='nsew')
 
         self.client_frame = ttk.Frame(self.side_bar_frame)
         self.client_frame.columnconfigure(0, weight=1, uniform='a')
         self.client_frame.columnconfigure(1, weight=1, uniform='a')
-        self.client_frame.grid(row=0, column=0, sticky='nsew')
+        self.client_frame.grid(row=1, column=0, sticky='nsew')
 
         self.clients_tree = ClientListTree.from_json(self.client_frame, self.clients_dictionary, ["Clients"])
 
@@ -66,10 +82,11 @@ class Configuration(tk.Toplevel):
         self.command_frame = ttk.Frame(self.side_bar_frame)
         self.command_frame.columnconfigure(0, weight=1, uniform='a')
         self.command_frame.columnconfigure(1, weight=1, uniform='a')
-        self.command_frame.grid(row=1, column=0, sticky='nsew')
+        self.command_frame.grid(row=2, column=0, sticky='nsew')
 
         # Command List Tree
         self.commands_tree = CommandListTree.from_json(self.command_frame, self.commands_dictionary, ["Commands"])
+
         # Making command tree items draggable.
         command_dnd = CommandDragManager(self.commands_tree)
         command_dnd.add_dragable(self.commands_tree)
@@ -101,16 +118,20 @@ class Configuration(tk.Toplevel):
         self.tabs.bind("<<NotebookTabChanged>>", self.on_tab_selected)
 
         # Tree Control Buttons
-        self.move_left_button = ttk.Button(self.tab_frame, text="\u2B9C", command=lambda: self.move_left(),
+        self.move_left_button = ttk.Button(self.tab_frame,
+                                           text="\u2B9C",
+                                           command=lambda: self.move_left(),
                                            bootstyle="outline")
-        self.delete_button = ttk.Button(self.tab_frame, text="\U0001F5D1", command=lambda: self.delete_client(),
-                                        bootstyle="outline")
-        self.move_right_button = ttk.Button(self.tab_frame, text="\u2B9E", command=lambda: self.move_right(),
-                                            bootstyle="outline")
 
-        # self.move_left_button.configure(state='disabled')
-        # self.delete_button.configure(state='disabled')
-        # self.move_right_button.configure(state='disabled')
+        self.delete_button = ttk.Button(self.tab_frame,
+                                        text="\U0001F5D1",
+                                        command=lambda: self.delete_client(),
+                                        bootstyle="outline")
+
+        self.move_right_button = ttk.Button(self.tab_frame,
+                                            text="\u2B9E",
+                                            command=lambda: self.move_right(),
+                                            bootstyle="outline")
 
         # New and Delete Buttons for tabs.
         self.tabs.grid(row=0, column=0, columnspan=3, sticky='nsew', pady=(15, 0))
@@ -127,6 +148,7 @@ class Configuration(tk.Toplevel):
         self.new_tab_button = ttk.Button(self.button_frame,
                                          text="New Tab",
                                          command=lambda: NewTabWindow(self.insert_tab, self.insert_another_tab))
+
         self.delete_tab_button = ttk.Button(self.button_frame,
                                             text="Delete Tab",
                                             command=self.delete_tab)
@@ -136,15 +158,9 @@ class Configuration(tk.Toplevel):
 
         self.button_frame.place(relx=0.8, rely=0)
 
-        # Bottom Bar Configuration
-        # self.bot_label = ttk.Label(self.bot_bar_frame, text="Bottom Bar")
-        # self.bot_label.pack(expand=True)
-
         # inserting frames on to configuration top level.
         self.tab_frame.grid(row=1, column=1, sticky='nsew', padx=(5, 5))
-        # self.side_bar_frame.grid(row=0, column=0, sticky='nsew', rowspan=3, padx=(5, 5), pady=(10, 10))
-        self.side_bar_frame.grid(row=0, column=0, sticky='nsew', rowspan=3, padx=(5, 5), pady=(10, 10))
-        self.bot_bar_frame.grid(row=2, column=1, sticky='nsew', padx=(5, 5), pady=(10, 10))
+        self.side_bar_frame.grid(row=0, column=0, sticky='nsew', rowspan=3, padx=(5, 5), pady=(10, 0))
 
         # Creating Tabs
         ScrollFrame.from_json(self.tabs,  # passing in notebook for method to instantiate tabs
@@ -220,7 +236,8 @@ class Configuration(tk.Toplevel):
 
     def shift_index_up(self):
         try:
-            if self.active_tab_tree_frame.index < self.client_tab_frame_list[-1].index:  # Making sure frame is not last.
+            # Making sure frame is not last.
+            if self.active_tab_tree_frame.index < self.client_tab_frame_list[-1].index:
                 for client_tab_frame in self.client_tab_frame_list:
                     if client_tab_frame.index == (self.active_tab_tree_frame.index + 1):  # One above
                         client_tab_frame.index -= 1
@@ -257,15 +274,6 @@ class Configuration(tk.Toplevel):
         row = (floor(client_frame_index / 5)) + 1
         column = (client_frame_index % 5) + 1
         return row, column
-
-    # def move_left(self):
-    #     print(self.active_tab_tree_frame)
-
-    # def move_right(self):
-    #     pass
-
-    # def delete_tree(self):
-    #     pass
 
     @classmethod
     def from_json(cls, json_data):
@@ -485,20 +493,16 @@ class ScrollFrame(ttk.Frame):
         self.client_tab_tree_index -= 1
 
 
-class BottomFrame(ttk.Frame):
-    def __init__(self, parent):
-        super().__init__(master=parent)
+class WindowMenu(ttk.Menu):
+    def __init__(self):
+        super().__init__()
+        # sub menu
+        file_menu = ttk.Menu(self, tearoff=False)
+        file_menu.add_command(label='New', command=lambda: print('New file'))
+        file_menu.add_command(label='Open', command=lambda: print('Open file'))
+        self.add_cascade(label='File', menu=file_menu)
 
-        self.columnconfigure(0, weight=1)
-        self.columnconfigure(1, weight=1)
-        self.rowconfigure(0, weight=1)
-
-        self.save_button = ttk.Button(self, text="Save", command=lambda: self.save_pressed())
-        self.save_button.grid(row=0, column=1)
-
-    def save_pressed(self):
-        pass
-
-    def run_pressed(self):
-        pass
-
+        # another sub menu
+        help_menu = ttk.Menu(self, tearoff=False)
+        help_menu.add_command(label='Help entry', command=lambda: print("test"))
+        self.add_cascade(label='Help', menu=help_menu)
