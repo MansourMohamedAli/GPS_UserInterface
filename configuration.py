@@ -4,10 +4,12 @@ from add_button_dlg import CommandWindow, ClientWindow, NewTabWindow
 from drag_and_drop import CommandDragManager, ClientDragManager
 from Tree_Widgets import ClientListTree, CommandListTree, TabBarTree, ClientTabFrame, TabTreeMouseOver
 from math import floor
+import json
 
 
 class Configuration(tk.Toplevel):
-    def __init__(self, clients_dictionary, commands_dictionary, tab_clients_dictionary, tab_commands_dictionary):
+    def __init__(self, configuration_names, clients_dictionary, commands_dictionary, tab_clients_dictionary,
+                 tab_commands_dictionary):
         super().__init__()
 
         self.tab_id = None
@@ -15,6 +17,7 @@ class Configuration(tk.Toplevel):
         self.geometry("1340x600")
         self.resizable(False, True)
         # self.minsize(400, 300)
+        self.configuration_names = configuration_names
         self.clients_dictionary = clients_dictionary
         self.commands_dictionary = commands_dictionary
         self.tab_clients_dictionary = tab_clients_dictionary
@@ -41,19 +44,33 @@ class Configuration(tk.Toplevel):
         self.side_bar_frame.rowconfigure(2, weight=1, uniform='a')
         self.side_bar_frame.columnconfigure(0, weight=1, uniform='a')
 
-        self.side_bar_title_frame = ttk.Frame(self.side_bar_frame)
-        self.side_bar_title = ttk.Label(self.side_bar_title_frame, text="Select Configuration")
-        self.side_bar_title.pack(side='top')
+        self.config_frame = ttk.Frame(self.side_bar_frame)
+        self.config_frame.rowconfigure(0, weight=1, uniform='a')
+        self.config_frame.rowconfigure(1, weight=1)
+        self.config_frame.columnconfigure(0, weight=1, uniform='a')
+
+        self.config_title_frame = ttk.Frame(self.config_frame)
+
+        self.side_bar_title = ttk.Label(self.config_title_frame,
+                                        text="Select Configuration",
+                                        bootstyle="inverse-light")
+
+        self.side_bar_title.pack(expand=True, fill='both')
 
         # Combobox
-        items = ('Ice cream', 'Pizza', 'Broccoli')
+        self.config_dropdown_frame = ttk.Label(self.config_frame)
+        items = self.configuration_names
         food_string = tk.StringVar(value=items[0])
-        combo = ttk.Combobox(self.side_bar_title_frame, textvariable=food_string)
-        # combo['values'] = items
+        combo = ttk.Combobox(self.config_dropdown_frame, textvariable=food_string)
         combo.configure(values=items)
-        combo.pack(fill='x', side='top')
+        combo.pack(expand=True, fill='x', side='top')
 
-        self.side_bar_title_frame.grid(row=0, column=0, sticky='nsew')
+        # packing title and dropdown frame to config frame.
+        self.config_title_frame.grid(row=0, sticky='nsew')
+        self.config_dropdown_frame.grid(row=1, sticky='nsew')
+
+        # attaching to sidebar frame.
+        self.config_frame.grid(row=0, column=0, sticky='nsew')
 
         self.client_frame = ttk.Frame(self.side_bar_frame)
         self.client_frame.columnconfigure(0, weight=1, uniform='a')
@@ -85,7 +102,9 @@ class Configuration(tk.Toplevel):
         self.command_frame.grid(row=2, column=0, sticky='nsew')
 
         # Command List Tree
-        self.commands_tree = CommandListTree.from_json(self.command_frame, self.commands_dictionary, ["Commands"])
+        self.commands_tree = CommandListTree.from_json(self.command_frame,
+                                                       self.commands_dictionary,
+                                                       ["Commands"])
 
         # Making command tree items draggable.
         command_dnd = CommandDragManager(self.commands_tree)
@@ -95,7 +114,7 @@ class Configuration(tk.Toplevel):
                                              text="New",
                                              command=lambda: CommandWindow(self.commands_tree.command_dictionary,
                                                                            self.insert_command,
-                                                                           self.insert_another_command, ))
+                                                                           self.insert_another_command))
 
         # Delete Command Button
         self.delete_command_button = ttk.Button(self.command_frame,
@@ -172,6 +191,27 @@ class Configuration(tk.Toplevel):
 
         self.buttons_list = [self.move_left_button, self.delete_button, self.move_right_button]
         self.bind('<Button-1>', self.enable_nav_buttons)
+
+    def change_configuration(self, configuration_name):
+        try:
+            with open('commandconfig.json') as f:
+                json_data = json.load(f)
+            Configuration.from_json(json_data)
+        except FileNotFoundError as e:
+            print(e)
+        except json.decoder.JSONDecodeError as e:
+            print(e)
+
+    @classmethod
+    def from_json(cls, json_data):
+        try:
+            active_config = (json_data['active_config'])
+            configuration_names = list(json_data['configurations'].keys())
+            config = (json_data['configurations'][active_config])
+            return cls(configuration_names, config['clients'], config['commands'], config['tab_clients'],
+                       config['tab_commands'])
+        except KeyError as e:
+            print(f'Key {e} is incorrect.')
 
     def enable_nav_buttons(self, event):
         x, y = event.widget.winfo_pointerxy()
@@ -274,15 +314,6 @@ class Configuration(tk.Toplevel):
         row = (floor(client_frame_index / 5)) + 1
         column = (client_frame_index % 5) + 1
         return row, column
-
-    @classmethod
-    def from_json(cls, json_data):
-        try:
-            active_config = (json_data['active_config'])
-            config = (json_data['configurations'][active_config])
-            return cls(config['clients'], config['commands'], config['tab_clients'], config['tab_commands'])
-        except KeyError as e:
-            print(f'Key {e} is incorrect.')
 
     def on_tab_selected(self, event):
         if self.tabs_list:

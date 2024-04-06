@@ -1,6 +1,5 @@
 import tkinter as tk
 import ttkbootstrap as ttk
-from math import floor
 from add_button_dlg import TabCommandDlg
 
 

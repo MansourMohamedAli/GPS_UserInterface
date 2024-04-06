@@ -14,7 +14,7 @@
 * Rename Tabs
 * File Open to select another JSON.
 * Allow only one of each window to open.
-
+* Configuration class shoud instantiate with only configuration passed in. not with clients,commands,tab_clients,tab_commands.
 
 ### Lower Priority:
 - Implement WOL option.
