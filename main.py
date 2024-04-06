@@ -1,5 +1,5 @@
 import tkinter as tk
-from configuration import Configuration
+from configuration import ConfigurationManager
 from send_command import send_cmd_client
 import socket
 import json
@@ -128,20 +128,14 @@ class Menu(ttk.Frame):
     def configuration_button(self, frame):
         config_button_frame = ttk.Frame(frame)
         config_button = ttk.Button(config_button_frame, text='Configuration',
-                                   command=self.read_configuration)
+                                   command= lambda: self.read_configuration('commandconfig.json'))
         config_button.pack(expand=True, fill='both')
         config_button_frame.grid(sticky='nsew', padx=5, pady=5)
 
     @staticmethod
-    def read_configuration():
-        try:
-            with open('commandconfig.json') as f:
-                json_data = json.load(f)
-            Configuration.from_json(json_data)
-        except FileNotFoundError as e:
-            print(e)
-        except json.decoder.JSONDecodeError as e:
-            print(e)
+    def read_configuration(configuration_filename):
+        ConfigurationManager.from_json(configuration_filename)
+
 
     @staticmethod
     def grid_button_frames(button_frames_list):

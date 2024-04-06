@@ -7,17 +7,43 @@ from math import floor
 import json
 
 
-class Configuration(tk.Toplevel):
-    def __init__(self, configuration_names, clients_dictionary, commands_dictionary, tab_clients_dictionary,
-                 tab_commands_dictionary):
+class ConfigurationManager(ttk.Toplevel):
+    def __init__(self, configurations):
         super().__init__()
-
-        self.tab_id = None
         self.title('Configuration')
         self.geometry("1340x600")
         self.resizable(False, True)
+
+        # self.configurations = configurations
+        active_config_name = configurations['active_config']
+        active_config_data = (configurations['configurations'][active_config_name])
+
+        # Menu
+        menu = WindowMenu()
+        self.configure(menu=menu)
+
+        # Configuration
+        config_frame = Configuration.from_json(self, active_config_data)
+        config_frame.pack(expand=True, fill='both')
+
+    @classmethod
+    def from_json(cls, json_name):
+        try:
+            with open(json_name) as f:
+                configurations = json.load(f)
+                cls(configurations)
+        except FileNotFoundError as e:
+            print(e)
+        except json.decoder.JSONDecodeError as e:
+            print(e)
+
+
+class Configuration(ttk.Frame):
+    def __init__(self, parent, clients_dictionary, commands_dictionary, tab_clients_dictionary,
+                 tab_commands_dictionary):
+        super().__init__(master=parent)
+        self.tab_id = None
         # self.minsize(400, 300)
-        self.configuration_names = configuration_names
         self.clients_dictionary = clients_dictionary
         self.commands_dictionary = commands_dictionary
         self.tab_clients_dictionary = tab_clients_dictionary
@@ -33,10 +59,6 @@ class Configuration(tk.Toplevel):
         self.rowconfigure(1, weight=10)
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=1)
-
-        # Menu
-        menu = WindowMenu()
-        self.configure(menu=menu)
 
         # Side Bar Configuration
         self.side_bar_frame.rowconfigure(0, weight=1)
@@ -59,7 +81,7 @@ class Configuration(tk.Toplevel):
 
         # Combobox
         self.config_dropdown_frame = ttk.Label(self.config_frame)
-        items = self.configuration_names
+        items = ['1', '2', '3']
         food_string = tk.StringVar(value=items[0])
         combo = ttk.Combobox(self.config_dropdown_frame, textvariable=food_string)
         combo.configure(values=items)
@@ -203,13 +225,14 @@ class Configuration(tk.Toplevel):
             print(e)
 
     @classmethod
-    def from_json(cls, json_data):
+    def from_json(cls, parent, active_config_data):
         try:
-            active_config = (json_data['active_config'])
-            configuration_names = list(json_data['configurations'].keys())
-            config = (json_data['configurations'][active_config])
-            return cls(configuration_names, config['clients'], config['commands'], config['tab_clients'],
-                       config['tab_commands'])
+            # print(active_config_data)
+            return cls(parent,
+                       active_config_data['clients'],
+                       active_config_data['commands'],
+                       active_config_data['tab_clients'],
+                       active_config_data['tab_commands'])
         except KeyError as e:
             print(f'Key {e} is incorrect.')
 
