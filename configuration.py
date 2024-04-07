@@ -92,7 +92,7 @@ class Configuration(ttk.Frame):
 
         # Side Bar Configuration
         self.side_bar_frame.rowconfigure(0, weight=1)
-        self.side_bar_frame.rowconfigure(1, weight=1, uniform='a')
+        self.side_bar_frame.rowconfigure(1, weight=1)
         self.side_bar_frame.columnconfigure(0, weight=1, uniform='a')
 
         self.client_frame = ttk.Frame(self.side_bar_frame)
@@ -228,8 +228,14 @@ class Configuration(ttk.Frame):
         c = ttk.StringVar(value=config_names[0])
         combo = ttk.Combobox(drop_down_frame, textvariable=c)
         combo['values'] = config_names
-        combo.pack(expand=True, fill='x', side='top')
+        combo['state'] = 'readonly'
+        combo.pack(expand=True, fill='x', side='right')
         combo.bind('<<ComboboxSelected>>', lambda event: self.m_config_selected(c))
+
+        new_config = ttk.Button(drop_down_frame, text="+")
+        delete_config = ttk.Button(drop_down_frame, text=u"\U0001F5D1")
+        delete_config.pack(side='left')
+        new_config.pack(side='left')
 
         # pack combo frame:
         drop_down_frame.grid(row=0, column=0, columnspan=2, sticky='nsew')
