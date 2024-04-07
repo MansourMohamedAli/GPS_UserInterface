@@ -8,6 +8,8 @@ import json
 
 
 class ConfigurationManager(ttk.Toplevel):
+    config_names = list()
+
     def __init__(self, configurations):
         super().__init__()
         self.title('Configuration')
@@ -17,40 +19,65 @@ class ConfigurationManager(ttk.Toplevel):
 
         self.active_config_name = self.configurations['active_config']
         active_config_data = self.configurations['configurations'][self.active_config_name]
+        ConfigurationManager.config_names = list(self.configurations['configurations'].keys())
+
+        self.config_frame = Configuration.from_active_config(self,
+                                                             active_config_data,
+                                                             self.config_selected)
+
+        # pack
+        self.config_frame.pack(expand=True, fill='both')
 
         # Menu
         menu = WindowMenu()
         self.configure(menu=menu)
 
-        # Configuration
+        # # Configuration Dropdown
+        # config_select_frame = ttk.Frame(self, bootstyle="#4582ec")
+        # config_select_frame.rowconfigure(0, weight=1)
+        # config_select_frame.columnconfigure(0, weight=1)
+        # config_select_frame.columnconfigure(1, weight=1)
+        # config_select_frame.columnconfigure(2, weight=1)
+        #
+        # drop_down_frame = ttk.Frame(config_select_frame)
+        #
+        # # Configuration Combobox.
+        # config_names = list(self.configurations['configurations'].keys())
+        # c = ttk.StringVar(value=config_names[0])
+        # combo = ttk.Combobox(drop_down_frame, textvariable=c)
+        # combo['values'] = config_names
+        # combo.pack(expand=True, fill='x', side='top')
+        # combo.bind('<<ComboboxSelected>>', lambda event: self.config_selected(c))
+        #
+        # # Configuration Frame
+        # self.config_frame = Configuration.from_active_config(self,
+        #                                                      active_config_data)
+        # # pack combo frame:
+        # drop_down_frame.grid(row=0, column=0, sticky='nsew')
+        #
+        # # pack parent frames
+        # config_select_frame.pack(expand=True, fill='x')
+        # self.config_frame.pack(expand=True, fill='both')
+
+
+
+
+
+
 
         # Configuration Dropdown
-        config_select_frame = ttk.Frame(self, bootstyle="#4582ec")
-        config_select_frame.rowconfigure(0, weight=1)
-        config_select_frame.columnconfigure(0, weight=1)
-        config_select_frame.columnconfigure(1, weight=1)
-        config_select_frame.columnconfigure(2, weight=1)
-
-        drop_down_frame = ttk.Frame(config_select_frame)
-
-        # Configuration Combobox.
-        config_names = list(self.configurations['configurations'].keys())
-        c = ttk.StringVar(value=config_names[0])
-        combo = ttk.Combobox(drop_down_frame, textvariable=c)
-        combo['values'] = config_names
-        combo.pack(expand=True, fill='x', side='top')
-        combo.bind('<<ComboboxSelected>>', lambda event: self.config_selected(c))
-
-        # Configuration Frame
-        self.config_frame = Configuration.from_active_config(self,
-                                                             active_config_data)
-
-        # pack combo frame:
-        drop_down_frame.grid(row=0, column=0, sticky='nsew')
-
-        # pack parent frames
-        config_select_frame.pack(expand=True, fill='x')
-        self.config_frame.pack(expand=True, fill='both')
+        # drop_down_frame = ttk.Frame(self)
+        #
+        # # Configuration Combobox.
+        # config_names = list(self.configurations['configurations'].keys())
+        # c = ttk.StringVar(value=config_names[0])
+        # combo = ttk.Combobox(drop_down_frame, textvariable=c)
+        # combo['values'] = config_names
+        # combo.pack(expand=True, fill='x', side='top')
+        # combo.bind('<<ComboboxSelected>>', lambda event: self.config_selected(c))
+        #
+        # # pack combo frame:
+        # drop_down_frame.grid(row=0, column=0, sticky='nsew')
 
     def config_selected(self, config):
         selected_config = config.get()
@@ -65,7 +92,8 @@ class ConfigurationManager(ttk.Toplevel):
             self.config_frame.destroy()
             # Loading Configuration with new configuration data
             self.config_frame = Configuration.from_active_config(self,
-                                                                 selected_config_data)
+                                                                 selected_config_data,
+                                                                 self.config_selected)
             # Repacking Configuration
             self.config_frame.pack(expand=True, fill='both')
 
@@ -86,7 +114,8 @@ class Configuration(ttk.Frame):
                  clients_dictionary,
                  commands_dictionary,
                  tab_clients_dictionary,
-                 tab_commands_dictionary):
+                 tab_commands_dictionary,
+                 m_config_selected):
         super().__init__(master=parent)
         self.tab_id = None
 
@@ -99,7 +128,7 @@ class Configuration(ttk.Frame):
         self.active_scroll_frame = None
         self.active_tab_tree_frame = None
         self.client_tab_frame_list = None
-        # print(config_names)
+        self.m_config_selected = m_config_selected
 
         self.tab_frame = ttk.Frame(self)
         self.side_bar_frame = ttk.Frame(self)
@@ -170,16 +199,17 @@ class Configuration(ttk.Frame):
         self.delete_command_button.grid(row=1, column=1, padx=5, pady=5)
 
         # Tab Frame configuration
-        self.tab_frame.rowconfigure(0, weight=10)
-        self.tab_frame.rowconfigure(1, weight=1)
-        self.tab_frame.columnconfigure(0, weight=1)
-        self.tab_frame.columnconfigure(1, weight=1)
-        self.tab_frame.columnconfigure(2, weight=1)
+        self.tab_frame.rowconfigure(0, weight=1)
+        self.tab_frame.rowconfigure(1, weight=10)
+        self.tab_frame.rowconfigure(2, weight=1)
+        self.tab_frame.columnconfigure(0, weight=1, uniform='a')
+        self.tab_frame.columnconfigure(1, weight=1, uniform='a')
+        self.tab_frame.columnconfigure(2, weight=1, uniform='a')
 
         self.tabs = ttk.Notebook(self.tab_frame, width=1080)
 
         tab_style = ttk.Style()
-        tab_style.configure('TNotebook', tabposition='en')
+        tab_style.configure('TNotebook', tabposition='new')
 
         self.tabs.bind("<<NotebookTabChanged>>", self.on_tab_selected)
 
@@ -200,10 +230,10 @@ class Configuration(ttk.Frame):
                                             bootstyle="outline")
 
         # New and Delete Buttons for tabs.
-        self.tabs.grid(row=0, column=0, columnspan=3, sticky='nsew', pady=(15, 0))
-        self.move_left_button.grid(row=1, column=0, sticky='new')
-        self.delete_button.grid(row=1, column=1, sticky='new')
-        self.move_right_button.grid(row=1, column=2, sticky='new')
+        self.tabs.grid(row=1, column=0, columnspan=3, sticky='nsew')
+        self.move_left_button.grid(row=2, column=0, sticky='new')
+        self.delete_button.grid(row=2, column=1, sticky='new')
+        self.move_right_button.grid(row=2, column=2, sticky='new')
 
         # Packing Tab Frame Widgets
         self.button_frame = ttk.Frame(self.tab_frame)
@@ -220,22 +250,50 @@ class Configuration(ttk.Frame):
         self.move_right_button.bindtags(self.tree_select)
 
         # Tab buttons
-        self.new_tab_button = ttk.Button(self.button_frame,
+        self.new_tab_button_frame = ttk.Frame(self.button_frame)
+        self.new_tab_button = ttk.Button(self.new_tab_button_frame,
                                          text="New Tab",
                                          command=lambda: NewTabWindow(self.insert_tab, self.insert_another_tab))
 
-        self.delete_tab_button = ttk.Button(self.button_frame,
+        self.delete_tab_button_frame = ttk.Frame(self.button_frame)
+        self.delete_tab_button = ttk.Button(self.delete_tab_button_frame,
                                             text="Delete Tab",
                                             command=self.delete_tab)
 
-        self.new_tab_button.grid(row=0, column=0, sticky='s', padx=5, pady=5)
-        self.delete_tab_button.grid(row=0, column=1, sticky='s', padx=5, pady=5)
+        self.new_tab_button.pack(expand=True, fill='both')
+        self.delete_tab_button.pack(expand=True, fill='both')
 
-        self.button_frame.place(relx=0.8, rely=0)
+        self.new_tab_button_frame.grid(row=0, column=0, sticky='s')
+        self.delete_tab_button_frame.grid(row=0, column=1, sticky='s')
 
-        # inserting frames on to configuration top level.
+        self.button_frame.grid(row=0, column=2)
+
+
+
+
+
+        # Configuration Dropdown
+        drop_down_frame = ttk.Frame(self.tab_frame)
+        # Configuration Combobox.
+        config_names = ConfigurationManager.config_names
+        c = ttk.StringVar(value=config_names[0])
+        combo = ttk.Combobox(drop_down_frame, textvariable=c)
+        combo['values'] = config_names
+        combo.pack(expand=True, fill='x', side='top')
+        combo.bind('<<ComboboxSelected>>', lambda event: self.m_config_selected(c))
+
+        # pack combo frame:
+        drop_down_frame.grid(row=0, column=0, sticky='nsew')
+
+
+
+
+
+
+
+        # inserting frames on to configuration frame.
         self.tab_frame.grid(row=1, column=1, sticky='nsew', padx=(5, 5))
-        self.side_bar_frame.grid(row=0, column=0, sticky='new', rowspan=3, padx=(5, 5), pady=(10, 0))
+        self.side_bar_frame.grid(row=0, column=0, sticky='new', rowspan=3, padx=(5, 5))
 
         # Creating Tabs
         ScrollFrame.from_json(self.tabs,  # passing in notebook for method to instantiate tabs
@@ -252,13 +310,14 @@ class Configuration(ttk.Frame):
         pass
 
     @classmethod
-    def from_active_config(cls, parent, active_config_data):
+    def from_active_config(cls, parent, active_config_data, m_config_selected):
         try:
             return cls(parent,
                        active_config_data['clients'],
                        active_config_data['commands'],
                        active_config_data['tab_clients'],
-                       active_config_data['tab_commands'])
+                       active_config_data['tab_commands'],
+                       m_config_selected)
         except KeyError as e:
             print(f'Key {e} is incorrect.')
 
