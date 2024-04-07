@@ -30,7 +30,6 @@ class ConfigurationManager(ttk.Toplevel):
         config_frame.pack(expand=True,
                           fill='both')
 
-
     @classmethod
     def from_json(cls, json_name):
         try:
@@ -179,6 +178,10 @@ class Configuration(ttk.Frame):
         self.tab_frame.columnconfigure(2, weight=1)
 
         self.tabs = ttk.Notebook(self.tab_frame, width=1080)
+
+        tab_style = ttk.Style()
+        tab_style.configure('TNotebook', tabposition='en')
+
         self.tabs.bind("<<NotebookTabChanged>>", self.on_tab_selected)
 
         # Tree Control Buttons
@@ -575,4 +578,13 @@ class WindowMenu(ttk.Menu):
         # another sub menu
         help_menu = ttk.Menu(self, tearoff=False)
         help_menu.add_command(label='Help entry', command=lambda: print("test"))
+        self.add_cascade(label='Help', menu=help_menu)
+
+        # another sub menu
+        combo_menu = ttk.Menu(self, tearoff=False)
+        items = ["1", "2", "3"]
+        food_string = tk.StringVar(value=items[0])
+        combo = ttk.Combobox(self, textvariable=food_string)
+        combo.configure(values=items)
+
         self.add_cascade(label='Help', menu=help_menu)
