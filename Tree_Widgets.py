@@ -90,6 +90,9 @@ class TabBarTree(ttk.Treeview):
         self.bind('<<TreeviewSelect>>', self.disable_scroll)
         self.scroll_state = True
 
+        self.tree_select = self.bindtags() + ("tree_select",)
+        self.bindtags(self.tree_select)
+
     @classmethod
     def from_json(cls,
                   parent,

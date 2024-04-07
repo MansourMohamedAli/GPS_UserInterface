@@ -12,23 +12,62 @@ class ConfigurationManager(ttk.Toplevel):
         super().__init__()
         self.title('Configuration')
         self.geometry("1340x600")
-        self.resizable(False, True)
+        self.resizable(True, True)
         self.configurations = configurations
 
-        active_config_name = self.configurations['active_config']
-        active_config_data = self.configurations['configurations'][active_config_name]
+        self.active_config_name = self.configurations['active_config']
+        active_config_data = self.configurations['configurations'][self.active_config_name]
 
         # Menu
         menu = WindowMenu()
         self.configure(menu=menu)
 
         # Configuration
+
+        # Configuration Dropdown
+        config_select_frame = ttk.Frame(self, bootstyle="#4582ec")
+        config_select_frame.rowconfigure(0, weight=1)
+        config_select_frame.columnconfigure(0, weight=1)
+        config_select_frame.columnconfigure(1, weight=1)
+        config_select_frame.columnconfigure(2, weight=1)
+
+        drop_down_frame = ttk.Frame(config_select_frame)
+
+        # Configuration Combobox.
         config_names = list(self.configurations['configurations'].keys())
-        config_frame = Configuration.from_active_config(self,
-                                                        active_config_data,
-                                                        config_names)
-        config_frame.pack(expand=True,
-                          fill='both')
+        c = ttk.StringVar(value=config_names[0])
+        combo = ttk.Combobox(drop_down_frame, textvariable=c)
+        combo['values'] = config_names
+        combo.pack(expand=True, fill='x', side='top')
+        combo.bind('<<ComboboxSelected>>', lambda event: self.config_selected(c))
+
+        # Configuration Frame
+        self.config_frame = Configuration.from_active_config(self,
+                                                             active_config_data)
+
+        # pack combo frame:
+        drop_down_frame.grid(row=0, column=0, sticky='nsew')
+
+        # pack parent frames
+        config_select_frame.pack(expand=True, fill='x')
+        self.config_frame.pack(expand=True, fill='both')
+
+    def config_selected(self, config):
+        selected_config = config.get()
+        if selected_config == self.active_config_name:
+            return
+        else:
+            # Setting new active config
+            self.active_config_name = selected_config
+            # Getting Config Data
+            selected_config_data = self.configurations['configurations'][selected_config]
+            # Destroying old config window
+            self.config_frame.destroy()
+            # Loading Configuration with new configuration data
+            self.config_frame = Configuration.from_active_config(self,
+                                                                 selected_config_data)
+            # Repacking Configuration
+            self.config_frame.pack(expand=True, fill='both')
 
     @classmethod
     def from_json(cls, json_name):
@@ -47,8 +86,7 @@ class Configuration(ttk.Frame):
                  clients_dictionary,
                  commands_dictionary,
                  tab_clients_dictionary,
-                 tab_commands_dictionary,
-                 config_names):
+                 tab_commands_dictionary):
         super().__init__(master=parent)
         self.tab_id = None
 
@@ -73,51 +111,12 @@ class Configuration(ttk.Frame):
         # Side Bar Configuration
         self.side_bar_frame.rowconfigure(0, weight=1)
         self.side_bar_frame.rowconfigure(1, weight=1, uniform='a')
-        self.side_bar_frame.rowconfigure(2, weight=1, uniform='a')
         self.side_bar_frame.columnconfigure(0, weight=1, uniform='a')
-
-        self.config_frame = ttk.Frame(self.side_bar_frame)
-        self.config_frame.rowconfigure(0, weight=1, uniform='a')
-        self.config_frame.rowconfigure(1, weight=1)
-        self.config_frame.columnconfigure(0, weight=1, uniform='a')
-
-        self.config_title_frame = ttk.Frame(self.config_frame)
-
-        self.side_bar_title = ttk.Label(self.config_title_frame,
-                                        text="Select Configuration",
-                                        bootstyle="inverse-light")
-
-        self.side_bar_title.pack(expand=True, fill='both')
-
-        # Combobox
-        self.config_dropdown_frame = ttk.Label(self.config_frame)
-        items = config_names
-        food_string = tk.StringVar(value=items[0])
-        combo = ttk.Combobox(self.config_dropdown_frame, textvariable=food_string)
-        combo.configure(values=items)
-        combo.pack(expand=True, fill='x', side='top')
-
-        self.config_button_frame = ttk.Frame(self.config_frame)
-        self.config_button_frame.columnconfigure((0, 1), weight=1)
-        self.load_config_button = ttk.Button(self.config_button_frame,
-                                             text="Load",
-                                             command=lambda: self.change_configuration(combo.get()))
-        self.delete_config_button = ttk.Button(self.config_button_frame, text="delete")
-        self.load_config_button.grid(row=0, column=0)
-        self.delete_config_button.grid(row=0, column=1)
-
-        # packing title and dropdown frame to config frame.
-        self.config_title_frame.grid(row=0, sticky='nsew')
-        self.config_dropdown_frame.grid(row=1, sticky='nsew')
-        self.config_button_frame.grid(row=2, sticky='nsew', pady=(5, 5))
-
-        # attaching to sidebar frame.
-        self.config_frame.grid(row=0, column=0, sticky='nsew', pady=(10, 10))
 
         self.client_frame = ttk.Frame(self.side_bar_frame)
         self.client_frame.columnconfigure(0, weight=1, uniform='a')
         self.client_frame.columnconfigure(1, weight=1, uniform='a')
-        self.client_frame.grid(row=1, column=0, sticky='nsew', pady=(10, 10))
+        self.client_frame.grid(row=0, column=0, sticky='nsew', pady=(10, 10))
 
         self.clients_tree = ClientListTree.from_json(self.client_frame,
                                                      self.clients_dictionary,
@@ -143,7 +142,7 @@ class Configuration(ttk.Frame):
         self.command_frame = ttk.Frame(self.side_bar_frame)
         self.command_frame.columnconfigure(0, weight=1, uniform='a')
         self.command_frame.columnconfigure(1, weight=1, uniform='a')
-        self.command_frame.grid(row=2, column=0, sticky='nsew', pady=(10, 10))
+        self.command_frame.grid(row=1, column=0, sticky='nsew', pady=(10, 10))
 
         # Command List Tree
         self.commands_tree = CommandListTree.from_json(self.command_frame,
@@ -212,6 +211,15 @@ class Configuration(ttk.Frame):
         self.button_frame.columnconfigure(1, weight=1, uniform='a')
         self.button_frame.rowconfigure(0, weight=1)
 
+        # Binding for tree select
+        self.tree_select = self.move_left_button.bindtags() + ("tree_select",)
+        self.move_left_button.bindtags(self.tree_select)
+        self.tree_select = self.delete_button.bindtags() + ("tree_select",)
+        self.delete_button.bindtags(self.tree_select)
+        self.tree_select = self.move_right_button.bindtags() + ("tree_select",)
+        self.move_right_button.bindtags(self.tree_select)
+
+        # Tab buttons
         self.new_tab_button = ttk.Button(self.button_frame,
                                          text="New Tab",
                                          command=lambda: NewTabWindow(self.insert_tab, self.insert_another_tab))
@@ -238,20 +246,19 @@ class Configuration(ttk.Frame):
                               self.tabs_list)
 
         self.buttons_list = [self.move_left_button, self.delete_button, self.move_right_button]
-        self.bind_all('<Button-1>', self.enable_nav_buttons)
+        self.bind_class("tree_select", '<Button-1>', self.enable_nav_buttons)
 
     def change_configuration(self, configuration_name):
         pass
 
     @classmethod
-    def from_active_config(cls, parent, active_config_data, config_names):
+    def from_active_config(cls, parent, active_config_data):
         try:
             return cls(parent,
                        active_config_data['clients'],
                        active_config_data['commands'],
                        active_config_data['tab_clients'],
-                       active_config_data['tab_commands'],
-                       config_names)
+                       active_config_data['tab_commands'])
         except KeyError as e:
             print(f'Key {e} is incorrect.')
 
@@ -578,13 +585,4 @@ class WindowMenu(ttk.Menu):
         # another sub menu
         help_menu = ttk.Menu(self, tearoff=False)
         help_menu.add_command(label='Help entry', command=lambda: print("test"))
-        self.add_cascade(label='Help', menu=help_menu)
-
-        # another sub menu
-        combo_menu = ttk.Menu(self, tearoff=False)
-        items = ["1", "2", "3"]
-        food_string = tk.StringVar(value=items[0])
-        combo = ttk.Combobox(self, textvariable=food_string)
-        combo.configure(values=items)
-
         self.add_cascade(label='Help', menu=help_menu)
