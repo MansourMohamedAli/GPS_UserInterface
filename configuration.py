@@ -110,15 +110,15 @@ class Configuration(ttk.Frame):
         # packing title and dropdown frame to config frame.
         self.config_title_frame.grid(row=0, sticky='nsew')
         self.config_dropdown_frame.grid(row=1, sticky='nsew')
-        self.config_button_frame.grid(row=2, sticky='nsew')
+        self.config_button_frame.grid(row=2, sticky='nsew', pady=(5, 5))
 
         # attaching to sidebar frame.
-        self.config_frame.grid(row=0, column=0, sticky='nsew')
+        self.config_frame.grid(row=0, column=0, sticky='nsew', pady=(10, 10))
 
         self.client_frame = ttk.Frame(self.side_bar_frame)
         self.client_frame.columnconfigure(0, weight=1, uniform='a')
         self.client_frame.columnconfigure(1, weight=1, uniform='a')
-        self.client_frame.grid(row=1, column=0, sticky='nsew')
+        self.client_frame.grid(row=1, column=0, sticky='nsew', pady=(10, 10))
 
         self.clients_tree = ClientListTree.from_json(self.client_frame,
                                                      self.clients_dictionary,
@@ -144,7 +144,7 @@ class Configuration(ttk.Frame):
         self.command_frame = ttk.Frame(self.side_bar_frame)
         self.command_frame.columnconfigure(0, weight=1, uniform='a')
         self.command_frame.columnconfigure(1, weight=1, uniform='a')
-        self.command_frame.grid(row=2, column=0, sticky='nsew')
+        self.command_frame.grid(row=2, column=0, sticky='nsew', pady=(10, 10))
 
         # Command List Tree
         self.commands_tree = CommandListTree.from_json(self.command_frame,
@@ -224,7 +224,7 @@ class Configuration(ttk.Frame):
 
         # inserting frames on to configuration top level.
         self.tab_frame.grid(row=1, column=1, sticky='nsew', padx=(5, 5))
-        self.side_bar_frame.grid(row=0, column=0, sticky='nsew', rowspan=3, padx=(5, 5), pady=(10, 0))
+        self.side_bar_frame.grid(row=0, column=0, sticky='new', rowspan=3, padx=(5, 5), pady=(10, 0))
 
         # Creating Tabs
         ScrollFrame.from_json(self.tabs,  # passing in notebook for method to instantiate tabs
@@ -235,18 +235,10 @@ class Configuration(ttk.Frame):
                               self.tabs_list)
 
         self.buttons_list = [self.move_left_button, self.delete_button, self.move_right_button]
-        self.bind('<Button-1>', self.enable_nav_buttons)
+        self.bind_all('<Button-1>', self.enable_nav_buttons)
 
     def change_configuration(self, configuration_name):
         pass
-        # try:
-        #     with open('commandconfig.json') as f:
-        #         json_data = json.load(f)
-        #     Configuration.from_json(json_data)
-        # except FileNotFoundError as e:
-        #     print(e)
-        # except json.decoder.JSONDecodeError as e:
-        #     print(e)
 
     @classmethod
     def from_active_config(cls, parent, active_config_data, config_names):
