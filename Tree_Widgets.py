@@ -187,29 +187,33 @@ class TabTreeMouseOver:
         self.move_up_button = ttk.Button(self.button_frame,
                                          text="\u2B9D",
                                          width=5,
-                                         command=self.move_up)
+                                         command=self.move_up,
+                                         bootstyle='info')
 
         self.move_down_button = ttk.Button(self.button_frame,
                                            text="\u2B9F",
                                            width=5,
-                                           command=self.move_down)
+                                           command=self.move_down,
+                                           bootstyle='info')
 
         self.new_command_button = ttk.Button(self.button_frame,
                                              text="+",
                                              width=5,
                                              command=lambda: TabCommandDlg(self.client_tab_tree.command_name_value_pair,
                                                                            self.insert_command,
-                                                                           self.insert_another_command,
-                                                                           ))
+                                                                           self.insert_another_command),
+                                             bootstyle='success')
         self.del_command_button = ttk.Button(self.button_frame,
                                              text=u"\U0001F5D1",
                                              width=5,
-                                             command=self.delete_command)
+                                             command=self.delete_command,
+                                             bootstyle='danger')
 
         self.move_up_button.grid(row=0, column=0, sticky='nsew')
-        self.new_command_button.grid(row=0, column=1, sticky='nsew')
-        self.del_command_button.grid(row=0, column=2, sticky='nsew')
-        self.move_down_button.grid(row=0, column=3, sticky='nsew')
+        self.move_down_button.grid(row=0, column=1, sticky='nsew')
+        self.new_command_button.grid(row=0, column=2, sticky='nsew')
+        self.del_command_button.grid(row=0, column=3, sticky='nsew')
+
 
         # Binding Scroll to widgets
         scroll_tags = self.move_up_button.bindtags() + ("scroll_frame_widgets",)

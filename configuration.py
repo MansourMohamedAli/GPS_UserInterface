@@ -32,53 +32,6 @@ class ConfigurationManager(ttk.Toplevel):
         menu = WindowMenu()
         self.configure(menu=menu)
 
-        # # Configuration Dropdown
-        # config_select_frame = ttk.Frame(self, bootstyle="#4582ec")
-        # config_select_frame.rowconfigure(0, weight=1)
-        # config_select_frame.columnconfigure(0, weight=1)
-        # config_select_frame.columnconfigure(1, weight=1)
-        # config_select_frame.columnconfigure(2, weight=1)
-        #
-        # drop_down_frame = ttk.Frame(config_select_frame)
-        #
-        # # Configuration Combobox.
-        # config_names = list(self.configurations['configurations'].keys())
-        # c = ttk.StringVar(value=config_names[0])
-        # combo = ttk.Combobox(drop_down_frame, textvariable=c)
-        # combo['values'] = config_names
-        # combo.pack(expand=True, fill='x', side='top')
-        # combo.bind('<<ComboboxSelected>>', lambda event: self.config_selected(c))
-        #
-        # # Configuration Frame
-        # self.config_frame = Configuration.from_active_config(self,
-        #                                                      active_config_data)
-        # # pack combo frame:
-        # drop_down_frame.grid(row=0, column=0, sticky='nsew')
-        #
-        # # pack parent frames
-        # config_select_frame.pack(expand=True, fill='x')
-        # self.config_frame.pack(expand=True, fill='both')
-
-
-
-
-
-
-
-        # Configuration Dropdown
-        # drop_down_frame = ttk.Frame(self)
-        #
-        # # Configuration Combobox.
-        # config_names = list(self.configurations['configurations'].keys())
-        # c = ttk.StringVar(value=config_names[0])
-        # combo = ttk.Combobox(drop_down_frame, textvariable=c)
-        # combo['values'] = config_names
-        # combo.pack(expand=True, fill='x', side='top')
-        # combo.bind('<<ComboboxSelected>>', lambda event: self.config_selected(c))
-        #
-        # # pack combo frame:
-        # drop_down_frame.grid(row=0, column=0, sticky='nsew')
-
     def config_selected(self, config):
         selected_config = config.get()
         if selected_config == self.active_config_name:
@@ -268,10 +221,6 @@ class Configuration(ttk.Frame):
 
         self.button_frame.grid(row=0, column=2)
 
-
-
-
-
         # Configuration Dropdown
         drop_down_frame = ttk.Frame(self.tab_frame)
         # Configuration Combobox.
@@ -283,13 +232,7 @@ class Configuration(ttk.Frame):
         combo.bind('<<ComboboxSelected>>', lambda event: self.m_config_selected(c))
 
         # pack combo frame:
-        drop_down_frame.grid(row=0, column=0, sticky='nsew')
-
-
-
-
-
-
+        drop_down_frame.grid(row=0, column=0, columnspan=2, sticky='nsew')
 
         # inserting frames on to configuration frame.
         self.tab_frame.grid(row=1, column=1, sticky='nsew', padx=(5, 5))
@@ -305,9 +248,6 @@ class Configuration(ttk.Frame):
 
         self.buttons_list = [self.move_left_button, self.delete_button, self.move_right_button]
         self.bind_class("tree_select", '<Button-1>', self.enable_nav_buttons)
-
-    def change_configuration(self, configuration_name):
-        pass
 
     @classmethod
     def from_active_config(cls, parent, active_config_data, m_config_selected):
@@ -451,14 +391,12 @@ class Configuration(ttk.Frame):
             self.tabs.add(tab, text=f'{new_tab}')
 
     def delete_tab(self):
-        # Don't delete if there is only one tab
-        if len(self.tabs.winfo_children()) > 1:
-            for item in self.tabs.winfo_children():
-                if str(item) == self.tabs.select():
-                    item.pack_forget()  # To prevent scroll errors.
-                    item.destroy()
-                    del self.tabs_list[self.tab_id]
-                    return
+        for item in self.tabs.winfo_children():
+            if str(item) == self.tabs.select():
+                item.pack_forget()  # To prevent scroll errors.
+                item.destroy()
+                del self.tabs_list[self.tab_id]
+                return
 
     def insert_client(self, window_instance, new_client):
         if new_client:
