@@ -163,6 +163,7 @@ class Configuration(ttk.Frame):
 
         tab_style = ttk.Style()
         tab_style.configure('TNotebook', tabposition='new')
+        # tab_style.configure('TNotebook', tabposition='en')
 
         self.tabs.bind("<<NotebookTabChanged>>", self.on_tab_selected)
 
@@ -203,23 +204,23 @@ class Configuration(ttk.Frame):
         self.move_right_button.bindtags(self.tree_select)
 
         # Tab buttons
-        self.new_tab_button_frame = ttk.Frame(self.button_frame)
-        self.new_tab_button = ttk.Button(self.new_tab_button_frame,
+        # self.new_tab_button_frame = ttk.Frame(self.button_frame)
+        self.new_tab_button = ttk.Button(self.button_frame,
                                          text="New Tab",
                                          command=lambda: NewTabWindow(self.insert_tab, self.insert_another_tab))
 
-        self.delete_tab_button_frame = ttk.Frame(self.button_frame)
-        self.delete_tab_button = ttk.Button(self.delete_tab_button_frame,
+        # self.delete_tab_button_frame = ttk.Frame(self.button_frame)
+        self.delete_tab_button = ttk.Button(self.button_frame,
                                             text="Delete Tab",
                                             command=self.delete_tab)
 
-        self.new_tab_button.pack(expand=True, fill='both')
-        self.delete_tab_button.pack(expand=True, fill='both')
+        self.new_tab_button.pack(expand=True, fill='both', side='right')
+        self.delete_tab_button.pack(expand=True, fill='both', side='right')
 
-        self.new_tab_button_frame.grid(row=0, column=0, sticky='s')
-        self.delete_tab_button_frame.grid(row=0, column=1, sticky='s')
+        # self.new_tab_button_frame.grid(row=0, column=0, sticky='s')
+        # self.delete_tab_button_frame.grid(row=0, column=1, sticky='s')
 
-        self.button_frame.grid(row=0, column=2)
+        self.button_frame.grid(row=0, column=2, sticky='se')
 
         # Configuration Dropdown
         drop_down_frame = ttk.Frame(self.tab_frame)
