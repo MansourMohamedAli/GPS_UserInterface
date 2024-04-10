@@ -155,9 +155,9 @@ class Configuration(ttk.Frame):
         self.tab_frame.rowconfigure(0, weight=1)
         self.tab_frame.rowconfigure(1, weight=10)
         self.tab_frame.rowconfigure(2, weight=1)
-        self.tab_frame.columnconfigure(0, weight=1, uniform='a')
-        self.tab_frame.columnconfigure(1, weight=1, uniform='a')
-        self.tab_frame.columnconfigure(2, weight=1, uniform='a')
+        self.tab_frame.columnconfigure(0, weight=5, uniform='a')
+        self.tab_frame.columnconfigure(1, weight=5, uniform='a')
+        self.tab_frame.columnconfigure(2, weight=1)
 
         self.tabs = ttk.Notebook(self.tab_frame, width=1080)
 
@@ -220,7 +220,7 @@ class Configuration(ttk.Frame):
         # self.new_tab_button_frame.grid(row=0, column=0, sticky='s')
         # self.delete_tab_button_frame.grid(row=0, column=1, sticky='s')
 
-        self.button_frame.grid(row=0, column=2, sticky='se')
+        self.button_frame.grid(row=0, column=2, sticky='se', pady=(0, 5))
 
         # Configuration Dropdown
         drop_down_frame = ttk.Frame(self.tab_frame)

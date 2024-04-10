@@ -10,6 +10,8 @@ ip_address = socket.gethostbyname(host)
 
 
 class App(ttk.Window):
+    config_names = list()
+
     def __init__(self, title, dimensions, theme):
         # main setup
         super().__init__(themename=theme)
@@ -19,29 +21,52 @@ class App(ttk.Window):
         # self.resizable(False, False)
         self.maxsize(400, 500)
 
-        config = self.load_active_config()
-        commands = self.get_active_commands(config)
-        clients = self.get_clients(config)
-        tab_dict = self.tab_client_command_map(clients, commands)
+        self.configurations = self.load_data()
+        App.config_names = list(self.configurations['configurations'].keys())
+        self.active_config_name = self.get_active_config(self.configurations)
+        commands = self.get_active_commands(self.active_config_name)
+        clients = self.get_clients(self.active_config_name)
+        self.tab_dict = self.tab_client_command_map(clients, commands)
 
         # Widgets
-        self.menu = Menu(self, tab_dict, 39)
+        self.menu = Menu(self, self.tab_dict, 39, self.config_selected)
         # Run
         self.mainloop()
 
+    def config_selected(self, config):
+        selected_config = config.get()
+        if selected_config == self.active_config_name:
+            return
+        else:
+            # Setting new active config
+            self.active_config_name = selected_config
+            # Getting Config Data
+            selected_config_data = self.configurations['configurations'][selected_config]
+            # commands = selected_config_data['tab_commands']
+            commands = self.get_active_commands(selected_config_data)
+            # clients = self.get_clients(self.active_config_name)
+            clients = self.get_clients(selected_config_data)
+            self.tab_dict = self.tab_client_command_map(clients, commands)
+            # Destroying old config window
+            self.menu.destroy()
+            # Loading Configuration with new configuration data
+            self.menu = Menu(self, self.tab_dict, 39, self.config_selected)
+
     @staticmethod
-    def load_active_config():
+    def load_data():
         try:
             with open('commandconfig.json') as f:
-                json_data = json.load(f)
-                active_config_name = (json_data['active_config'])
-                active_config = json_data["configurations"][active_config_name]
-                return active_config
+                return json.load(f)
 
         except FileNotFoundError as e:
             print(e)
         except json.decoder.JSONDecodeError as e:
             print(e)
+
+    @staticmethod
+    def get_active_config(data):
+        active_config_name = data['active_config']
+        return data["configurations"][active_config_name]
 
     @staticmethod
     def get_active_commands(active_config):
@@ -69,13 +94,13 @@ class App(ttk.Window):
 
 
 class Menu(ttk.Frame):
-    def __init__(self, parent, tab_dict, item_height):
+    def __init__(self, parent, tab_dict, item_height, m_config_selected):
         super().__init__(parent)
         # widget data
         self.tab_dict = tab_dict
-        item_number = len(tab_dict) + 1  # Plus one for configuration button.
+        item_number = len(tab_dict) + 2  # Plus two for configuration button and dropdown menu
         self.list_height = item_number * item_height
-
+        self.m_config_selected = m_config_selected
         self.place(x=0, y=0, relwidth=1, relheight=1)
         self.config_button = ttk.Button(self, text='Configuration')
         self.columnconfigure(0, weight=1, uniform='a')
@@ -83,11 +108,10 @@ class Menu(ttk.Frame):
         # canvas
         self.canvas = tk.Canvas(self, background='red', scrollregion=(0, 0, self.winfo_width(), self.list_height))
         self.canvas.pack(expand=True, fill='both')
-
         # display frame
         self.frame = ttk.Frame(self)
-        self.create_item().pack(expand=True, fill='both', pady=5, padx=5)
 
+        self.create_item().pack(expand=True, fill='both', pady=5, padx=5)
         # scrollbar
         self.scrollbar = ttk.Scrollbar(self, orient='vertical', command=self.canvas.yview)
         self.canvas.configure(yscrollcommand=self.scrollbar.set)
@@ -119,18 +143,38 @@ class Menu(ttk.Frame):
         frame = ttk.Frame(self.frame)
         # grid layout
         frame.columnconfigure(0, weight=1)
+
         button_frames_list = CommandButtons.from_dictionary(self.tab_dict, frame)
+        self.drop_down_menu(frame)
         self.grid_button_frames(button_frames_list)
+
         # Creating configuration button and putting at bottom.
         self.configuration_button(frame)
         return frame
 
+    def drop_down_menu(self, frame):
+        # Configuration Dropdown
+        drop_down_frame = ttk.Frame(frame)
+        # Configuration Combobox.
+        config_names = App.config_names
+        c = ttk.StringVar(value=config_names[0])
+        combo = ttk.Combobox(drop_down_frame, textvariable=c)
+        combo['values'] = config_names
+        combo['state'] = 'readonly'
+        combo.pack(expand=True, fill='x', padx=5)
+        # combo.bind('<<ComboboxSelected>>', lambda event: self.m_config_selected(c))
+        combo.bind('<<ComboboxSelected>>', lambda event: self.m_config_selected(c))
+        # pack combo frame:
+        # drop_down_frame.pack(expand=True, fill='x')
+        drop_down_frame.grid(sticky='nsew', pady=5)
+
     def configuration_button(self, frame):
         config_button_frame = ttk.Frame(frame)
         config_button = ttk.Button(config_button_frame, text='Configuration',
-                                   command= lambda: self.read_configuration('commandconfig.json'))
+                                   command=lambda: self.read_configuration('commandconfig.json'))
         config_button.pack(expand=True, fill='both')
-        config_button_frame.grid(sticky='nsew', padx=5, pady=5)
+        config_button_frame.grid(sticky='nsew', pady=5)
+
 
     @staticmethod
     def read_configuration(configuration_filename):
@@ -139,9 +183,13 @@ class Menu(ttk.Frame):
 
     @staticmethod
     def grid_button_frames(button_frames_list):
-
         for button_frame in button_frames_list:
-            button_frame.grid(sticky='nsew', padx=5, pady=5)
+            button_frame.grid(sticky='nsew', pady=5)
+
+    @staticmethod
+    def grid_button_destroy(button_frames_list):
+        for button_frame in button_frames_list:
+            button_frame.destroy()
 
 
 class CommandButtons(ttk.Button):
