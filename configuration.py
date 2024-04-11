@@ -9,7 +9,7 @@ import json
 
 class ConfigurationManager(ttk.Toplevel):
     config_names = list()
-
+    active_config_name = None
     def __init__(self, configurations):
         super().__init__()
         self.title('Configuration')
@@ -17,8 +17,8 @@ class ConfigurationManager(ttk.Toplevel):
         self.resizable(True, True)
         self.configurations = configurations
 
-        self.active_config_name = self.configurations['active_config']
-        active_config_data = self.configurations['configurations'][self.active_config_name]
+        ConfigurationManager.active_config_name = self.configurations['active_config']
+        active_config_data = self.configurations['configurations'][ConfigurationManager.active_config_name]
         ConfigurationManager.config_names = list(self.configurations['configurations'].keys())
 
         self.config_frame = Configuration.from_active_config(self,
@@ -34,11 +34,11 @@ class ConfigurationManager(ttk.Toplevel):
 
     def config_selected(self, config):
         selected_config = config.get()
-        if selected_config == self.active_config_name:
+        if selected_config == ConfigurationManager.active_config_name:
             return
         else:
             # Setting new active config
-            self.active_config_name = selected_config
+            ConfigurationManager.active_config_name = selected_config
             # Getting Config Data
             selected_config_data = self.configurations['configurations'][selected_config]
             # Destroying old config window
@@ -226,7 +226,7 @@ class Configuration(ttk.Frame):
         drop_down_frame = ttk.Frame(self.tab_frame)
         # Configuration Combobox.
         config_names = ConfigurationManager.config_names
-        c = ttk.StringVar(value=config_names[0])
+        c = ttk.StringVar(value=ConfigurationManager.active_config_name)
         combo = ttk.Combobox(drop_down_frame, textvariable=c)
         combo['values'] = config_names
         combo['state'] = 'readonly'

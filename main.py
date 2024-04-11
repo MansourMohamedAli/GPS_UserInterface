@@ -11,7 +11,7 @@ ip_address = socket.gethostbyname(host)
 
 class App(ttk.Window):
     config_names = list()
-
+    active_config_name = None
     def __init__(self, title, dimensions, theme):
         # main setup
         super().__init__(themename=theme)
@@ -23,25 +23,24 @@ class App(ttk.Window):
 
         self.configurations = self.load_data()
         App.config_names = list(self.configurations['configurations'].keys())
-        self.active_config_name = self.configurations['active_config']
+        App.active_config_name = self.configurations['active_config']
         self.active_config_data = self.get_active_config(self.configurations)
         commands = self.get_active_commands(self.active_config_data)
         clients = self.get_clients(self.active_config_data)
         self.tab_dict = self.tab_client_command_map(clients, commands)
 
         # Widgets
-        self.menu = Menu(self, self.tab_dict, 39, self.config_selected, self.active_config_name)
+        self.menu = Menu(self, self.tab_dict, 39, self.config_selected)
         # Run
         self.mainloop()
 
     def config_selected(self, config):
         selected_config = config.get()
-        print(selected_config, self.active_config_name)
-        if selected_config == self.active_config_name:
+        if selected_config == App.active_config_name:
             return
         else:
             # Setting new active config
-            self.active_config_name = selected_config
+            App.active_config_name = selected_config
             # Getting Config Data
             selected_config_data = self.configurations['configurations'][selected_config]
             # commands = selected_config_data['tab_commands']
@@ -52,7 +51,7 @@ class App(ttk.Window):
             # Destroying old config window
             self.menu.destroy()
             # Loading Configuration with new configuration data
-            self.menu = Menu(self, self.tab_dict, 39, self.config_selected, self.active_config_name)
+            self.menu = Menu(self, self.tab_dict, 39, self.config_selected)
 
 
     @staticmethod
@@ -97,14 +96,13 @@ class App(ttk.Window):
 
 
 class Menu(ttk.Frame):
-    def __init__(self, parent, tab_dict, item_height, m_config_selected, active_config):
+    def __init__(self, parent, tab_dict, item_height, m_config_selected):
         super().__init__(parent)
         # widget data
         self.tab_dict = tab_dict
         item_number = len(tab_dict) + 2  # Plus two for configuration button and dropdown menu
         self.list_height = item_number * item_height
         self.m_config_selected = m_config_selected
-        self.active_config = active_config
         self.place(x=0, y=0, relwidth=1, relheight=1)
         self.config_button = ttk.Button(self, text='Configuration')
         self.columnconfigure(0, weight=1, uniform='a')
@@ -161,7 +159,7 @@ class Menu(ttk.Frame):
         drop_down_frame = ttk.Frame(frame)
         # Configuration Combobox.
         config_names = App.config_names
-        c = ttk.StringVar(value=self.active_config)
+        c = ttk.StringVar(value=App.active_config_name)
         combo = ttk.Combobox(drop_down_frame, textvariable=c)
         combo['values'] = config_names
         combo['state'] = 'readonly'
