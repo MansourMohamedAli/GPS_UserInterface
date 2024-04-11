@@ -23,18 +23,20 @@ class App(ttk.Window):
 
         self.configurations = self.load_data()
         App.config_names = list(self.configurations['configurations'].keys())
-        self.active_config_name = self.get_active_config(self.configurations)
-        commands = self.get_active_commands(self.active_config_name)
-        clients = self.get_clients(self.active_config_name)
+        self.active_config_name = self.configurations['active_config']
+        self.active_config_data = self.get_active_config(self.configurations)
+        commands = self.get_active_commands(self.active_config_data)
+        clients = self.get_clients(self.active_config_data)
         self.tab_dict = self.tab_client_command_map(clients, commands)
 
         # Widgets
-        self.menu = Menu(self, self.tab_dict, 39, self.config_selected)
+        self.menu = Menu(self, self.tab_dict, 39, self.config_selected, self.active_config_name)
         # Run
         self.mainloop()
 
     def config_selected(self, config):
         selected_config = config.get()
+        print(selected_config, self.active_config_name)
         if selected_config == self.active_config_name:
             return
         else:
@@ -50,7 +52,8 @@ class App(ttk.Window):
             # Destroying old config window
             self.menu.destroy()
             # Loading Configuration with new configuration data
-            self.menu = Menu(self, self.tab_dict, 39, self.config_selected)
+            self.menu = Menu(self, self.tab_dict, 39, self.config_selected, self.active_config_name)
+
 
     @staticmethod
     def load_data():
@@ -94,13 +97,14 @@ class App(ttk.Window):
 
 
 class Menu(ttk.Frame):
-    def __init__(self, parent, tab_dict, item_height, m_config_selected):
+    def __init__(self, parent, tab_dict, item_height, m_config_selected, active_config):
         super().__init__(parent)
         # widget data
         self.tab_dict = tab_dict
         item_number = len(tab_dict) + 2  # Plus two for configuration button and dropdown menu
         self.list_height = item_number * item_height
         self.m_config_selected = m_config_selected
+        self.active_config = active_config
         self.place(x=0, y=0, relwidth=1, relheight=1)
         self.config_button = ttk.Button(self, text='Configuration')
         self.columnconfigure(0, weight=1, uniform='a')
@@ -157,12 +161,11 @@ class Menu(ttk.Frame):
         drop_down_frame = ttk.Frame(frame)
         # Configuration Combobox.
         config_names = App.config_names
-        c = ttk.StringVar(value=config_names[0])
+        c = ttk.StringVar(value=self.active_config)
         combo = ttk.Combobox(drop_down_frame, textvariable=c)
         combo['values'] = config_names
         combo['state'] = 'readonly'
         combo.pack(expand=True, fill='x', padx=5)
-        # combo.bind('<<ComboboxSelected>>', lambda event: self.m_config_selected(c))
         combo.bind('<<ComboboxSelected>>', lambda event: self.m_config_selected(c))
         # pack combo frame:
         # drop_down_frame.pack(expand=True, fill='x')
