@@ -12,6 +12,7 @@ ip_address = socket.gethostbyname(host)
 class App(ttk.Window):
     config_names = list()
     active_config_name = None
+
     def __init__(self, title, dimensions, theme):
         # main setup
         super().__init__(themename=theme)
@@ -41,6 +42,7 @@ class App(ttk.Window):
         else:
             # Setting new active config
             App.active_config_name = selected_config
+            self.write_active_config()
             # Getting Config Data
             selected_config_data = self.configurations['configurations'][selected_config]
             # commands = selected_config_data['tab_commands']
@@ -52,6 +54,12 @@ class App(ttk.Window):
             self.menu.destroy()
             # Loading Configuration with new configuration data
             self.menu = Menu(self, self.tab_dict, 39, self.config_selected)
+
+
+    def write_active_config(self):
+        self.configurations['active_config'] = self.active_config_name
+        with open('commandconfig.json', 'w') as f:
+            json.dump(self.configurations, f, indent=2)
 
 
     @staticmethod

@@ -10,6 +10,7 @@ import json
 class ConfigurationManager(ttk.Toplevel):
     config_names = list()
     active_config_name = None
+
     def __init__(self, configurations):
         super().__init__()
         self.title('Configuration')
