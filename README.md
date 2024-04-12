@@ -10,6 +10,7 @@
 * File Open to select another JSON.
 * Allow only one of each window to open.
 * Configuration class should instantiate with only configuration passed in. not with clients,commands,tab_clients,tab_commands.
+* TabFrame should store dictionary of commands rather than a lost of lists
 
 ### Lower Priority:
 - Implement WOL option.

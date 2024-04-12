@@ -32,6 +32,8 @@ class App(ttk.Window):
 
         # Widgets
         self.menu = Menu(self, self.tab_dict, 39, self.config_selected)
+        window_menu = WindowMenu()
+        self.configure(menu=window_menu)
         # Run
         self.mainloop()
 
@@ -55,12 +57,10 @@ class App(ttk.Window):
             # Loading Configuration with new configuration data
             self.menu = Menu(self, self.tab_dict, 39, self.config_selected)
 
-
     def write_active_config(self):
         self.configurations['active_config'] = self.active_config_name
         with open('commandconfig.json', 'w') as f:
             json.dump(self.configurations, f, indent=2)
-
 
     @staticmethod
     def load_data():
@@ -102,6 +102,20 @@ class App(ttk.Window):
             tab_dict[tab_name] = [clients_in_tab, commands_in_tab]
         return tab_dict
 
+
+class WindowMenu(ttk.Menu):
+    def __init__(self):
+        super().__init__()
+        # sub menu
+        file_menu = ttk.Menu(self, tearoff=False)
+        file_menu.add_command(label='New', command=lambda: print('New file'))
+        file_menu.add_command(label='Open', command=lambda: print('Open file'))
+        self.add_cascade(label='File', menu=file_menu)
+
+        # another sub menu
+        help_menu = ttk.Menu(self, tearoff=False)
+        help_menu.add_command(label='Help entry', command=lambda: print("test"))
+        self.add_cascade(label='Help', menu=help_menu)
 
 class Menu(ttk.Frame):
     def __init__(self, parent, tab_dict, item_height, m_config_selected):

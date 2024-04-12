@@ -10,17 +10,18 @@ import json
 class ConfigurationManager(ttk.Toplevel):
     config_names = list()
     active_config_name = None
+    configurations = None
 
     def __init__(self, configurations):
         super().__init__()
         self.title('Configuration')
         self.geometry("1340x600")
         self.resizable(True, True)
-        self.configurations = configurations
+        ConfigurationManager.configurations = configurations
 
-        ConfigurationManager.active_config_name = self.configurations['active_config']
-        active_config_data = self.configurations['configurations'][ConfigurationManager.active_config_name]
-        ConfigurationManager.config_names = list(self.configurations['configurations'].keys())
+        ConfigurationManager.active_config_name = ConfigurationManager.configurations['active_config']
+        active_config_data = ConfigurationManager.configurations['configurations'][ConfigurationManager.active_config_name]
+        ConfigurationManager.config_names = list(ConfigurationManager.configurations['configurations'].keys())
 
         self.config_frame = Configuration.from_active_config(self,
                                                              active_config_data,
@@ -41,7 +42,7 @@ class ConfigurationManager(ttk.Toplevel):
             # Setting new active config
             ConfigurationManager.active_config_name = selected_config
             # Getting Config Data
-            selected_config_data = self.configurations['configurations'][selected_config]
+            selected_config_data = ConfigurationManager.configurations['configurations'][selected_config]
             # Destroying old config window
             self.config_frame.destroy()
             # Loading Configuration with new configuration data
@@ -152,13 +153,16 @@ class Configuration(ttk.Frame):
         self.new_command_button.grid(row=1, column=0, padx=5, pady=5)
         self.delete_command_button.grid(row=1, column=1, padx=5, pady=5)
 
+        self.save_button = ttk.Button(self.side_bar_frame, text='Save', command=self.write_json)
+        self.save_button.grid(row=2)
+
         # Tab Frame configuration
         self.tab_frame.rowconfigure(0, weight=1)
         self.tab_frame.rowconfigure(1, weight=10)
         self.tab_frame.rowconfigure(2, weight=1)
         self.tab_frame.columnconfigure(0, weight=5, uniform='a')
         self.tab_frame.columnconfigure(1, weight=5, uniform='a')
-        self.tab_frame.columnconfigure(2, weight=1)
+        self.tab_frame.columnconfigure(2, weight=5, uniform='a')
 
         self.tabs = ttk.Notebook(self.tab_frame, width=1080)
 
@@ -221,7 +225,7 @@ class Configuration(ttk.Frame):
         # self.new_tab_button_frame.grid(row=0, column=0, sticky='s')
         # self.delete_tab_button_frame.grid(row=0, column=1, sticky='s')
 
-        self.button_frame.grid(row=0, column=2, sticky='se', pady=(0, 5))
+        self.button_frame.grid(row=0, column=2, sticky='se')
 
         # Configuration Dropdown
         drop_down_frame = ttk.Frame(self.tab_frame)
@@ -256,6 +260,11 @@ class Configuration(ttk.Frame):
 
         self.buttons_list = [self.move_left_button, self.delete_button, self.move_right_button]
         self.bind_class("tree_select", '<Button-1>', self.enable_nav_buttons)
+
+    @staticmethod
+    def write_json():
+        with open('commandconfig_configtest.json', 'w') as f:
+            json.dump(ConfigurationManager.configurations, f, indent=2)
 
     @classmethod
     def from_active_config(cls, parent, active_config_data, m_config_selected):
@@ -308,6 +317,8 @@ class Configuration(ttk.Frame):
             for index, client_tab_frame in enumerate(self.client_tab_frame_list):
                 if client_tab_frame.index == self.active_tab_tree_frame.index:
                     del self.client_tab_frame_list[index]
+                    del self.tab_commands_dictionary[str(self.tab_id + 1)][self.active_tab_tree_frame.index]
+                    del self.tab_clients_dictionary[self.tabs.tab(self.tabs.select(), "text")][self.active_tab_tree_frame.index]
 
             for client_tab_frame in self.client_tab_frame_list:
                 if client_tab_frame.index > self.active_tab_tree_frame.index:
@@ -326,7 +337,6 @@ class Configuration(ttk.Frame):
             scroll_frame_height = (self.active_tab_tree_frame.winfo_height() * last_row
                                    + (last_row * 10))  # Row multiplied by pad (5 top + 5 bottom)
             self.active_scroll_frame.update_scroll_area(scroll_frame_height)
-
             # Setting active_tab_tree_frame to none.
             self.active_tab_tree_frame = None
 

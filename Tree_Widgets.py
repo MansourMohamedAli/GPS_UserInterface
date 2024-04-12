@@ -82,6 +82,7 @@ class TabBarTree(ttk.Treeview):
         self.mac_address = mac_address
         self.command_name_value_pair = command_name_value_pair
 
+
         self.no_scroll_tags = self.bindtags()
         # Adding new tag for frame to allow scroll on TabTree and background.
         self.scroll_tags = self.bindtags() + ("scroll_frame_widgets",)
