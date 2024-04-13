@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="095cb8ad-5dc0-4956-a4a8-3fc088038ed8" name="Changes" comment="delete works for client_tree, commands_tree, tab_tree.">
-      <change beforePath="$PROJECT_DIR$/Tree_Widgets.py" beforeDir="false" afterPath="$PROJECT_DIR$/Tree_Widgets.py" afterDir="false" />
+    <list default="true" id="095cb8ad-5dc0-4956-a4a8-3fc088038ed8" name="Changes" comment="started tab process">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/commandconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/commandconfig.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configuration.py" beforeDir="false" afterPath="$PROJECT_DIR$/configuration.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -97,14 +96,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1700876537819</updated>
-    </task>
-    <task id="LOCAL-00076" summary="Tab_tree class method now works for initializing.">
-      <option name="closed" value="true" />
-      <created>1711214048290</created>
-      <option name="number" value="00076" />
-      <option name="presentableId" value="LOCAL-00076" />
-      <option name="project" value="LOCAL" />
-      <updated>1711214048290</updated>
     </task>
     <task id="LOCAL-00077" summary="Tab_tree class method now works for initializing.">
       <option name="closed" value="true" />
@@ -490,7 +481,15 @@
       <option name="project" value="LOCAL" />
       <updated>1713037878323</updated>
     </task>
-    <option name="localTasksCounter" value="125" />
+    <task id="LOCAL-00125" summary="started tab process">
+      <option name="closed" value="true" />
+      <created>1713044647782</created>
+      <option name="number" value="00125" />
+      <option name="presentableId" value="LOCAL-00125" />
+      <option name="project" value="LOCAL" />
+      <updated>1713044647782</updated>
+    </task>
+    <option name="localTasksCounter" value="126" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -505,7 +504,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Cleaned up comments." />
     <MESSAGE value="putting buttons in scrollable widget. can grid but symmetry is off." />
     <MESSAGE value="Putting each buttons in it's own frame." />
     <MESSAGE value="button expands properly." />
@@ -530,7 +528,8 @@
     <MESSAGE value="Drop down works on main menu works." />
     <MESSAGE value="Applied drop down text update fix to configuration drop down." />
     <MESSAGE value="delete works for client_tree, commands_tree, tab_tree." />
-    <option name="LAST_COMMIT_MESSAGE" value="delete works for client_tree, commands_tree, tab_tree." />
+    <MESSAGE value="started tab process" />
+    <option name="LAST_COMMIT_MESSAGE" value="started tab process" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>

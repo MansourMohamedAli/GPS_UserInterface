@@ -24,10 +24,9 @@ class App(ttk.Window):
         self.configurations = self.load_data()
         App.config_names = list(self.configurations['configurations'].keys())
         App.active_config_name = self.configurations['active_config']
-        tabs_info = self.configurations['configurations'][App.active_config_name]['tabs_info']
-
+        active_config_data = self.configurations['configurations'][App.active_config_name]
         # Widgets
-        self.menu = Menu.from_tab_info(tabs_info)
+        self.menu = Menu.from_active_config_data(self, active_config_data)
 
         window_menu = WindowMenu()
         self.configure(menu=window_menu)
@@ -120,13 +119,15 @@ class WindowMenu(ttk.Menu):
 
 
 class Menu(ttk.Frame):
-    def __init__(self, parent, tab_dict, m_config_selected):
+    def __init__(self, parent, buttons_info):
         super().__init__(parent)
         # widget data
-        self.tab_dict = tab_dict
-        item_number = len(tab_dict) + 2  # Plus two for configuration button and dropdown menu
+        # self.tab_dict = tab_dict
+        # item_number = len(tab_dict) + 2  # Plus two for configuration button and dropdown menu
+        item_number = len(buttons_info) + 2  # Plus two for configuration button and dropdown menu
+        self.buttons_info = buttons_info
         self.list_height = item_number * 39
-        self.m_config_selected = m_config_selected
+        # self.m_config_selected = m_config_selected
         self.place(x=0, y=0, relwidth=1, relheight=1)
         self.config_button = ttk.Button(self, text='Configuration')
         self.columnconfigure(0, weight=1, uniform='a')
@@ -148,17 +149,16 @@ class Menu(ttk.Frame):
         self.bind('<Configure>', self.update_size)
 
     @classmethod
-    def from_tab_info(cls, tabs_info):
-        buttons = list(tabs_info.keys())
-        for button in buttons:
-            button_info = tabs_info[button]
-            print(button_info)
-            # tree_indices = list(button_info.keys())
-            # for i in tree_indices:
-            #     print(button_info[i]['client'])
-            #     print(button_info[i]['tree_commands'])
+    def from_active_config_data(cls, parent, active_config_data):
+        buttons_info = active_config_data['tabs_info']
+        cls(parent, buttons_info)
 
 
+        # buttons = list(tabs_info.keys())
+        # for button in buttons:
+        #     button_info = tabs_info[button]
+        #     print(button_info)
+        #     cls(parent, button_info)
 
     def update_size(self, event):
         if self.list_height >= self.winfo_height():
@@ -182,8 +182,7 @@ class Menu(ttk.Frame):
         frame = ttk.Frame(self.frame)
         # grid layout
         frame.columnconfigure(0, weight=1)
-
-        button_frames_list = CommandButtons.from_dictionary(self.tab_dict, frame)
+        button_frames_list = CommandButtons.from_buttons_info(self.buttons_info, frame)
         self.drop_down_menu(frame)
         self.grid_button_frames(button_frames_list)
 
@@ -247,13 +246,35 @@ class CommandButtons(ttk.Button):
                 send_cmd_client(ip_address, command)
 
     @classmethod
-    def from_dictionary(cls, tab_dict, menu_frame):
+    def from_buttons_info(cls, buttons_info, menu_frame):
         button_frames_list = list()
-        for button_name, client_commands in tab_dict.items():
+        for button_name, client_commands in buttons_info.items():
+            # print(button_name, client_commands)
             button_frame = ttk.Frame(menu_frame)
-            cls(button_frame, button_name, client_commands[0], client_commands[1]).pack(expand=True, fill="both")
-            button_frames_list.append(button_frame)
-        return button_frames_list
+            tree_index = list(client_commands.keys())
+            clients = list()
+            commands = list()
+            for tree in tree_index:
+                tree_info = client_commands[tree]
+                # print(tree_info['client'])
+                clients.append(tree_info['client'])
+                # print(list(tree_info['tree_commands'].values()))
+                commands.append(list(tree_info['tree_commands'].values()))
+            cls(button_frame, button_name, clients, commands).pack(expand=True, fill="both")
+            # print(clients)
+            # print(commands)
+            print('end of button')
+
+            # cls(button_frame, button_name, client_commands[0], client_commands[1]).pack(expand=True, fill="both")
+
+    # @classmethod
+    # def from_dictionary(cls, tab_dict, menu_frame):
+    #     button_frames_list = list()
+    #     for button_name, client_commands in tab_dict.items():
+    #         button_frame = ttk.Frame(menu_frame)
+    #         cls(button_frame, button_name, client_commands[0], client_commands[1]).pack(expand=True, fill="both")
+    #         button_frames_list.append(button_frame)
+    #     return button_frames_list
 
 
 App('Glass Panel Control', (400, 500), 'darkly')

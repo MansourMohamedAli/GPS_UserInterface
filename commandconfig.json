@@ -694,6 +694,17 @@
                       {
                       "client": "VB16",
                       "tree_commands": {
+                                      "Load Graphic 6": "6",
+                                      "Load Graphic 7": "7",
+                                      "Load Graphic 8": "8",
+                                      "Load Graphic 9": "9",
+                                      "Load Graphic 10": "10"
+                      }
+                      },
+                    "3":
+                      {
+                      "client": "VB30",
+                      "tree_commands": {
                                       "Load Graphic 6": "666",
                                       "Load Graphic 7": "777",
                                       "Load Graphic 8": "888",
