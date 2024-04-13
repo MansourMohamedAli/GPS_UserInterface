@@ -222,9 +222,6 @@ class Configuration(ttk.Frame):
         self.new_tab_button.pack(expand=True, fill='both', side='right')
         self.delete_tab_button.pack(expand=True, fill='both', side='right')
 
-        # self.new_tab_button_frame.grid(row=0, column=0, sticky='s')
-        # self.delete_tab_button_frame.grid(row=0, column=1, sticky='s')
-
         self.button_frame.grid(row=0, column=2, sticky='se')
 
         # Configuration Dropdown

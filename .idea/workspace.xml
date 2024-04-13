@@ -1,0 +1,553 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="095cb8ad-5dc0-4956-a4a8-3fc088038ed8" name="Changes" comment="delete works for client_tree, commands_tree, tab_tree.">
+      <change beforePath="$PROJECT_DIR$/Tree_Widgets.py" beforeDir="false" afterPath="$PROJECT_DIR$/Tree_Widgets.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/commandconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/commandconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/configuration.py" beforeDir="false" afterPath="$PROJECT_DIR$/configuration.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="PREVIOUS_COMMIT_AUTHORS">
+      <list>
+        <option value="Mohamed Mansour &lt;mansourmohamedali1996@gmail.com&gt;" />
+      </list>
+    </option>
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
+  <component name="ProjectId" id="2YeCD6D93roZFo6FMCHUqQnWtpp" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.configuration.executor": "Run",
+    "Python.main.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "tab__tree__dictionary",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Projects/Python/GPS_UserInterface/main.py"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python">
+      <module name="GPS_UserInterface" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="SDK_NAME" value="Python 3.12 (GPS_UserInterface)" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-50da183f06c8-d3b881c8e49f-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-233.13135.95" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="095cb8ad-5dc0-4956-a4a8-3fc088038ed8" name="Changes" comment="" />
+      <created>1700876537819</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1700876537819</updated>
+    </task>
+    <task id="LOCAL-00076" summary="Tab_tree class method now works for initializing.">
+      <option name="closed" value="true" />
+      <created>1711214048290</created>
+      <option name="number" value="00076" />
+      <option name="presentableId" value="LOCAL-00076" />
+      <option name="project" value="LOCAL" />
+      <updated>1711214048290</updated>
+    </task>
+    <task id="LOCAL-00077" summary="Tab_tree class method now works for initializing.">
+      <option name="closed" value="true" />
+      <created>1711214055274</created>
+      <option name="number" value="00077" />
+      <option name="presentableId" value="LOCAL-00077" />
+      <option name="project" value="LOCAL" />
+      <updated>1711214055274</updated>
+    </task>
+    <task id="LOCAL-00078" summary="Added class method to ClientTabTree">
+      <option name="closed" value="true" />
+      <created>1711217830013</created>
+      <option name="number" value="00078" />
+      <option name="presentableId" value="LOCAL-00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1711217830013</updated>
+    </task>
+    <task id="LOCAL-00079" summary="Added class method to CommandTabTree">
+      <option name="closed" value="true" />
+      <created>1711237469744</created>
+      <option name="number" value="00079" />
+      <option name="presentableId" value="LOCAL-00079" />
+      <option name="project" value="LOCAL" />
+      <updated>1711237469745</updated>
+    </task>
+    <task id="LOCAL-00080" summary="Fixed error adding tabs.">
+      <option name="closed" value="true" />
+      <created>1711239003470</created>
+      <option name="number" value="00080" />
+      <option name="presentableId" value="LOCAL-00080" />
+      <option name="project" value="LOCAL" />
+      <updated>1711239003471</updated>
+    </task>
+    <task id="LOCAL-00081" summary="Fixed error adding tabs.">
+      <option name="closed" value="true" />
+      <created>1711239959380</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1711239959380</updated>
+    </task>
+    <task id="LOCAL-00082" summary="Fixed error adding tabs.">
+      <option name="closed" value="true" />
+      <created>1711240271479</created>
+      <option name="number" value="00082" />
+      <option name="presentableId" value="LOCAL-00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1711240271479</updated>
+    </task>
+    <task id="LOCAL-00083" summary="Implementing ttk.bootstrap styling.">
+      <option name="closed" value="true" />
+      <created>1711246871688</created>
+      <option name="number" value="00083" />
+      <option name="presentableId" value="LOCAL-00083" />
+      <option name="project" value="LOCAL" />
+      <updated>1711246871688</updated>
+    </task>
+    <task id="LOCAL-00084" summary="Adjusted tab tree and button heights. canvas from scroll frame is configured after packed so scroll area is properly set.">
+      <option name="closed" value="true" />
+      <created>1711316812584</created>
+      <option name="number" value="00084" />
+      <option name="presentableId" value="LOCAL-00084" />
+      <option name="project" value="LOCAL" />
+      <updated>1711316812585</updated>
+    </task>
+    <task id="LOCAL-00085" summary="Adjusted tab tree and button heights. canvas from scroll frame is configured after packed so scroll area is properly set.">
+      <option name="closed" value="true" />
+      <created>1711322662340</created>
+      <option name="number" value="00085" />
+      <option name="presentableId" value="LOCAL-00085" />
+      <option name="project" value="LOCAL" />
+      <updated>1711322662340</updated>
+    </task>
+    <task id="LOCAL-00086" summary="ScrollFrame are now instantiated after tab_frame.grid. This now means the scroll height is properly set.">
+      <option name="closed" value="true" />
+      <created>1711322758803</created>
+      <option name="number" value="00086" />
+      <option name="presentableId" value="LOCAL-00086" />
+      <option name="project" value="LOCAL" />
+      <updated>1711322758803</updated>
+    </task>
+    <task id="LOCAL-00087" summary="ScrollFrame are now instantiated after tab_frame.grid. This now means the scroll height is properly set.">
+      <option name="closed" value="true" />
+      <created>1711325774238</created>
+      <option name="number" value="00087" />
+      <option name="presentableId" value="LOCAL-00087" />
+      <option name="project" value="LOCAL" />
+      <updated>1711325774238</updated>
+    </task>
+    <task id="LOCAL-00088" summary="Resizing works again.">
+      <option name="closed" value="true" />
+      <created>1711327237766</created>
+      <option name="number" value="00088" />
+      <option name="presentableId" value="LOCAL-00088" />
+      <option name="project" value="LOCAL" />
+      <updated>1711327237766</updated>
+    </task>
+    <task id="LOCAL-00089" summary="Resizing works again.">
+      <option name="closed" value="true" />
+      <created>1711328569705</created>
+      <option name="number" value="00089" />
+      <option name="presentableId" value="LOCAL-00089" />
+      <option name="project" value="LOCAL" />
+      <updated>1711328569705</updated>
+    </task>
+    <task id="LOCAL-00090" summary="Adjusting grid.">
+      <option name="closed" value="true" />
+      <created>1711334973095</created>
+      <option name="number" value="00090" />
+      <option name="presentableId" value="LOCAL-00090" />
+      <option name="project" value="LOCAL" />
+      <updated>1711334973095</updated>
+    </task>
+    <task id="LOCAL-00091" summary="add button for tab tree fixed.">
+      <option name="closed" value="true" />
+      <created>1711335826753</created>
+      <option name="number" value="00091" />
+      <option name="presentableId" value="LOCAL-00091" />
+      <option name="project" value="LOCAL" />
+      <updated>1711335826753</updated>
+    </task>
+    <task id="LOCAL-00092" summary="working on mapping commands to client on startup.">
+      <option name="closed" value="true" />
+      <created>1711581688207</created>
+      <option name="number" value="00092" />
+      <option name="presentableId" value="LOCAL-00092" />
+      <option name="project" value="LOCAL" />
+      <updated>1711581688207</updated>
+    </task>
+    <task id="LOCAL-00093" summary="working on mapping commands to client on startup.">
+      <option name="closed" value="true" />
+      <created>1711584155601</created>
+      <option name="number" value="00093" />
+      <option name="presentableId" value="LOCAL-00093" />
+      <option name="project" value="LOCAL" />
+      <updated>1711584155601</updated>
+    </task>
+    <task id="LOCAL-00094" summary="Buttons are now instantiated with info needed.">
+      <option name="closed" value="true" />
+      <created>1711586494369</created>
+      <option name="number" value="00094" />
+      <option name="presentableId" value="LOCAL-00094" />
+      <option name="project" value="LOCAL" />
+      <updated>1711586494369</updated>
+    </task>
+    <task id="LOCAL-00095" summary="Can now send commands loaded into buttons.">
+      <option name="closed" value="true" />
+      <created>1711590438020</created>
+      <option name="number" value="00095" />
+      <option name="presentableId" value="LOCAL-00095" />
+      <option name="project" value="LOCAL" />
+      <updated>1711590438020</updated>
+    </task>
+    <task id="LOCAL-00096" summary="Can now send commands loaded into buttons.">
+      <option name="closed" value="true" />
+      <created>1711590795034</created>
+      <option name="number" value="00096" />
+      <option name="presentableId" value="LOCAL-00096" />
+      <option name="project" value="LOCAL" />
+      <updated>1711590795034</updated>
+    </task>
+    <task id="LOCAL-00097" summary="Cleaned up comments.">
+      <option name="closed" value="true" />
+      <created>1711676194653</created>
+      <option name="number" value="00097" />
+      <option name="presentableId" value="LOCAL-00097" />
+      <option name="project" value="LOCAL" />
+      <updated>1711676194654</updated>
+    </task>
+    <task id="LOCAL-00098" summary="putting buttons in scrollable widget. can grid but symmetry is off.">
+      <option name="closed" value="true" />
+      <created>1711679180708</created>
+      <option name="number" value="00098" />
+      <option name="presentableId" value="LOCAL-00098" />
+      <option name="project" value="LOCAL" />
+      <updated>1711679180708</updated>
+    </task>
+    <task id="LOCAL-00099" summary="Putting each buttons in it's own frame.">
+      <option name="closed" value="true" />
+      <created>1711753434415</created>
+      <option name="number" value="00099" />
+      <option name="presentableId" value="LOCAL-00099" />
+      <option name="project" value="LOCAL" />
+      <updated>1711753434415</updated>
+    </task>
+    <task id="LOCAL-00100" summary="button expands properly.">
+      <option name="closed" value="true" />
+      <created>1711755411287</created>
+      <option name="number" value="00100" />
+      <option name="presentableId" value="LOCAL-00100" />
+      <option name="project" value="LOCAL" />
+      <updated>1711755411287</updated>
+    </task>
+    <task id="LOCAL-00101" summary="re-added configuration button.">
+      <option name="closed" value="true" />
+      <created>1711764259046</created>
+      <option name="number" value="00101" />
+      <option name="presentableId" value="LOCAL-00101" />
+      <option name="project" value="LOCAL" />
+      <updated>1711764259046</updated>
+    </task>
+    <task id="LOCAL-00102" summary="Modified menu dimensions.">
+      <option name="closed" value="true" />
+      <created>1711764693910</created>
+      <option name="number" value="00102" />
+      <option name="presentableId" value="LOCAL-00102" />
+      <option name="project" value="LOCAL" />
+      <updated>1711764693910</updated>
+    </task>
+    <task id="LOCAL-00103" summary="Modified menu dimensions.">
+      <option name="closed" value="true" />
+      <created>1711764903587</created>
+      <option name="number" value="00103" />
+      <option name="presentableId" value="LOCAL-00103" />
+      <option name="project" value="LOCAL" />
+      <updated>1711764903587</updated>
+    </task>
+    <task id="LOCAL-00104" summary="Fixed scroll frame because it was not accounting for pad lengths of tree.">
+      <option name="closed" value="true" />
+      <created>1711766420483</created>
+      <option name="number" value="00104" />
+      <option name="presentableId" value="LOCAL-00104" />
+      <option name="project" value="LOCAL" />
+      <updated>1711766420483</updated>
+    </task>
+    <task id="LOCAL-00105" summary="get_tab_tree stores clicked">
+      <option name="closed" value="true" />
+      <created>1712022653248</created>
+      <option name="number" value="00105" />
+      <option name="presentableId" value="LOCAL-00105" />
+      <option name="project" value="LOCAL" />
+      <updated>1712022653248</updated>
+    </task>
+    <task id="LOCAL-00106" summary="get_tab_tree stores clicked">
+      <option name="closed" value="true" />
+      <created>1712023215077</created>
+      <option name="number" value="00106" />
+      <option name="presentableId" value="LOCAL-00106" />
+      <option name="project" value="LOCAL" />
+      <updated>1712023215077</updated>
+    </task>
+    <task id="LOCAL-00107" summary="Buttons work. Need some debugging.">
+      <option name="closed" value="true" />
+      <created>1712024984062</created>
+      <option name="number" value="00107" />
+      <option name="presentableId" value="LOCAL-00107" />
+      <option name="project" value="LOCAL" />
+      <updated>1712024984063</updated>
+    </task>
+    <task id="LOCAL-00108" summary="Buttons work. Need some debugging.">
+      <option name="closed" value="true" />
+      <created>1712190847908</created>
+      <option name="number" value="00108" />
+      <option name="presentableId" value="LOCAL-00108" />
+      <option name="project" value="LOCAL" />
+      <updated>1712190847909</updated>
+    </task>
+    <task id="LOCAL-00109" summary="change order buttons working.">
+      <option name="closed" value="true" />
+      <created>1712285027904</created>
+      <option name="number" value="00109" />
+      <option name="presentableId" value="LOCAL-00109" />
+      <option name="project" value="LOCAL" />
+      <updated>1712285027904</updated>
+    </task>
+    <task id="LOCAL-00110" summary="Added file menu and drop down to select configuration.">
+      <option name="closed" value="true" />
+      <created>1712375418432</created>
+      <option name="number" value="00110" />
+      <option name="presentableId" value="LOCAL-00110" />
+      <option name="project" value="LOCAL" />
+      <updated>1712375418433</updated>
+    </task>
+    <task id="LOCAL-00111" summary="drop down populated with configuration names.">
+      <option name="closed" value="true" />
+      <created>1712431445920</created>
+      <option name="number" value="00111" />
+      <option name="presentableId" value="LOCAL-00111" />
+      <option name="project" value="LOCAL" />
+      <updated>1712431445920</updated>
+    </task>
+    <task id="LOCAL-00112" summary="created ConfigurationManager Class.">
+      <option name="closed" value="true" />
+      <created>1712435488048</created>
+      <option name="number" value="00112" />
+      <option name="presentableId" value="LOCAL-00112" />
+      <option name="project" value="LOCAL" />
+      <updated>1712435488048</updated>
+    </task>
+    <task id="LOCAL-00113" summary="packed Configuration to ConfigurationManager frame.">
+      <option name="closed" value="true" />
+      <created>1712438957035</created>
+      <option name="number" value="00113" />
+      <option name="presentableId" value="LOCAL-00113" />
+      <option name="project" value="LOCAL" />
+      <updated>1712438957035</updated>
+    </task>
+    <task id="LOCAL-00114" summary="Loading config names into drop down.">
+      <option name="closed" value="true" />
+      <created>1712441546894</created>
+      <option name="number" value="00114" />
+      <option name="presentableId" value="LOCAL-00114" />
+      <option name="project" value="LOCAL" />
+      <updated>1712441546894</updated>
+    </task>
+    <task id="LOCAL-00115" summary="Changed mousedown for navigation buttons from bind to bind_all because of new ConfigurationManager .">
+      <option name="closed" value="true" />
+      <created>1712503738344</created>
+      <option name="number" value="00115" />
+      <option name="presentableId" value="LOCAL-00115" />
+      <option name="project" value="LOCAL" />
+      <updated>1712503738344</updated>
+    </task>
+    <task id="LOCAL-00116" summary="Changed tabs to display vertically (makes more logical sense since main button menu is vertical).">
+      <option name="closed" value="true" />
+      <created>1712504872115</created>
+      <option name="number" value="00116" />
+      <option name="presentableId" value="LOCAL-00116" />
+      <option name="project" value="LOCAL" />
+      <updated>1712504872115</updated>
+    </task>
+    <task id="LOCAL-00117" summary="Drop down now selects new instantiates new configuration.">
+      <option name="closed" value="true" />
+      <created>1712513281294</created>
+      <option name="number" value="00117" />
+      <option name="presentableId" value="LOCAL-00117" />
+      <option name="project" value="LOCAL" />
+      <updated>1712513281294</updated>
+    </task>
+    <task id="LOCAL-00118" summary="Configuration class instantiates drop down now. function to change configs is passed into Configuration class from Configuration Manager.">
+      <option name="closed" value="true" />
+      <created>1712524442901</created>
+      <option name="number" value="00118" />
+      <option name="presentableId" value="LOCAL-00118" />
+      <option name="project" value="LOCAL" />
+      <updated>1712524442901</updated>
+    </task>
+    <task id="LOCAL-00119" summary="add color to buttons">
+      <option name="closed" value="true" />
+      <created>1712525985584</created>
+      <option name="number" value="00119" />
+      <option name="presentableId" value="LOCAL-00119" />
+      <option name="project" value="LOCAL" />
+      <updated>1712525985584</updated>
+    </task>
+    <task id="LOCAL-00120" summary="added + and delete config buttons.">
+      <option name="closed" value="true" />
+      <created>1712529964280</created>
+      <option name="number" value="00120" />
+      <option name="presentableId" value="LOCAL-00120" />
+      <option name="project" value="LOCAL" />
+      <updated>1712529964281</updated>
+    </task>
+    <task id="LOCAL-00121" summary="Drop down works on main menu works.">
+      <option name="closed" value="true" />
+      <created>1712794091953</created>
+      <option name="number" value="00121" />
+      <option name="presentableId" value="LOCAL-00121" />
+      <option name="project" value="LOCAL" />
+      <updated>1712794091953</updated>
+    </task>
+    <task id="LOCAL-00122" summary="Applied drop down text update fix to configuration drop down.">
+      <option name="closed" value="true" />
+      <created>1712796447978</created>
+      <option name="number" value="00122" />
+      <option name="presentableId" value="LOCAL-00122" />
+      <option name="project" value="LOCAL" />
+      <updated>1712796447978</updated>
+    </task>
+    <task id="LOCAL-00123" summary="delete works for client_tree, commands_tree, tab_tree.">
+      <option name="closed" value="true" />
+      <created>1712885964973</created>
+      <option name="number" value="00123" />
+      <option name="presentableId" value="LOCAL-00123" />
+      <option name="project" value="LOCAL" />
+      <updated>1712885964974</updated>
+    </task>
+    <task id="LOCAL-00124" summary="delete works for client_tree, commands_tree, tab_tree.">
+      <option name="closed" value="true" />
+      <created>1713037878323</created>
+      <option name="number" value="00124" />
+      <option name="presentableId" value="LOCAL-00124" />
+      <option name="project" value="LOCAL" />
+      <updated>1713037878323</updated>
+    </task>
+    <option name="localTasksCounter" value="125" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Cleaned up comments." />
+    <MESSAGE value="putting buttons in scrollable widget. can grid but symmetry is off." />
+    <MESSAGE value="Putting each buttons in it's own frame." />
+    <MESSAGE value="button expands properly." />
+    <MESSAGE value="re-added configuration button." />
+    <MESSAGE value="Modified menu dimensions." />
+    <MESSAGE value="Fixed scroll frame because it was not accounting for pad lengths of tree." />
+    <MESSAGE value="get_tab_tree stores clicked" />
+    <MESSAGE value="Buttons work." />
+    <MESSAGE value="Buttons work. Need some debugging." />
+    <MESSAGE value="change order buttons working." />
+    <MESSAGE value="Added file menu and drop down to select configuration." />
+    <MESSAGE value="drop down populated with configuration names." />
+    <MESSAGE value="created ConfigurationManager Class." />
+    <MESSAGE value="packed Configuration to ConfigurationManager frame." />
+    <MESSAGE value="Loading config names into drop down." />
+    <MESSAGE value="Changed mousedown for navigation buttons from bind to bind_all because of new ConfigurationManager ." />
+    <MESSAGE value="Changed tabs to display vertically (makes more logical sense since main button menu is vertical)." />
+    <MESSAGE value="Drop down now selects new instantiates new configuration." />
+    <MESSAGE value="Configuration class instantiates drop down now. function to change configs is passed into Configuration class from Configuration Manager." />
+    <MESSAGE value="add color to buttons" />
+    <MESSAGE value="added + and delete config buttons." />
+    <MESSAGE value="Drop down works on main menu works." />
+    <MESSAGE value="Applied drop down text update fix to configuration drop down." />
+    <MESSAGE value="delete works for client_tree, commands_tree, tab_tree." />
+    <option name="LAST_COMMIT_MESSAGE" value="delete works for client_tree, commands_tree, tab_tree." />
+  </component>
+  <component name="XDebuggerManager">
+    <watches-manager>
+      <configuration name="PythonConfigurationType">
+        <watch expression="self.list_height" />
+        <watch expression="self.winfo_height()" />
+        <watch expression="item_details['values']" />
+        <watch expression="item" />
+        <watch expression="self.tab_frame.winfo_height()" />
+        <watch expression="self.tab_commands[index]" language="Python" />
+        <watch expression="self" />
+        <watch expression="self.command_names[0]" />
+        <watch expression="command" />
+        <watch expression="self.tab_commands[index]" language="Python" />
+        <watch expression="index" />
+        <watch expression="self.config_names" />
+      </configuration>
+    </watches-manager>
+  </component>
+</project>

@@ -21,21 +21,22 @@ class App(ttk.Window):
         self.minsize(100, 100)
         # self.resizable(False, False)
         self.maxsize(400, 500)
-
         self.configurations = self.load_data()
         App.config_names = list(self.configurations['configurations'].keys())
         App.active_config_name = self.configurations['active_config']
-        self.active_config_data = self.get_active_config(self.configurations)
-        commands = self.get_active_commands(self.active_config_data)
-        clients = self.get_clients(self.active_config_data)
-        self.tab_dict = self.tab_client_command_map(clients, commands)
+        tabs_info = self.configurations['configurations'][App.active_config_name]['tabs_info']
 
         # Widgets
-        self.menu = Menu(self, self.tab_dict, 39, self.config_selected)
+        self.menu = Menu.from_tab_info(tabs_info)
+
         window_menu = WindowMenu()
         self.configure(menu=window_menu)
         # Run
         self.mainloop()
+
+
+    def get_tab_name(self):
+        pass
 
     def config_selected(self, config):
         selected_config = config.get()
@@ -117,13 +118,14 @@ class WindowMenu(ttk.Menu):
         help_menu.add_command(label='Help entry', command=lambda: print("test"))
         self.add_cascade(label='Help', menu=help_menu)
 
+
 class Menu(ttk.Frame):
-    def __init__(self, parent, tab_dict, item_height, m_config_selected):
+    def __init__(self, parent, tab_dict, m_config_selected):
         super().__init__(parent)
         # widget data
         self.tab_dict = tab_dict
         item_number = len(tab_dict) + 2  # Plus two for configuration button and dropdown menu
-        self.list_height = item_number * item_height
+        self.list_height = item_number * 39
         self.m_config_selected = m_config_selected
         self.place(x=0, y=0, relwidth=1, relheight=1)
         self.config_button = ttk.Button(self, text='Configuration')
@@ -144,6 +146,19 @@ class Menu(ttk.Frame):
         # events
         self.canvas.bind_all('<MouseWheel>', lambda event: self.canvas.yview_scroll(-int(event.delta / 60), "units"))
         self.bind('<Configure>', self.update_size)
+
+    @classmethod
+    def from_tab_info(cls, tabs_info):
+        buttons = list(tabs_info.keys())
+        for button in buttons:
+            button_info = tabs_info[button]
+            print(button_info)
+            # tree_indices = list(button_info.keys())
+            # for i in tree_indices:
+            #     print(button_info[i]['client'])
+            #     print(button_info[i]['tree_commands'])
+
+
 
     def update_size(self, event):
         if self.list_height >= self.winfo_height():

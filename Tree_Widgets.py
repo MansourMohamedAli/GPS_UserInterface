@@ -82,7 +82,6 @@ class TabBarTree(ttk.Treeview):
         self.mac_address = mac_address
         self.command_name_value_pair = command_name_value_pair
 
-
         self.no_scroll_tags = self.bindtags()
         # Adding new tag for frame to allow scroll on TabTree and background.
         self.scroll_tags = self.bindtags() + ("scroll_frame_widgets",)
@@ -215,7 +214,6 @@ class TabTreeMouseOver:
         self.new_command_button.grid(row=0, column=2, sticky='nsew')
         self.del_command_button.grid(row=0, column=3, sticky='nsew')
 
-
         # Binding Scroll to widgets
         scroll_tags = self.move_up_button.bindtags() + ("scroll_frame_widgets",)
         self.move_up_button.bindtags(scroll_tags)
@@ -227,12 +225,12 @@ class TabTreeMouseOver:
     def move_up(self):
         rows = self.client_tab_tree.selection()
         for row in rows:
-            self.client_tab_tree.move(row, "", self.client_tab_tree.index(row)-1)
+            self.client_tab_tree.move(row, "", self.client_tab_tree.index(row) - 1)
 
     def move_down(self):
         rows = self.client_tab_tree.selection()
         for row in reversed(rows):
-            self.client_tab_tree.move(row, "", self.client_tab_tree.index(row)+1)
+            self.client_tab_tree.move(row, "", self.client_tab_tree.index(row) + 1)
 
     def delete_command(self):
         selected_items = self.client_tab_tree.selection()
