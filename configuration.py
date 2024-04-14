@@ -20,7 +20,8 @@ class ConfigurationManager(ttk.Toplevel):
         ConfigurationManager.configurations = configurations
 
         ConfigurationManager.active_config_name = ConfigurationManager.configurations['active_config']
-        active_config_data = ConfigurationManager.configurations['configurations'][ConfigurationManager.active_config_name]
+        active_config_data = ConfigurationManager.configurations['configurations'][
+            ConfigurationManager.active_config_name]
         ConfigurationManager.config_names = list(ConfigurationManager.configurations['configurations'].keys())
 
         self.config_frame = Configuration.from_active_config(self,
@@ -245,15 +246,10 @@ class Configuration(ttk.Frame):
         self.tab_frame.grid(row=1, column=1, sticky='nsew', padx=(5, 5))
         self.side_bar_frame.grid(row=0, column=0, sticky='new', rowspan=3, padx=(5, 5))
 
-        # Creating Tabs
-        # ScrollFrame.from_json(self.tabs,  # passing in notebook for method to instantiate tabs
-        #                       self.clients_dictionary,
-        #                       self.tabs_info,
-        #                       # list containing list of command name, command pairs.
-        #                       self.tabs_list)
-
-        # Creating Tabs
-        self.tabs_list.append(ScrollFrame.from_json(self.tabs_nb, self.tabs_info))
+        # Creating Tabs. Class method appends to tabs to list and returns list of tab objects
+        self.tabs_list = ScrollFrame.from_tabs_info(self.tabs_nb, self.tabs_info)
+        for tab in self.tabs_list:
+            self.tabs_nb.add(tab, text=f'{tab.tab_name}')
 
         self.buttons_list = [self.move_left_button, self.delete_button, self.move_right_button]
         self.bind_class("tree_select", '<Button-1>', self.enable_nav_buttons)
@@ -314,7 +310,8 @@ class Configuration(ttk.Frame):
                 if client_tab_frame.index == self.active_tab_tree_frame.index:
                     del self.client_tab_frame_list[index]
                     del self.tab_commands_dictionary[str(self.tab_id + 1)][self.active_tab_tree_frame.index]
-                    del self.tab_clients_dictionary[self.tabs_nb.tab(self.tabs_nb.select(), "text")][self.active_tab_tree_frame.index]
+                    del self.tab_clients_dictionary[self.tabs_nb.tab(self.tabs_nb.select(), "text")][
+                        self.active_tab_tree_frame.index]
 
             for client_tab_frame in self.client_tab_frame_list:
                 if client_tab_frame.index > self.active_tab_tree_frame.index:
@@ -438,12 +435,14 @@ class Configuration(ttk.Frame):
 class ScrollFrame(ttk.Frame):
     def __init__(self,
                  parent,
+                 tab_name,
                  tab_data):
         super().__init__(master=parent)
 
         # widget data
         self.list_height = 0
         # self.clients_dictionary = clients_dictionary
+        self.tab_name = tab_name
         self.tab_data = tab_data
         self.client_tab_frame_list = list()
         # canvas
@@ -463,10 +462,20 @@ class ScrollFrame(ttk.Frame):
         self.scrollbar.place(relx=1, rely=0, relheight=1, anchor='ne')
 
         # Creating tree frame:
-        client_tab_frame_list = ClientTabFrame.from_tab_info(self, self.tab_data)
+        client_tab_frame_list = ClientTabFrame.from_tab_info(self.scroll_frame, self.tab_data)
         tab_tree_list = TabBarTree.from_tab_data(client_tab_frame_list, self.tab_data)
-        TabTreeMouseOver.from_client_tab_frame_list(client_tab_frame_list, tab_tree_list)
+        tt_mouse_over_list = TabTreeMouseOver.from_client_tab_frame_list(client_tab_frame_list, tab_tree_list)
 
+        # packing trees and mouse_over frame to client tab_frame
+        for tree, mouse_over_frame in zip(tab_tree_list, tt_mouse_over_list):
+            print(tree)
+            # print(mouse_over_frame)
+            tree.grid(sticky='nsew')
+            # mouse_over_frame.pack()
+            pass
+
+        # put client_tab_frame on the scroll frame
+        self.grid_tab_frames(client_tab_frame_list)
         # events
         self.canvas.bind_class('scroll_frame_widgets', '<MouseWheel>',
                                lambda event: self.canvas.yview_scroll(-int(event.delta / 60), "units"))
@@ -523,85 +532,78 @@ class ScrollFrame(ttk.Frame):
             height=height)
 
     @classmethod
-    def from_json(cls,
-                  tabs_nb,
-                  tabs_info):
-
+    def from_tabs_info(cls,
+                       tabs_nb,
+                       tabs_info):
+        tabs_data_list = list()
         for tab_name, tab_data in tabs_info.items():
-            # tab = cls(tabs, clients_dictionary)  # experimenting not passing in variable but using self.clients_tree.
-            cls(tabs_nb, tab_data)
+            tabs_data_list.append(cls(tabs_nb, tab_name, tab_data))
+        return tabs_data_list
 
-            # tab_list.append(tab)
-            # print(tree_indices)
-            # for tree_index in tree_indices:
-            #     print(tree_indices[tree_index]['client'])
-            #     print(tree_indices[tree_index]['tree_commands'])
-            #     pass
-    # @classmethod
-    # def from_json(cls,
-    #               tabs,
-    #               clients_dictionary,
-    #               tab_clients,
-    #               tab_commands,
-    #               tab_list):
-    #
-    #     for index, (tab_name, clients) in enumerate(tab_clients.items()):
-    #         tab = cls(tabs, clients_dictionary)
-    #         tab_list.append(tab)
-    #
-    #         for i, client in enumerate(clients):
-    #             cls.pack_trees(tab,
-    #                            [client],
-    #                            tab_commands[str(index + 1)][i],
-    #                            clients_dictionary)
-    #
-    #         tab.pack(expand=True, fill='both')
-    #         tabs.add(tab, text=tab_name)
-
-    def pack_trees(self, client_name, tab_commands, clients_dictionary):
-        # todo simplify code below. client_tab_tree and TabTreeMouseOver can called from ClientTabFrame Class.
-        client_tab_frame = ClientTabFrame(self.scroll_frame, self.client_tab_tree_index)
-        client_tab_tree = TabBarTree.from_json(client_tab_frame,
-                                               clients_dictionary,
-                                               client_name,
-                                               tab_commands)
-        client_tab_frame_row, client_tab_frame_col = self.assign_row_column(client_tab_tree, self.client_tab_tree_index)
-        self.scroll_frame.rowconfigure(client_tab_frame_row)
-        client_tab_tree.grid(row=0, sticky='nsew')
-
-        TabTreeMouseOver(client_tab_frame,
-                         client_tab_tree)
-
-        tree_pad_x = 5
-        tree_pad_y = 5
-
-        client_tab_frame.grid(row=client_tab_frame_row, column=client_tab_frame_col,
-                              padx=tree_pad_x,
-                              pady=tree_pad_y,
-                              sticky="nsew")
-
-        self.scroll_frame.grid_propagate(False)
-        self.scroll_frame.update_idletasks()
-        scroll_frame_height = (client_tab_frame.winfo_height() * client_tab_frame_row
-                               + ((client_tab_frame_row * 2) * tree_pad_y))
-        self.update_scroll_area(scroll_frame_height)
-        self.client_tab_frame_list.append(client_tab_frame)
-        self.client_tab_tree_index += 1
+    def grid_tab_frames(self, client_tab_frame_list):
+        for tab_frame in client_tab_frame_list:
+            client_tab_frame_row, client_tab_frame_col = self.assign_row_column(tab_frame)
+            self.scroll_frame.rowconfigure(client_tab_frame_row)
+            tab_frame.grid(row=client_tab_frame_row, column=client_tab_frame_col,
+                           padx=5,
+                           pady=5,
+                           sticky="nsew")
+            # print(tab_frame.winfo_children())
+            self.scroll_frame.grid_propagate(False)
+            self.scroll_frame.update_idletasks()
+            scroll_frame_height = (tab_frame.winfo_height() * client_tab_frame_row
+                                   + ((client_tab_frame_row * 2) * 5))
+            self.update_scroll_area(scroll_frame_height)
+            self.client_tab_frame_list.append(tab_frame)
 
     @staticmethod
-    def assign_row_column(client_tab_frame, client_tab_frame_index):
+    def assign_row_column(tab_frame):
         """
         ScrollFrame needs to be in charge of managing its trees.
-        :param client_tab_frame: ScrollFrame attribute, Frame that tree and buttons are packed.
+        :param tab_frame: ScrollFrame attribute, Frame that tree and buttons are packed.
         :param client_tab_frame_index: ScrollFrame attribute.
         :return: row and column for frame that contains tree and buttons,
         """
-        client_tab_frame.row = (floor(client_tab_frame_index / 5)) + 1
-        client_tab_frame.column = (client_tab_frame_index % 5) + 1
-        return client_tab_frame.row, client_tab_frame.column
+        # print(client_tab_frame.index)
+        # row = (floor(int(tab_frame.index) / 5)) + 1
+        # column = (int(tab_frame.index) % 5) + 1
+        row = (floor(int(tab_frame.index) / 5)) + 1
+        column = (int(tab_frame.index) % 5) + 1
+        # print(row, column)
+        return row, column
 
     def reduce_tab_tree_index(self):
         self.client_tab_tree_index -= 1
+
+    # def pack_trees(self, client_name, tab_commands, clients_dictionary):
+    #     # todo simplify code below. client_tab_tree and TabTreeMouseOver can called from ClientTabFrame Class.
+    #     client_tab_frame = ClientTabFrame(self.scroll_frame, self.client_tab_tree_index)
+    #     client_tab_tree = TabBarTree.from_json(client_tab_frame,
+    #                                            clients_dictionary,
+    #                                            client_name,
+    #                                            tab_commands)
+    #     client_tab_frame_row, client_tab_frame_col = self.assign_row_column(client_tab_tree, self.client_tab_tree_index)
+    #     self.scroll_frame.rowconfigure(client_tab_frame_row)
+    #     client_tab_tree.grid(row=0, sticky='nsew')
+    #
+    #     TabTreeMouseOver(client_tab_frame,
+    #                      client_tab_tree)
+    #
+    #     tree_pad_x = 5
+    #     tree_pad_y = 5
+    #
+    #     client_tab_frame.grid(row=client_tab_frame_row, column=client_tab_frame_col,
+    #                           padx=tree_pad_x,
+    #                           pady=tree_pad_y,
+    #                           sticky="nsew")
+    #
+    #     self.scroll_frame.grid_propagate(False)
+    #     self.scroll_frame.update_idletasks()
+    #     scroll_frame_height = (client_tab_frame.winfo_height() * client_tab_frame_row
+    #                            + ((client_tab_frame_row * 2) * tree_pad_y))
+    #     self.update_scroll_area(scroll_frame_height)
+    #     self.client_tab_frame_list.append(client_tab_frame)
+    #     self.client_tab_tree_index += 1
 
 
 class WindowMenu(ttk.Menu):

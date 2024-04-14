@@ -73,7 +73,6 @@ class CommandListTree(ttk.Treeview):
 class TabBarTree(ttk.Treeview):
     def __init__(self, parent, client_name, tab_command_dict):
         super().__init__(master=parent, columns=client_name, show='headings', bootstyle='primary')
-        self.parent = parent
         self.client_name = client_name
         self.heading(client_name, text=str(client_name))
         # self.get_tree_headings()
@@ -95,7 +94,8 @@ class TabBarTree(ttk.Treeview):
 
     def populate_tree(self):
         for command in self.tab_command_dict:
-            self.insert(parent='', index=tk.END, values=command)  # Insert name on to tree.
+            print(command)
+            self.insert(parent='', index=tk.END, values=[command])  # Insert name on to tree.
 
     @classmethod
     def from_tab_data(cls,
@@ -192,41 +192,41 @@ class ClientTabFrame(ttk.Frame):
         return tab_frame_list
 
 
-class TabTreeMouseOver:
+class TabTreeMouseOver(ttk.Frame):
     def __init__(self,
                  client_tab_frame,
                  client_tab_tree):
+        super().__init__(master=client_tab_frame)
 
         self.client_tab_frame = client_tab_frame
         self.client_tab_tree = client_tab_tree
         self.client_tab_frame.bind('<Enter>', self.mouse_over)
         self.client_tab_frame.bind('<Leave>', self.mouse_leave)
-        self.button_frame = ttk.Frame(client_tab_frame)
-        self.button_frame.rowconfigure(0, weight=1, uniform='a')
-        self.button_frame.columnconfigure(0, weight=1, uniform='a')
-        self.button_frame.columnconfigure(1, weight=1, uniform='a')
-        self.button_frame.columnconfigure(2, weight=1, uniform='a')
-        self.button_frame.columnconfigure(3, weight=1, uniform='a')
-        self.move_up_button = ttk.Button(self.button_frame,
+        self.rowconfigure(0, weight=1, uniform='a')
+        self.columnconfigure(0, weight=1, uniform='a')
+        self.columnconfigure(1, weight=1, uniform='a')
+        self.columnconfigure(2, weight=1, uniform='a')
+        self.columnconfigure(3, weight=1, uniform='a')
+        self.move_up_button = ttk.Button(self,
                                          text="\u2B9D",
                                          width=5,
                                          command=self.move_up,
                                          bootstyle='info')
 
-        self.move_down_button = ttk.Button(self.button_frame,
+        self.move_down_button = ttk.Button(self,
                                            text="\u2B9F",
                                            width=5,
                                            command=self.move_down,
                                            bootstyle='info')
 
-        self.new_command_button = ttk.Button(self.button_frame,
+        self.new_command_button = ttk.Button(self,
                                              text="+",
                                              width=5,
                                              command=lambda: TabCommandDlg(self.client_tab_tree.tab_command_dict,
                                                                            self.insert_command,
                                                                            self.insert_another_command),
                                              bootstyle='success')
-        self.del_command_button = ttk.Button(self.button_frame,
+        self.del_command_button = ttk.Button(self,
                                              text=u"\U0001F5D1",
                                              width=5,
                                              command=self.delete_command,
@@ -243,12 +243,15 @@ class TabTreeMouseOver:
         self.new_command_button.bindtags(scroll_tags)
         self.del_command_button.bindtags(scroll_tags)
         self.move_down_button.bindtags(scroll_tags)
-        self.button_frame.bindtags(scroll_tags)
+        self.bindtags(scroll_tags)
 
     @classmethod
     def from_client_tab_frame_list(cls, client_tab_frame_list, tab_tree_list):
+        tt_mouse_over_list = list()
         for frame, tree in zip(client_tab_frame_list, tab_tree_list):
-            cls(frame, tree)
+            tt_mouse_over_list.append(cls(frame, tree))
+        # print(tt_mouse_over_list)
+        return tt_mouse_over_list
 
     def move_up(self):
         rows = self.client_tab_tree.selection()
@@ -266,10 +269,10 @@ class TabTreeMouseOver:
             self.client_tab_tree.delete(command)
 
     def mouse_over(self, event):
-        self.button_frame.grid(row=1, sticky='nsew')
+        self.grid(row=1, sticky='nsew')
 
     def mouse_leave(self, event):
-        self.button_frame.grid_forget()
+        self.grid_forget()
 
     def insert_command(self, window_instance, new_command):
         if new_command:

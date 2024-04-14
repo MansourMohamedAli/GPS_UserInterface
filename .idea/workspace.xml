@@ -4,12 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="095cb8ad-5dc0-4956-a4a8-3fc088038ed8" name="Changes" comment="adjusted classmethod for buttons and menu.">
+    <list default="true" id="095cb8ad-5dc0-4956-a4a8-3fc088038ed8" name="Changes" comment="added classmethods to tabtree and tabtreemouseover.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Tree_Widgets.py" beforeDir="false" afterPath="$PROJECT_DIR$/Tree_Widgets.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/configuration.py" beforeDir="false" afterPath="$PROJECT_DIR$/configuration.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/drag_and_drop.py" beforeDir="false" afterPath="$PROJECT_DIR$/drag_and_drop.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -98,14 +96,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1700876537819</updated>
-    </task>
-    <task id="LOCAL-00078" summary="Added class method to ClientTabTree">
-      <option name="closed" value="true" />
-      <created>1711217830013</created>
-      <option name="number" value="00078" />
-      <option name="presentableId" value="LOCAL-00078" />
-      <option name="project" value="LOCAL" />
-      <updated>1711217830013</updated>
     </task>
     <task id="LOCAL-00079" summary="Added class method to CommandTabTree">
       <option name="closed" value="true" />
@@ -491,7 +481,15 @@
       <option name="project" value="LOCAL" />
       <updated>1713046897309</updated>
     </task>
-    <option name="localTasksCounter" value="127" />
+    <task id="LOCAL-00127" summary="added classmethods to tabtree and tabtreemouseover.">
+      <option name="closed" value="true" />
+      <created>1713116297512</created>
+      <option name="number" value="00127" />
+      <option name="presentableId" value="LOCAL-00127" />
+      <option name="project" value="LOCAL" />
+      <updated>1713116297512</updated>
+    </task>
+    <option name="localTasksCounter" value="128" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -506,7 +504,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Putting each buttons in it's own frame." />
     <MESSAGE value="button expands properly." />
     <MESSAGE value="re-added configuration button." />
     <MESSAGE value="Modified menu dimensions." />
@@ -531,7 +528,8 @@
     <MESSAGE value="delete works for client_tree, commands_tree, tab_tree." />
     <MESSAGE value="started tab process" />
     <MESSAGE value="adjusted classmethod for buttons and menu." />
-    <option name="LAST_COMMIT_MESSAGE" value="adjusted classmethod for buttons and menu." />
+    <MESSAGE value="added classmethods to tabtree and tabtreemouseover." />
+    <option name="LAST_COMMIT_MESSAGE" value="added classmethods to tabtree and tabtreemouseover." />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
