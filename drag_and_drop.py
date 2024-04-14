@@ -83,7 +83,7 @@ class CommandDragManager:
 
                     # Add command names and commands to two separate lists.
                     # I want to allow duplicate commands so a dictionary wouldn't work.
-                    target.command_name_value_pair.append([command_name, command_value])
+                    target.tab_command_dict.append([command_name, command_value])
         except AttributeError:
             pass
         self.tree_selection.clear()

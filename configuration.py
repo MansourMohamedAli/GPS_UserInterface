@@ -68,8 +68,7 @@ class Configuration(ttk.Frame):
                  parent,
                  clients_dictionary,
                  commands_dictionary,
-                 tab_clients_dictionary,
-                 tab_commands_dictionary,
+                 tabs_info,
                  m_config_selected):
         super().__init__(master=parent)
         self.tab_id = None
@@ -77,8 +76,7 @@ class Configuration(ttk.Frame):
         # self.minsize(400, 300)
         self.clients_dictionary = clients_dictionary
         self.commands_dictionary = commands_dictionary
-        self.tab_clients_dictionary = tab_clients_dictionary
-        self.tab_commands_dictionary = tab_commands_dictionary
+        self.tabs_info = tabs_info
         self.tabs_list = list()
         self.active_scroll_frame = None
         self.active_tab_tree_frame = None
@@ -164,13 +162,13 @@ class Configuration(ttk.Frame):
         self.tab_frame.columnconfigure(1, weight=5, uniform='a')
         self.tab_frame.columnconfigure(2, weight=5, uniform='a')
 
-        self.tabs = ttk.Notebook(self.tab_frame, width=1080)
+        self.tabs_nb = ttk.Notebook(self.tab_frame, width=1080)
 
         tab_style = ttk.Style()
         tab_style.configure('TNotebook', tabposition='new')
         # tab_style.configure('TNotebook', tabposition='en')
 
-        self.tabs.bind("<<NotebookTabChanged>>", self.on_tab_selected)
+        self.tabs_nb.bind("<<NotebookTabChanged>>", self.on_tab_selected)
 
         # Tree Control Buttons
         self.move_left_button = ttk.Button(self.tab_frame,
@@ -189,7 +187,7 @@ class Configuration(ttk.Frame):
                                             bootstyle="outline")
 
         # New and Delete Buttons for tabs.
-        self.tabs.grid(row=1, column=0, columnspan=3, sticky='nsew')
+        self.tabs_nb.grid(row=1, column=0, columnspan=3, sticky='nsew')
         self.move_left_button.grid(row=2, column=0, sticky='new')
         self.delete_button.grid(row=2, column=1, sticky='new')
         self.move_right_button.grid(row=2, column=2, sticky='new')
@@ -248,12 +246,14 @@ class Configuration(ttk.Frame):
         self.side_bar_frame.grid(row=0, column=0, sticky='new', rowspan=3, padx=(5, 5))
 
         # Creating Tabs
-        ScrollFrame.from_json(self.tabs,  # passing in notebook for method to instantiate tabs
-                              self.clients_dictionary,
-                              self.tab_clients_dictionary,
-                              self.tab_commands_dictionary,
-                              # list containing list of command name, command pairs.
-                              self.tabs_list)
+        # ScrollFrame.from_json(self.tabs,  # passing in notebook for method to instantiate tabs
+        #                       self.clients_dictionary,
+        #                       self.tabs_info,
+        #                       # list containing list of command name, command pairs.
+        #                       self.tabs_list)
+
+        # Creating Tabs
+        self.tabs_list.append(ScrollFrame.from_json(self.tabs_nb, self.tabs_info))
 
         self.buttons_list = [self.move_left_button, self.delete_button, self.move_right_button]
         self.bind_class("tree_select", '<Button-1>', self.enable_nav_buttons)
@@ -269,8 +269,7 @@ class Configuration(ttk.Frame):
             return cls(parent,
                        active_config_data['clients'],
                        active_config_data['commands'],
-                       active_config_data['tab_clients'],
-                       active_config_data['tab_commands'],
+                       active_config_data['tabs_info'],
                        m_config_selected)
         except KeyError as e:
             print(f'Key {e} is incorrect.')
@@ -315,7 +314,7 @@ class Configuration(ttk.Frame):
                 if client_tab_frame.index == self.active_tab_tree_frame.index:
                     del self.client_tab_frame_list[index]
                     del self.tab_commands_dictionary[str(self.tab_id + 1)][self.active_tab_tree_frame.index]
-                    del self.tab_clients_dictionary[self.tabs.tab(self.tabs.select(), "text")][self.active_tab_tree_frame.index]
+                    del self.tab_clients_dictionary[self.tabs_nb.tab(self.tabs_nb.select(), "text")][self.active_tab_tree_frame.index]
 
             for client_tab_frame in self.client_tab_frame_list:
                 if client_tab_frame.index > self.active_tab_tree_frame.index:
@@ -381,7 +380,7 @@ class Configuration(ttk.Frame):
     def on_tab_selected(self, event):
         if self.tabs_list:
             selected_tab = event.widget.select()
-            self.tab_id = self.tabs.index(selected_tab)
+            self.tab_id = self.tabs_nb.index(selected_tab)
             scroll_frame = self.tabs_list[self.tab_id]
             # todo Verify how class memory is managed. Is the old one being replaced?
             client_dnd = ClientDragManager(scroll_frame,
@@ -392,22 +391,22 @@ class Configuration(ttk.Frame):
 
     def insert_tab(self, window_instance, new_tab):
         if new_tab:
-            tab = ScrollFrame(self.tabs,
+            tab = ScrollFrame(self.tabs_nb,
                               self.clients_dictionary)
             self.tabs_list.append(tab)
-            self.tabs.add(tab, text=f'{new_tab}')
+            self.tabs_nb.add(tab, text=f'{new_tab}')
         window_instance.destroy()
 
     def insert_another_tab(self, new_tab):
         if new_tab:
-            tab = ScrollFrame(self.tabs,
+            tab = ScrollFrame(self.tabs_nb,
                               self.clients_tree)
             self.tabs_list.append(tab)
-            self.tabs.add(tab, text=f'{new_tab}')
+            self.tabs_nb.add(tab, text=f'{new_tab}')
 
     def delete_tab(self):
-        for item in self.tabs.winfo_children():
-            if str(item) == self.tabs.select():
+        for item in self.tabs_nb.winfo_children():
+            if str(item) == self.tabs_nb.select():
                 item.pack_forget()  # To prevent scroll errors.
                 item.destroy()
                 del self.tabs_list[self.tab_id]
@@ -439,13 +438,13 @@ class Configuration(ttk.Frame):
 class ScrollFrame(ttk.Frame):
     def __init__(self,
                  parent,
-                 clients_dictionary):
+                 tab_data):
         super().__init__(master=parent)
 
         # widget data
         self.list_height = 0
-        self.clients_dictionary = clients_dictionary
-        self.client_tab_tree_index = 0
+        # self.clients_dictionary = clients_dictionary
+        self.tab_data = tab_data
         self.client_tab_frame_list = list()
         # canvas
         self.canvas = tk.Canvas(self)
@@ -462,6 +461,11 @@ class ScrollFrame(ttk.Frame):
         self.scrollbar = ttk.Scrollbar(self, orient='vertical', command=self.canvas.yview)
         self.canvas.configure(yscrollcommand=self.scrollbar.set)
         self.scrollbar.place(relx=1, rely=0, relheight=1, anchor='ne')
+
+        # Creating tree frame:
+        client_tab_frame_list = ClientTabFrame.from_tab_info(self, self.tab_data)
+        tab_tree_list = TabBarTree.from_tab_data(client_tab_frame_list, self.tab_data)
+        TabTreeMouseOver.from_client_tab_frame_list(client_tab_frame_list, tab_tree_list)
 
         # events
         self.canvas.bind_class('scroll_frame_widgets', '<MouseWheel>',
@@ -520,24 +524,39 @@ class ScrollFrame(ttk.Frame):
 
     @classmethod
     def from_json(cls,
-                  tabs,
-                  clients_dictionary,
-                  tab_clients,
-                  tab_commands,
-                  tab_list):
+                  tabs_nb,
+                  tabs_info):
 
-        for index, (tab_name, clients) in enumerate(tab_clients.items()):
-            tab = cls(tabs, clients_dictionary)
-            tab_list.append(tab)
+        for tab_name, tab_data in tabs_info.items():
+            # tab = cls(tabs, clients_dictionary)  # experimenting not passing in variable but using self.clients_tree.
+            cls(tabs_nb, tab_data)
 
-            for i, client in enumerate(clients):
-                cls.pack_trees(tab,
-                               [client],
-                               tab_commands[str(index + 1)][i],
-                               clients_dictionary)
-
-            tab.pack(expand=True, fill='both')
-            tabs.add(tab, text=tab_name)
+            # tab_list.append(tab)
+            # print(tree_indices)
+            # for tree_index in tree_indices:
+            #     print(tree_indices[tree_index]['client'])
+            #     print(tree_indices[tree_index]['tree_commands'])
+            #     pass
+    # @classmethod
+    # def from_json(cls,
+    #               tabs,
+    #               clients_dictionary,
+    #               tab_clients,
+    #               tab_commands,
+    #               tab_list):
+    #
+    #     for index, (tab_name, clients) in enumerate(tab_clients.items()):
+    #         tab = cls(tabs, clients_dictionary)
+    #         tab_list.append(tab)
+    #
+    #         for i, client in enumerate(clients):
+    #             cls.pack_trees(tab,
+    #                            [client],
+    #                            tab_commands[str(index + 1)][i],
+    #                            clients_dictionary)
+    #
+    #         tab.pack(expand=True, fill='both')
+    #         tabs.add(tab, text=tab_name)
 
     def pack_trees(self, client_name, tab_commands, clients_dictionary):
         # todo simplify code below. client_tab_tree and TabTreeMouseOver can called from ClientTabFrame Class.

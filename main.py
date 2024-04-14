@@ -25,6 +25,7 @@ class App(ttk.Window):
         App.config_names = list(self.configurations['configurations'].keys())
         App.active_config_name = self.configurations['active_config']
         active_config_data = self.configurations['configurations'][App.active_config_name]
+
         # Widgets
         self.menu = Menu.from_active_config_data(self, active_config_data)
 
@@ -86,22 +87,6 @@ class App(ttk.Window):
     def get_clients(active_config):
         return active_config['tab_clients']
 
-    @staticmethod
-    def tab_client_command_map(tab_clients, tab_commands):
-        tab_dict = dict()
-        for tab_index, (tab_name, client_list) in enumerate(tab_clients.items()):
-            clients_in_tab = list()
-            commands_in_tab = list()
-            for i, client in enumerate(client_list):
-                command_kv = tab_commands[str(tab_index + 1)][i]
-                commands_list = list()
-                for pair in command_kv:
-                    commands_list.append(pair[1])
-                commands_in_tab.append(commands_list)
-                clients_in_tab.append(client)
-            tab_dict[tab_name] = [clients_in_tab, commands_in_tab]
-        return tab_dict
-
 
 class WindowMenu(ttk.Menu):
     def __init__(self):
@@ -151,14 +136,7 @@ class Menu(ttk.Frame):
     @classmethod
     def from_active_config_data(cls, parent, active_config_data):
         buttons_info = active_config_data['tabs_info']
-        cls(parent, buttons_info)
-
-
-        # buttons = list(tabs_info.keys())
-        # for button in buttons:
-        #     button_info = tabs_info[button]
-        #     print(button_info)
-        #     cls(parent, button_info)
+        return cls(parent, buttons_info)
 
     def update_size(self, event):
         if self.list_height >= self.winfo_height():
@@ -243,38 +221,23 @@ class CommandButtons(ttk.Button):
     def send_cmd(self, event):
         for client, commands in zip(self.clients, self.commands):
             for command in commands:
+                print(client, command)
                 send_cmd_client(ip_address, command)
 
     @classmethod
     def from_buttons_info(cls, buttons_info, menu_frame):
         button_frames_list = list()
-        for button_name, client_commands in buttons_info.items():
-            # print(button_name, client_commands)
+        for button_name, tree_indices in buttons_info.items():
             button_frame = ttk.Frame(menu_frame)
-            tree_index = list(client_commands.keys())
             clients = list()
             commands = list()
-            for tree in tree_index:
-                tree_info = client_commands[tree]
-                # print(tree_info['client'])
+            for tree_index in tree_indices:
+                tree_info = tree_indices[tree_index]
                 clients.append(tree_info['client'])
-                # print(list(tree_info['tree_commands'].values()))
                 commands.append(list(tree_info['tree_commands'].values()))
             cls(button_frame, button_name, clients, commands).pack(expand=True, fill="both")
-            # print(clients)
-            # print(commands)
-            print('end of button')
-
-            # cls(button_frame, button_name, client_commands[0], client_commands[1]).pack(expand=True, fill="both")
-
-    # @classmethod
-    # def from_dictionary(cls, tab_dict, menu_frame):
-    #     button_frames_list = list()
-    #     for button_name, client_commands in tab_dict.items():
-    #         button_frame = ttk.Frame(menu_frame)
-    #         cls(button_frame, button_name, client_commands[0], client_commands[1]).pack(expand=True, fill="both")
-    #         button_frames_list.append(button_frame)
-    #     return button_frames_list
+            button_frames_list.append(button_frame)
+        return button_frames_list
 
 
 App('Glass Panel Control', (400, 500), 'darkly')
