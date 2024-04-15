@@ -380,8 +380,9 @@ class Configuration(ttk.Frame):
             self.tab_id = self.tabs_nb.index(selected_tab)
             scroll_frame = self.tabs_list[self.tab_id]
             # todo Verify how class memory is managed. Is the old one being replaced?
-            client_dnd = ClientDragManager(scroll_frame,
-                                           self.clients_dictionary)
+            # client_dnd = ClientDragManager(scroll_frame,
+            #                                self.clients_dictionary)
+            client_dnd = ClientDragManager(scroll_frame)
             client_dnd.add_dragable(self.clients_tree)
             self.active_scroll_frame = scroll_frame
             self.client_tab_frame_list = scroll_frame.client_tab_frame_list
@@ -441,10 +442,10 @@ class ScrollFrame(ttk.Frame):
 
         # widget data
         self.list_height = 0
-        # self.clients_dictionary = clients_dictionary
         self.tab_name = tab_name
         self.tab_data = tab_data
         self.client_tab_frame_list = list()
+        self.client_tab_tree_index = 0
         # canvas
         self.canvas = tk.Canvas(self)
         self.canvas.pack(expand=True, fill='both')
@@ -465,17 +466,16 @@ class ScrollFrame(ttk.Frame):
         client_tab_frame_list = ClientTabFrame.from_tab_info(self.scroll_frame, self.tab_data)
         tab_tree_list = TabBarTree.from_tab_data(client_tab_frame_list, self.tab_data)
         tt_mouse_over_list = TabTreeMouseOver.from_client_tab_frame_list(client_tab_frame_list, tab_tree_list)
+        # self.client_tab_tree_index = len(client_tab_frame_list)
 
         # packing trees and mouse_over frame to client tab_frame
         for tree, mouse_over_frame in zip(tab_tree_list, tt_mouse_over_list):
-            print(tree)
-            # print(mouse_over_frame)
             tree.grid(sticky='nsew')
-            # mouse_over_frame.pack()
-            pass
 
         # put client_tab_frame on the scroll frame
-        self.grid_tab_frames(client_tab_frame_list)
+        for tab_frame in client_tab_frame_list:
+            self.grid_tab_frame(tab_frame)
+        # print(self.client_tab_tree_index)
         # events
         self.canvas.bind_class('scroll_frame_widgets', '<MouseWheel>',
                                lambda event: self.canvas.yview_scroll(-int(event.delta / 60), "units"))
@@ -540,36 +540,33 @@ class ScrollFrame(ttk.Frame):
             tabs_data_list.append(cls(tabs_nb, tab_name, tab_data))
         return tabs_data_list
 
-    def grid_tab_frames(self, client_tab_frame_list):
-        for tab_frame in client_tab_frame_list:
-            client_tab_frame_row, client_tab_frame_col = self.assign_row_column(tab_frame)
-            self.scroll_frame.rowconfigure(client_tab_frame_row)
-            tab_frame.grid(row=client_tab_frame_row, column=client_tab_frame_col,
-                           padx=5,
-                           pady=5,
-                           sticky="nsew")
-            # print(tab_frame.winfo_children())
-            self.scroll_frame.grid_propagate(False)
-            self.scroll_frame.update_idletasks()
-            scroll_frame_height = (tab_frame.winfo_height() * client_tab_frame_row
-                                   + ((client_tab_frame_row * 2) * 5))
-            self.update_scroll_area(scroll_frame_height)
-            self.client_tab_frame_list.append(tab_frame)
+    def grid_tab_frame(self, tab_frame):
+        client_tab_frame_row, client_tab_frame_col = self.assign_row_column(self.client_tab_tree_index)
+        self.scroll_frame.rowconfigure(client_tab_frame_row)
+        tab_frame.grid(row=client_tab_frame_row, column=client_tab_frame_col,
+                       padx=5,
+                       pady=5,
+                       sticky="nsew")
+        self.scroll_frame.grid_propagate(False)
+        self.scroll_frame.update_idletasks()
+        scroll_frame_height = (tab_frame.winfo_height() * client_tab_frame_row
+                               + ((client_tab_frame_row * 2) * 5))
+        self.update_scroll_area(scroll_frame_height)
+        self.client_tab_frame_list.append(tab_frame)
+        self.client_tab_tree_index += 1
+
 
     @staticmethod
-    def assign_row_column(tab_frame):
+    def assign_row_column(tab_frame_index):
         """
         ScrollFrame needs to be in charge of managing its trees.
-        :param tab_frame: ScrollFrame attribute, Frame that tree and buttons are packed.
-        :param client_tab_frame_index: ScrollFrame attribute.
+        :param tab_frame_index: ScrollFrame attribute, Frame that tree and buttons are packed into.
         :return: row and column for frame that contains tree and buttons,
         """
-        # print(client_tab_frame.index)
         # row = (floor(int(tab_frame.index) / 5)) + 1
         # column = (int(tab_frame.index) % 5) + 1
-        row = (floor(int(tab_frame.index) / 5)) + 1
-        column = (int(tab_frame.index) % 5) + 1
-        # print(row, column)
+        row = (floor(tab_frame_index / 5)) + 1
+        column = (tab_frame_index % 5) + 1
         return row, column
 
     def reduce_tab_tree_index(self):

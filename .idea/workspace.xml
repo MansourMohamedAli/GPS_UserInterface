@@ -4,10 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="095cb8ad-5dc0-4956-a4a8-3fc088038ed8" name="Changes" comment="added classmethods to tabtree and tabtreemouseover.">
+    <list default="true" id="095cb8ad-5dc0-4956-a4a8-3fc088038ed8" name="Changes" comment="notebook now being packed.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Tree_Widgets.py" beforeDir="false" afterPath="$PROJECT_DIR$/Tree_Widgets.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/configuration.py" beforeDir="false" afterPath="$PROJECT_DIR$/configuration.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/drag_and_drop.py" beforeDir="false" afterPath="$PROJECT_DIR$/drag_and_drop.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,17 +46,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.configuration.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;tab__tree__dictionary&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Projects/Python/GPS_UserInterface/main.py&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.configuration.executor": "Run",
+    "Python.main.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "tab__tree__dictionary",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Projects/Python/GPS_UserInterface/main.py",
+    "settings.editor.selected.configurable": "inlay.hints"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python">
       <module name="GPS_UserInterface" />
@@ -96,14 +98,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1700876537819</updated>
-    </task>
-    <task id="LOCAL-00079" summary="Added class method to CommandTabTree">
-      <option name="closed" value="true" />
-      <created>1711237469744</created>
-      <option name="number" value="00079" />
-      <option name="presentableId" value="LOCAL-00079" />
-      <option name="project" value="LOCAL" />
-      <updated>1711237469745</updated>
     </task>
     <task id="LOCAL-00080" summary="Fixed error adding tabs.">
       <option name="closed" value="true" />
@@ -489,7 +483,15 @@
       <option name="project" value="LOCAL" />
       <updated>1713116297512</updated>
     </task>
-    <option name="localTasksCounter" value="128" />
+    <task id="LOCAL-00128" summary="notebook now being packed.">
+      <option name="closed" value="true" />
+      <created>1713122313067</created>
+      <option name="number" value="00128" />
+      <option name="presentableId" value="LOCAL-00128" />
+      <option name="project" value="LOCAL" />
+      <updated>1713122313067</updated>
+    </task>
+    <option name="localTasksCounter" value="129" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -504,7 +506,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="button expands properly." />
     <MESSAGE value="re-added configuration button." />
     <MESSAGE value="Modified menu dimensions." />
     <MESSAGE value="Fixed scroll frame because it was not accounting for pad lengths of tree." />
@@ -529,7 +530,8 @@
     <MESSAGE value="started tab process" />
     <MESSAGE value="adjusted classmethod for buttons and menu." />
     <MESSAGE value="added classmethods to tabtree and tabtreemouseover." />
-    <option name="LAST_COMMIT_MESSAGE" value="added classmethods to tabtree and tabtreemouseover." />
+    <MESSAGE value="notebook now being packed." />
+    <option name="LAST_COMMIT_MESSAGE" value="notebook now being packed." />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
