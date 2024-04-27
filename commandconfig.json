@@ -682,36 +682,36 @@
                       {
                       "client": "VB15",
                       "tree_commands": {
-                                      "Load Graphic 6": "666",
-                                      "Load Graphic 7": "777",
-                                      "Load Graphic 8": "888",
+                                      "Load Graphic 6": "yee",
+                                      "Load Graphic 7": "77gfg7",
+                                      "Load Graphic 8": "g888",
                                       "Load Graphic 9": "999",
-                                      "Load Graphic 10": "1000"
+                                      "Load Graphic 10": "g"
                       },
-                      "command_list" : ["Load Graphic 6", "Load Graphic 7","Load Graphic 8", "Load Graphic 9","Load Graphic 10"]
+                      "command_list" : ["Load Graphic 6","Load Graphic 6", "Load Graphic 7","Load Graphic 8", "Load Graphic 9","Load Graphic 10"]
                       },
 
                     "2":
                       {
                       "client": "VB16",
                       "tree_commands": {
-                                      "Load Graphic 6": "6",
+                                      "Load Graphic 11": "6",
                                       "Load Graphic 7": "7",
                                       "Load Graphic 8": "8",
                                       "Load Graphic 9": "9",
                                       "Load Graphic 10": "10"
                       },
-                      "command_list" : ["Load Graphic 6", "Load Graphic 7","Load Graphic 8", "Load Graphic 9","Load Graphic 10"]
+                      "command_list" : ["Load Graphic 11", "Load Graphic 7","Load Graphic 8", "Load Graphic 9","Load Graphic 10"]
                       },
                     "3":
                       {
                       "client": "VB30",
                       "tree_commands": {
-                                      "Load Graphic 6": "666",
-                                      "Load Graphic 7": "777",
-                                      "Load Graphic 8": "888",
-                                      "Load Graphic 9": "999",
-                                      "Load Graphic 10": "1000"
+                                      "Load Graphic 6": "0",
+                                      "Load Graphic 7": "00",
+                                      "Load Graphic 8": "000",
+                                      "Load Graphic 9": "0000",
+                                      "Load Graphic 10": "00000"
                       },
                       "command_list" : ["Load Graphic 6", "Load Graphic 7","Load Graphic 8", "Load Graphic 9","Load Graphic 10"]
                       }

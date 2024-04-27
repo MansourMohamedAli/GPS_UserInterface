@@ -34,7 +34,6 @@ class App(ttk.Window):
         # Run
         self.mainloop()
 
-
     def get_tab_name(self):
         pass
 
@@ -212,17 +211,38 @@ class CommandButtons(ttk.Button):
     Buttons will be instantiated with client, and command info built in.
     """
 
-    def __init__(self, parent, button_name, clients, commands):
+    def __init__(self, parent, button_name, clients, command_name_lists, commands_dict):
         super().__init__(master=parent, text=button_name)
         self.clients = clients
-        self.commands = commands
+        self.commands_dict = commands_dict
+        self.command_name_lists = command_name_lists
+        self.command_list = list()
+        self.client_list = list()
+        self.create_commands_list()
         self.bind('<ButtonPress-1>', self.send_cmd)
 
     def send_cmd(self, event):
-        for client, commands in zip(self.clients, self.commands):
-            for command in commands:
-                print(client, command)
-                send_cmd_client(ip_address, command)
+        for client, command in zip(self.client_list, self.command_list):
+            print(client, command)
+            send_cmd_client(ip_address, command)
+
+    # def send_cmd(self, event):
+    #     for client, commands in zip(self.clients, self.command_list):
+    #         print(client, commands)
+            # for command in commands:
+            #     print(client, command)
+                # send_cmd_client(ip_address, command)
+
+    def create_commands_list(self):
+        for index, (client, command_name_list) in enumerate(zip(self.clients, self.command_name_lists)):
+            # print(client)
+            # print(command_name_list)
+            for command_name in command_name_list:
+                self.client_list.append(client)
+                self.command_list.append(self.commands_dict[index][command_name])
+
+
+
 
     @classmethod
     def from_buttons_info(cls, buttons_info, menu_frame):
@@ -230,12 +250,15 @@ class CommandButtons(ttk.Button):
         for button_name, tree_indices in buttons_info.items():
             button_frame = ttk.Frame(menu_frame)
             clients = list()
-            commands = list()
+            command_name_lists = list()
+            commands_dict = list()
             for tree_index in tree_indices:
                 tree_info = tree_indices[tree_index]
                 clients.append(tree_info['client'])
-                commands.append(list(tree_info['tree_commands'].values()))
-            cls(button_frame, button_name, clients, commands).pack(expand=True, fill="both")
+                command_name_lists.append(tree_info['command_list'])
+                #print(command_names)
+                commands_dict.append(tree_info['tree_commands'])
+            cls(button_frame, button_name, clients, command_name_lists, commands_dict).pack(expand=True, fill="both")
             button_frames_list.append(button_frame)
         return button_frames_list
 
