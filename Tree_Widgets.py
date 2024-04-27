@@ -71,13 +71,14 @@ class CommandListTree(ttk.Treeview):
 
 
 class TabBarTree(ttk.Treeview):
-    def __init__(self, parent, client_name, tab_command_dict=None):
+    def __init__(self, parent, client_name, command_list, tab_command_dict=None):
         super().__init__(master=parent, columns=client_name, show='headings', bootstyle='primary')
         self.client_name = client_name
         self.heading(client_name, text=str(client_name))
         # self.get_tree_headings()
         self.bind('<Delete>', self.delete_row)
         self.tree_name = "tab_tree"
+        self.command_list = command_list
         self.tab_command_dict = tab_command_dict
 
         self.no_scroll_tags = self.bindtags()
@@ -93,8 +94,9 @@ class TabBarTree(ttk.Treeview):
         self.populate_tree()
 
     def populate_tree(self):
-        if self.tab_command_dict:
-            for command in self.tab_command_dict:
+        if self.command_list:
+            for command in self.command_list:
+                print(command)
                 self.insert(parent='', index=tk.END, values=[command])  # Insert name on to tree.
 
     @classmethod
@@ -106,7 +108,8 @@ class TabBarTree(ttk.Treeview):
             parent_frame = parent_frame_list[index]
             client_name = tree_info['client']
             commands_dictionary = tree_info['tree_commands']
-            tab_tree_list.append(cls(parent_frame, client_name, commands_dictionary))
+            command_list = tree_info['command_list']
+            tab_tree_list.append(cls(parent_frame, client_name, command_list, commands_dictionary))
         return tab_tree_list
 
         # @classmethod
