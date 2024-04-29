@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="095cb8ad-5dc0-4956-a4a8-3fc088038ed8" name="Changes" comment="Added list to each tab tree in json.">
+    <list default="true" id="095cb8ad-5dc0-4956-a4a8-3fc088038ed8" name="Changes" comment="main menu works.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tree_Widgets.py" beforeDir="false" afterPath="$PROJECT_DIR$/Tree_Widgets.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/commandconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/commandconfig.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
@@ -97,14 +98,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1700876537819</updated>
-    </task>
-    <task id="LOCAL-00081" summary="Fixed error adding tabs.">
-      <option name="closed" value="true" />
-      <created>1711239959380</created>
-      <option name="number" value="00081" />
-      <option name="presentableId" value="LOCAL-00081" />
-      <option name="project" value="LOCAL" />
-      <updated>1711239959380</updated>
     </task>
     <task id="LOCAL-00082" summary="Fixed error adding tabs.">
       <option name="closed" value="true" />
@@ -490,7 +483,15 @@
       <option name="project" value="LOCAL" />
       <updated>1714179549214</updated>
     </task>
-    <option name="localTasksCounter" value="130" />
+    <task id="LOCAL-00130" summary="main menu works.">
+      <option name="closed" value="true" />
+      <created>1714185320665</created>
+      <option name="number" value="00130" />
+      <option name="presentableId" value="LOCAL-00130" />
+      <option name="project" value="LOCAL" />
+      <updated>1714185320665</updated>
+    </task>
+    <option name="localTasksCounter" value="131" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -505,7 +506,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Modified menu dimensions." />
     <MESSAGE value="Fixed scroll frame because it was not accounting for pad lengths of tree." />
     <MESSAGE value="get_tab_tree stores clicked" />
     <MESSAGE value="Buttons work." />
@@ -530,7 +530,8 @@
     <MESSAGE value="added classmethods to tabtree and tabtreemouseover." />
     <MESSAGE value="notebook now being packed." />
     <MESSAGE value="Added list to each tab tree in json." />
-    <option name="LAST_COMMIT_MESSAGE" value="Added list to each tab tree in json." />
+    <MESSAGE value="main menu works." />
+    <option name="LAST_COMMIT_MESSAGE" value="main menu works." />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>

@@ -102,6 +102,7 @@ class ClientDragManager:
     #     parent.grid_tab_frame(frame)
     #     # print(self.target_frame)
 
+
 class CommandDragManager:
     def __init__(self, commands_tree):
         self.widget = None

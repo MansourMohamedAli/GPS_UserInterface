@@ -27,7 +27,7 @@ class App(ttk.Window):
         active_config_data = self.configurations['configurations'][App.active_config_name]
 
         # Widgets
-        self.menu = Menu.from_active_config_data(self, active_config_data)
+        self.menu = Menu.from_active_config_data(self, active_config_data, self.config_selected)
 
         window_menu = WindowMenu()
         self.configure(menu=window_menu)
@@ -43,19 +43,16 @@ class App(ttk.Window):
             return
         else:
             # Setting new active config
+            print(selected_config)
             App.active_config_name = selected_config
             self.write_active_config()
             # Getting Config Data
             selected_config_data = self.configurations['configurations'][selected_config]
-            # commands = selected_config_data['tab_commands']
-            commands = self.get_active_commands(selected_config_data)
-            # clients = self.get_clients(self.active_config_name)
-            clients = self.get_clients(selected_config_data)
-            self.tab_dict = self.tab_client_command_map(clients, commands)
+            buttons_info = selected_config_data['tabs_info']
             # Destroying old config window
             self.menu.destroy()
             # Loading Configuration with new configuration data
-            self.menu = Menu(self, self.tab_dict, 39, self.config_selected)
+            self.menu = Menu(self,buttons_info, self.config_selected)
 
     def write_active_config(self):
         self.configurations['active_config'] = self.active_config_name
@@ -103,7 +100,7 @@ class WindowMenu(ttk.Menu):
 
 
 class Menu(ttk.Frame):
-    def __init__(self, parent, buttons_info):
+    def __init__(self, parent, buttons_info, m_config_selected):
         super().__init__(parent)
         # widget data
         # self.tab_dict = tab_dict
@@ -111,7 +108,7 @@ class Menu(ttk.Frame):
         item_number = len(buttons_info) + 2  # Plus two for configuration button and dropdown menu
         self.buttons_info = buttons_info
         self.list_height = item_number * 39
-        # self.m_config_selected = m_config_selected
+        self.m_config_selected = m_config_selected
         self.place(x=0, y=0, relwidth=1, relheight=1)
         self.config_button = ttk.Button(self, text='Configuration')
         self.columnconfigure(0, weight=1, uniform='a')
@@ -133,9 +130,9 @@ class Menu(ttk.Frame):
         self.bind('<Configure>', self.update_size)
 
     @classmethod
-    def from_active_config_data(cls, parent, active_config_data):
+    def from_active_config_data(cls, parent, active_config_data, m_config_selected):
         buttons_info = active_config_data['tabs_info']
-        return cls(parent, buttons_info)
+        return cls(parent, buttons_info, m_config_selected)
 
     def update_size(self, event):
         if self.list_height >= self.winfo_height():
@@ -226,13 +223,6 @@ class CommandButtons(ttk.Button):
             print(client, command)
             send_cmd_client(ip_address, command)
 
-    # def send_cmd(self, event):
-    #     for client, commands in zip(self.clients, self.command_list):
-    #         print(client, commands)
-            # for command in commands:
-            #     print(client, command)
-                # send_cmd_client(ip_address, command)
-
     def create_commands_list(self):
         for index, (client, command_name_list) in enumerate(zip(self.clients, self.command_name_lists)):
             # print(client)
@@ -256,7 +246,6 @@ class CommandButtons(ttk.Button):
                 tree_info = tree_indices[tree_index]
                 clients.append(tree_info['client'])
                 command_name_lists.append(tree_info['command_list'])
-                #print(command_names)
                 commands_dict.append(tree_info['tree_commands'])
             cls(button_frame, button_name, clients, command_name_lists, commands_dict).pack(expand=True, fill="both")
             button_frames_list.append(button_frame)
