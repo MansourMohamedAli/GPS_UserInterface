@@ -274,7 +274,8 @@ class Configuration(ttk.Frame):
         x, y = event.widget.winfo_pointerxy()
         target = event.widget.winfo_containing(x, y)
         master_target = event.widget.winfo_containing(x, y).master
-        if master_target in self.client_tab_frame_list:
+        # if master_target in self.client_tab_frame_list:
+        if master_target in self.active_scroll_frame.client_tab_frame_list:
             self.active_tab_tree_frame = master_target
         elif target in self.buttons_list:
             pass
@@ -306,16 +307,16 @@ class Configuration(ttk.Frame):
     def delete_client(self):
         if self.active_tab_tree_frame:
             self.unpack_client_frame()
-            for index, client_tab_frame in enumerate(self.client_tab_frame_list):
+            for index, client_tab_frame in enumerate(self.active_scroll_frame.client_tab_frame_list):
                 if client_tab_frame.index == self.active_tab_tree_frame.index:
-                    del self.client_tab_frame_list[index]
-                    del self.tab_commands_dictionary[str(self.tab_id + 1)][self.active_tab_tree_frame.index]
-                    del self.tab_clients_dictionary[self.tabs_nb.tab(self.tabs_nb.select(), "text")][
-                        self.active_tab_tree_frame.index]
+                    # print(self.active_scroll_frame.client_tab_frame_list[index])
+                    del self.active_scroll_frame.client_tab_frame_list[index]
+                    # print(self.active_scroll_frame.client_tab_frame_list[index])
 
-            for client_tab_frame in self.client_tab_frame_list:
+            for client_tab_frame in self.active_scroll_frame.client_tab_frame_list:
                 if client_tab_frame.index > self.active_tab_tree_frame.index:
                     client_tab_frame.index -= 1
+                    print(f'After reducing: {client_tab_frame.index}\n')
 
             self.re_sort(self.client_tab_frame_list)
             for client_tab_frame in self.client_tab_frame_list:
