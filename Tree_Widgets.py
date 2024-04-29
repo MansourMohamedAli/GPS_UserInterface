@@ -96,7 +96,6 @@ class TabBarTree(ttk.Treeview):
     def populate_tree(self):
         if self.command_list:
             for command in self.command_list:
-                print(command)
                 self.insert(parent='', index=tk.END, values=[command])  # Insert name on to tree.
 
     @classmethod
@@ -104,12 +103,13 @@ class TabBarTree(ttk.Treeview):
                       parent_frame_list,
                       tab_data):
         tab_tree_list = list()
-        for index, tree_info in enumerate(tab_data.values()):
-            parent_frame = parent_frame_list[index]
-            client_name = tree_info['client']
-            commands_dictionary = tree_info['tree_commands']
-            command_list = tree_info['command_list']
-            tab_tree_list.append(cls(parent_frame, client_name, command_list, commands_dictionary))
+        if tab_data:
+            for index, tree_info in enumerate(tab_data.values()):
+                parent_frame = parent_frame_list[index]
+                client_name = tree_info['client']
+                commands_dictionary = tree_info['tree_commands']
+                command_list = tree_info['command_list']
+                tab_tree_list.append(cls(parent_frame, client_name, command_list, commands_dictionary))
         return tab_tree_list
 
         # @classmethod
@@ -190,8 +190,9 @@ class ClientTabFrame(ttk.Frame):
     @classmethod
     def from_tab_info(cls, parent, tab_data):
         tab_frame_list = list()
-        for index in tab_data:
-            tab_frame_list.append(cls(parent, index))
+        if tab_data:
+            for index in tab_data:
+                tab_frame_list.append(cls(parent, index))
         return tab_frame_list
 
 

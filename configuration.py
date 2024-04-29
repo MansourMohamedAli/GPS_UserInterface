@@ -437,7 +437,7 @@ class ScrollFrame(ttk.Frame):
     def __init__(self,
                  parent,
                  tab_name,
-                 tab_data):
+                 tab_data=None):
         super().__init__(master=parent)
 
         # widget data
