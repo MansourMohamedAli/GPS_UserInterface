@@ -309,9 +309,7 @@ class Configuration(ttk.Frame):
             self.unpack_client_frame()
             for index, client_tab_frame in enumerate(self.active_scroll_frame.client_tab_frame_list):
                 if client_tab_frame.index == self.active_tab_tree_frame.index:
-                    # print(self.active_scroll_frame.client_tab_frame_list[index])
                     del self.active_scroll_frame.client_tab_frame_list[index]
-                    # print(self.active_scroll_frame.client_tab_frame_list[index])
 
             for client_tab_frame in self.active_scroll_frame.client_tab_frame_list:
                 if client_tab_frame.index > self.active_tab_tree_frame.index:

@@ -23,14 +23,6 @@
           "199.199.199.05",
           "MAC5"
         ],
-        "VB6": [
-          "199.199.199.06",
-          "MAC6"
-        ],
-        "VB7": [
-          "199.199.199.07",
-          "MAC7"
-        ],
         "VB8": [
           "199.199.199.08",
           "MAC8"
@@ -124,483 +116,189 @@
         "Load Graphic 1": "111",
         "Load Graphic 2": "222",
         "Load Graphic 3": "333",
-        "Load Graphic 4": "444",
         "Load Graphic 5": "555"
       },
-      "tab_clients": {
-        "Tab 1": [
-          "VB1",
-          "VB2",
-          "VB3"
-        ],
-        "Tab 2": [
-          "VB4",
-          "VB5",
-          "VB6"
-        ],
-        "Tab 3": [
-          "VB7",
-          "VB8",
-          "VB9"
-        ],
-        "Tab 4": [
-          "VB10",
-          "VB11"
-        ],
-        "Tab 5": [
-          "VB12",
-          "VB13",
-          "VB14"
-        ],
-        "Tab 6": [
-          "VB15",
-          "VB16",
-          "VB17",
-          "VB18",
-          "VB19",
-          "VB20",
-          "VB21",
-          "VB22",
-          "VB23",
-          "VB24",
-          "VB25",
-          "VB26"
-        ],
-        "Tab 7": [
-          "VB27"
-        ],
-        "Tab 8": [
-          "VB28"
-        ],
-        "Tab 9": [
-          "VB29"
-        ]
-      },
-      "tab_commands": {
-        "1": [
-          [
-            [
-              "VB1 Command Name 1",
-              "VB1 Tree command 1"
-            ],
-            [
-              "VB1 Command Name 2",
-              "VB1 Tree command 2"
-            ],
-            [
-              "VB1 Command Name 3",
-              "VB1 Tree command 3"
+      "tabs_info": {
+        "tab 1": {
+          "1": {
+            "client": "VB1",
+            "tree_commands": {
+              "Load Graphic 1": "test1",
+              "Load Graphic 2": "test2",
+              "Load Graphic 3": "test3",
+              "Load Graphic 4": "test4",
+              "Load Graphic 5": "test5"
+            },
+            "command_list": [
+              "Load Graphic 1",
+              "Load Graphic 1",
+              "Load Graphic 2",
+              "Load Graphic 3",
+              "Load Graphic 4",
+              "Load Graphic 5"
             ]
-          ],
-          [
-            [
-              "VB2 Command Name 1",
-              "VB2 Tree command 1"
-            ],
-            [
-              "VB2 Command Name 2",
-              "VB2 Tree command 2"
-            ],
-            [
-              "VB2 Command Name 3",
-              "VB2 Tree command 3"
+          },
+          "2": {
+            "client": "VB2",
+            "tree_commands": {
+              "Load Graphic 11": "6",
+              "Load Graphic 7": "7",
+              "Load Graphic 8": "8",
+              "Load Graphic 9": "9",
+              "Load Graphic 10": "10"
+            },
+            "command_list": [
+              "Load Graphic 11",
+              "Load Graphic 7",
+              "Load Graphic 8",
+              "Load Graphic 9",
+              "Load Graphic 10"
             ]
-          ],
-          [
-            [
-              "VB3 Command Name 1",
-              "VB3 Tree command 1"
-            ],
-            [
-              "VB3 Command Name 2",
-              "VB3 Tree command 2"
-            ],
-            [
-              "VB3 Command Name 3",
-              "VB3 Tree command 3"
+          },
+          "3": {
+            "client": "VB3",
+            "tree_commands": {
+              "Load Graphic 6": "0",
+              "Load Graphic 7": "00",
+              "Load Graphic 8": "000",
+              "Load Graphic 9": "0000",
+              "Load Graphic 10": "00000"
+            },
+            "command_list": [
+              "Load Graphic 6",
+              "Load Graphic 7",
+              "Load Graphic 8",
+              "Load Graphic 9",
+              "Load Graphic 10"
             ]
-          ]
-        ],
-        "2": [
-          [
-            [
-              "VB4 Command Name 1",
-              "VB4 Tree command 1"
-            ],
-            [
-              "VB4 Command Name 2",
-              "VB4 Tree command 2"
-            ],
-            [
-              "VB4 Command Name 3",
-              "VB4 Tree command 3"
+          },
+          "4": {
+            "client": "VB4",
+            "tree_commands": {
+              "Load Graphic 10": "10",
+              "Load Graphic 11": "11",
+              "Load Graphic 12": "12",
+              "Load Graphic 13": "13",
+              "Load Graphic 14": "14"
+            },
+            "command_list": [
+              "Load Graphic 10",
+              "Load Graphic 11",
+              "Load Graphic 12",
+              "Load Graphic 13",
+              "Load Graphic 14"
             ]
-          ],
-          [
-            [
-              "VB5 Command Name 1",
-              "VB5 Tree command 1"
-            ],
-            [
-              "VB5 Command Name 2",
-              "VB5 Tree command 2"
-            ],
-            [
-              "VB5 Command Name 3",
-              "VB5 Tree command 3"
+          }
+        },
+        "tab 2": {
+          "1": {
+            "client": "VB17",
+            "tree_commands": {
+              "Load Graphic 6": "666",
+              "Load Graphic 7": "777",
+              "Load Graphic 8": "888",
+              "Load Graphic 9": "999",
+              "Load Graphic 10": "1000"
+            },
+            "command_list": [
+              "Load Graphic 6",
+              "Load Graphic 7",
+              "Load Graphic 8",
+              "Load Graphic 9",
+              "Load Graphic 10"
             ]
-          ],
-          [
-            [
-              "VB6 Command Name 1",
-              "VB6 Tree command 1"
-            ],
-            [
-              "VB6 Command Name 2",
-              "VB6 Tree command 2"
-            ],
-            [
-              "VB6 Command Name 3",
-              "VB6 Tree command 3"
+          },
+          "2": {
+            "client": "VB18",
+            "tree_commands": {
+              "Load Graphic 6": "666",
+              "Load Graphic 7": "777",
+              "Load Graphic 8": "888",
+              "Load Graphic 9": "999",
+              "Load Graphic 10": "1000"
+            },
+            "command_list": [
+              "Load Graphic 6",
+              "Load Graphic 7",
+              "Load Graphic 8",
+              "Load Graphic 9",
+              "Load Graphic 10"
             ]
-          ]
-        ],
-        "3": [
-          [
-            [
-              "VB7 Command Name 1",
-              "VB7 Tree command 1"
-            ],
-            [
-              "VB7 Command Name 2",
-              "VB7 Tree command 2"
-            ],
-            [
-              "VB7 Command Name 3",
-              "VB7 Tree command 3"
+          }
+        },
+        "tab 3": {
+          "1": {
+            "client": "VB19",
+            "tree_commands": {
+              "Load Graphic 6": "666",
+              "Load Graphic 7": "777",
+              "Load Graphic 8": "888",
+              "Load Graphic 9": "999",
+              "Load Graphic 10": "1000"
+            },
+            "command_list": [
+              "Load Graphic 6",
+              "Load Graphic 7",
+              "Load Graphic 8",
+              "Load Graphic 9",
+              "Load Graphic 10"
             ]
-          ],
-          [
-            [
-              "VB8 Command Name 1",
-              "VB8 Tree command 1"
-            ],
-            [
-              "VB8 Command Name 2",
-              "VB8 Tree command 2"
-            ],
-            [
-              "VB8 Command Name 3",
-              "VB8 Tree command 3"
+          },
+          "2": {
+            "client": "VB20",
+            "tree_commands": {
+              "Load Graphic 6": "666",
+              "Load Graphic 7": "777",
+              "Load Graphic 8": "888",
+              "Load Graphic 9": "999",
+              "Load Graphic 10": "1000"
+            },
+            "command_list": [
+              "Load Graphic 6",
+              "Load Graphic 7",
+              "Load Graphic 8",
+              "Load Graphic 9",
+              "Load Graphic 10"
             ]
-          ],
-          [
-            [
-              "VB9 Command Name 1",
-              "VB9 Tree command 1"
-            ],
-            [
-              "VB9 Command Name 2",
-              "VB9 Tree command 2"
-            ],
-            [
-              "VB9 Command Name 3",
-              "VB9 Tree command 3"
+          }
+        },
+        "tab 4": {
+          "1": {
+            "client": "VB19",
+            "tree_commands": {
+              "name 1": "name 1",
+              "name 2": "name 2",
+              "name 3": "name 3",
+              "name 4": "name 4",
+              "name 5": "name 5"
+            },
+            "command_list": [
+              "name 1",
+              "name 2",
+              "name 2",
+              "name 3",
+              "name 4",
+              "name 5"
             ]
-          ]
-        ],
-        "4": [
-          [
-            [
-              "VB10 Command Name 1",
-              "VB10 Tree command 1"
-            ],
-            [
-              "VB10 Command Name 2",
-              "VB10 Tree command 2"
-            ],
-            [
-              "VB10 Command Name 3",
-              "VB10 Tree command 3"
+          },
+          "2": {
+            "client": "VB20",
+            "tree_commands": {
+              "Load Graphic 6": "666",
+              "Load Graphic 7": "777",
+              "Load Graphic 8": "888",
+              "Load Graphic 9": "999",
+              "Load Graphic 10": "1000"
+            },
+            "command_list": [
+              "Load Graphic 6",
+              "Load Graphic 7",
+              "Load Graphic 8",
+              "Load Graphic 9",
+              "Load Graphic 10"
             ]
-          ],
-          [
-            [
-              "VB11 Command Name 1",
-              "VB11 Tree command 1"
-            ],
-            [
-              "VB11 Command Name 2",
-              "VB11 Tree command 2"
-            ],
-            [
-              "VB11 Command Name 3",
-              "VB11 Tree command 3"
-            ]
-          ]
-        ],
-        "5": [
-          [
-            [
-              "VB12 Command Name 1",
-              "VB12 Tree command 1"
-            ],
-            [
-              "VB12 Command Name 2",
-              "VB12 Tree command 2"
-            ],
-            [
-              "VB12 Command Name 3",
-              "VB12 Tree command 3"
-            ]
-          ],
-          [
-            [
-              "VB13 Command Name 1",
-              "VB13 Tree command 1"
-            ],
-            [
-              "VB13 Command Name 2",
-              "VB13 Tree command 2"
-            ],
-            [
-              "VB13 Command Name 3",
-              "VB13 Tree command 3"
-            ]
-          ],
-          [
-            [
-              "VB14 Command Name 1",
-              "VB14 Tree command 1"
-            ],
-            [
-              "VB14 Command Name 2",
-              "VB14 Tree command 2"
-            ],
-            [
-              "VB14 Command Name 3",
-              "VB14 Tree command 3"
-            ]
-          ]
-        ],
-        "6": [
-          [
-            [
-              "VB15 Command Name 1",
-              "VB15 Tree command 1"
-            ],
-            [
-              "VB15 Command Name 2",
-              "VB15 Tree command 2"
-            ],
-            [
-              "VB15 Command Name 3",
-              "VB15 Tree command 3"
-            ]
-          ],
-          [
-            [
-              "VB16 Command Name 1",
-              "VB16 Tree command 1"
-            ],
-            [
-              "VB16 Command Name 2",
-              "VB16 Tree command 2"
-            ],
-            [
-              "VB16 Command Name 3",
-              "VB16 Tree command 3"
-            ]
-          ],
-          [
-            [
-              "VB17 Command Name 1",
-              "VB17 Tree command 1"
-            ],
-            [
-              "VB17 Command Name 2",
-              "VB17 Tree command 2"
-            ],
-            [
-              "VB17 Command Name 3",
-              "VB17 Tree command 3"
-            ]
-          ],
-          [
-            [
-              "VB18 Command Name 1",
-              "VB18 Tree command 1"
-            ],
-            [
-              "VB18 Command Name 2",
-              "VB18 Tree command 2"
-            ],
-            [
-              "VB18 Command Name 3",
-              "VB18 Tree command 3"
-            ]
-          ],
-          [
-            [
-              "VB19 Command Name 1",
-              "VB19 Tree command 1"
-            ],
-            [
-              "VB19 Command Name 2",
-              "VB19 Tree command 2"
-            ],
-            [
-              "VB19 Command Name 3",
-              "VB19 Tree command 3"
-            ]
-          ],
-          [
-            [
-              "VB20 Command Name 1",
-              "VB20 Tree command 1"
-            ],
-            [
-              "VB20 Command Name 2",
-              "VB20 Tree command 2"
-            ],
-            [
-              "VB20 Command Name 3",
-              "VB20 Tree command 3"
-            ]
-          ],
-          [
-            [
-              "VB21 Command Name 1",
-              "VB21 Tree command 1"
-            ],
-            [
-              "VB21 Command Name 2",
-              "VB21 Tree command 2"
-            ],
-            [
-              "VB21 Command Name 3",
-              "VB21 Tree command 3"
-            ]
-          ],
-          [
-            [
-              "VB22 Command Name 1",
-              "VB22 Tree command 1"
-            ],
-            [
-              "VB22 Command Name 2",
-              "VB22 Tree command 2"
-            ],
-            [
-              "VB22 Command Name 3",
-              "VB22 Tree command 3"
-            ]
-          ],
-          [
-            [
-              "VB23 Command Name 1",
-              "VB23 Tree command 1"
-            ],
-            [
-              "VB23 Command Name 2",
-              "VB23 Tree command 2"
-            ],
-            [
-              "VB23 Command Name 3",
-              "VB23 Tree command 3"
-            ]
-          ],
-          [
-            [
-              "VB24 Command Name 1",
-              "VB24 Tree command 1"
-            ],
-            [
-              "VB24 Command Name 2",
-              "VB24 Tree command 2"
-            ],
-            [
-              "VB24 Command Name 3",
-              "VB24 Tree command 3"
-            ]
-          ],
-          [
-            [
-              "VB25 Command Name 1",
-              "VB25 Tree command 1"
-            ],
-            [
-              "VB25 Command Name 2",
-              "VB25 Tree command 2"
-            ],
-            [
-              "VB25 Command Name 3",
-              "VB25 Tree command 3"
-            ]
-          ],
-          [
-            [
-              "VB26 Command Name 1",
-              "VB26 Tree command 1"
-            ],
-            [
-              "VB26 Command Name 2",
-              "VB26 Tree command 2"
-            ],
-            [
-              "VB26 Command Name 3",
-              "VB26 Tree command 3"
-            ]
-          ]
-        ],
-        "7": [
-          [
-            [
-              "VB27 Command Name 1",
-              "VB27 Tree command 1"
-            ],
-            [
-              "VB27 Command Name 2",
-              "VB27 Tree command 2"
-            ],
-            [
-              "VB27 Command Name 3",
-              "VB27 Tree command 3"
-            ]
-          ]
-        ],
-        "8": [
-          [
-            [
-              "VB27 Command Name 1",
-              "VB28 Tree command 1"
-            ],
-            [
-              "VB28 Command Name 2",
-              "VB28 Tree command 2"
-            ],
-            [
-              "VB28 Command Name 3",
-              "VB28 Tree command 3"
-            ]
-          ]
-        ],
-        "9": [
-          [
-            [
-              "VB29 Command Name 1",
-              "VB29 Tree command 1"
-            ],
-            [
-              "VB29 Command Name 2",
-              "VB29 Tree command 2"
-            ],
-            [
-              "VB29 Command Name 3",
-              "VB29 Tree command 3"
-            ]
-          ]
-        ]
+          }
+        }
       }
     },
     "config 2": {
@@ -673,250 +371,133 @@
         "Load Graphic 9": "999",
         "Load Graphic 10": "1000"
       },
-      "tab_clients": {
-        "Tab 6": [
-          "VB15",
-          "VB16",
-          "VB17",
-          "VB18",
-          "VB19",
-          "VB20",
-          "VB21",
-          "VB22",
-          "VB23",
-          "VB24",
-          "VB25",
-          "VB26"
-        ],
-        "Tab 7": [
-          "VB27"
-        ],
-        "Tab 8": [
-          "VB28"
-        ],
-        "Tab 9": [
-          "VB29"
-        ]
-      },
-      "tab_commands": {
-        "1": [
-          [
-            [
-              "VB15 Command Name 1",
-              "VB15 Tree command 1"
-            ],
-            [
-              "VB15 Command Name 2",
-              "VB15 Tree command 2"
-            ],
-            [
-              "VB15 Command Name 3",
-              "VB15 Tree command 3"
+      "tabs_info": {
+        "tab 6": {
+          "1": {
+            "client": "VB15",
+            "tree_commands": {
+              "Load Graphic 6": "yee",
+              "Load Graphic 7": "77gfg7",
+              "Load Graphic 8": "g888",
+              "Load Graphic 9": "999",
+              "Load Graphic 10": "g"
+            },
+            "command_list": [
+              "Load Graphic 6",
+              "Load Graphic 6",
+              "Load Graphic 7",
+              "Load Graphic 8",
+              "Load Graphic 9",
+              "Load Graphic 10"
             ]
-          ],
-          [
-            [
-              "VB16 Command Name 1",
-              "VB16 Tree command 1"
-            ],
-            [
-              "VB16 Command Name 2",
-              "VB16 Tree command 2"
-            ],
-            [
-              "VB16 Command Name 3",
-              "VB16 Tree command 3"
+          },
+          "2": {
+            "client": "VB16",
+            "tree_commands": {
+              "Load Graphic 11": "6",
+              "Load Graphic 7": "7",
+              "Load Graphic 8": "8",
+              "Load Graphic 9": "9",
+              "Load Graphic 10": "10"
+            },
+            "command_list": [
+              "Load Graphic 11",
+              "Load Graphic 7",
+              "Load Graphic 8",
+              "Load Graphic 9",
+              "Load Graphic 10"
             ]
-          ],
-          [
-            [
-              "VB17 Command Name 1",
-              "VB17 Tree command 1"
-            ],
-            [
-              "VB17 Command Name 2",
-              "VB17 Tree command 2"
-            ],
-            [
-              "VB17 Command Name 3",
-              "VB17 Tree command 3"
+          },
+          "3": {
+            "client": "VB30",
+            "tree_commands": {
+              "Load Graphic 6": "0",
+              "Load Graphic 7": "00",
+              "Load Graphic 8": "000",
+              "Load Graphic 9": "0000",
+              "Load Graphic 10": "00000"
+            },
+            "command_list": [
+              "Load Graphic 6",
+              "Load Graphic 7",
+              "Load Graphic 8",
+              "Load Graphic 9",
+              "Load Graphic 10"
             ]
-          ],
-          [
-            [
-              "VB18 Command Name 1",
-              "VB18 Tree command 1"
-            ],
-            [
-              "VB18 Command Name 2",
-              "VB18 Tree command 2"
-            ],
-            [
-              "VB18 Command Name 3",
-              "VB18 Tree command 3"
+          }
+        },
+        "tab 7": {
+          "1": {
+            "client": "VB17",
+            "tree_commands": {
+              "Load Graphic 6": "666",
+              "Load Graphic 7": "777",
+              "Load Graphic 8": "888",
+              "Load Graphic 9": "999",
+              "Load Graphic 10": "1000"
+            },
+            "command_list": [
+              "Load Graphic 6",
+              "Load Graphic 7",
+              "Load Graphic 8",
+              "Load Graphic 9",
+              "Load Graphic 10"
             ]
-          ],
-          [
-            [
-              "VB19 Command Name 1",
-              "VB19 Tree command 1"
-            ],
-            [
-              "VB19 Command Name 2",
-              "VB19 Tree command 2"
-            ],
-            [
-              "VB19 Command Name 3",
-              "VB19 Tree command 3"
+          },
+          "2": {
+            "client": "VB18",
+            "tree_commands": {
+              "Load Graphic 6": "666",
+              "Load Graphic 7": "777",
+              "Load Graphic 8": "888",
+              "Load Graphic 9": "999",
+              "Load Graphic 10": "1000"
+            },
+            "command_list": [
+              "Load Graphic 6",
+              "Load Graphic 7",
+              "Load Graphic 8",
+              "Load Graphic 9",
+              "Load Graphic 10"
             ]
-          ],
-          [
-            [
-              "VB20 Command Name 1",
-              "VB20 Tree command 1"
-            ],
-            [
-              "VB20 Command Name 2",
-              "VB20 Tree command 2"
-            ],
-            [
-              "VB20 Command Name 3",
-              "VB20 Tree command 3"
+          }
+        },
+        "tab 8": {
+          "1": {
+            "client": "VB19",
+            "tree_commands": {
+              "Load Graphic 6": "666",
+              "Load Graphic 7": "777",
+              "Load Graphic 8": "888",
+              "Load Graphic 9": "999",
+              "Load Graphic 10": "1000"
+            },
+            "command_list": [
+              "Load Graphic 6",
+              "Load Graphic 7",
+              "Load Graphic 8",
+              "Load Graphic 9",
+              "Load Graphic 10"
             ]
-          ],
-          [
-            [
-              "VB21 Command Name 1",
-              "VB21 Tree command 1"
-            ],
-            [
-              "VB21 Command Name 2",
-              "VB21 Tree command 2"
-            ],
-            [
-              "VB21 Command Name 3",
-              "VB21 Tree command 3"
+          },
+          "2": {
+            "client": "VB20",
+            "tree_commands": {
+              "Load Graphic 6": "666",
+              "Load Graphic 7": "777",
+              "Load Graphic 8": "888",
+              "Load Graphic 9": "999",
+              "Load Graphic 10": "1000"
+            },
+            "command_list": [
+              "Load Graphic 6",
+              "Load Graphic 7",
+              "Load Graphic 8",
+              "Load Graphic 9",
+              "Load Graphic 10"
             ]
-          ],
-          [
-            [
-              "VB22 Command Name 1",
-              "VB22 Tree command 1"
-            ],
-            [
-              "VB22 Command Name 2",
-              "VB22 Tree command 2"
-            ],
-            [
-              "VB22 Command Name 3",
-              "VB22 Tree command 3"
-            ]
-          ],
-          [
-            [
-              "VB23 Command Name 1",
-              "VB23 Tree command 1"
-            ],
-            [
-              "VB23 Command Name 2",
-              "VB23 Tree command 2"
-            ],
-            [
-              "VB23 Command Name 3",
-              "VB23 Tree command 3"
-            ]
-          ],
-          [
-            [
-              "VB24 Command Name 1",
-              "VB24 Tree command 1"
-            ],
-            [
-              "VB24 Command Name 2",
-              "VB24 Tree command 2"
-            ],
-            [
-              "VB24 Command Name 3",
-              "VB24 Tree command 3"
-            ]
-          ],
-          [
-            [
-              "VB25 Command Name 1",
-              "VB25 Tree command 1"
-            ],
-            [
-              "VB25 Command Name 2",
-              "VB25 Tree command 2"
-            ],
-            [
-              "VB25 Command Name 3",
-              "VB25 Tree command 3"
-            ]
-          ],
-          [
-            [
-              "VB26 Command Name 1",
-              "VB26 Tree command 1"
-            ],
-            [
-              "VB26 Command Name 2",
-              "VB26 Tree command 2"
-            ],
-            [
-              "VB26 Command Name 3",
-              "VB26 Tree command 3"
-            ]
-          ]
-        ],
-        "2": [
-          [
-            [
-              "VB27 Command Name 1",
-              "VB27 Tree command 1"
-            ],
-            [
-              "VB27 Command Name 2",
-              "VB27 Tree command 2"
-            ],
-            [
-              "VB27 Command Name 3",
-              "VB27 Tree command 3"
-            ]
-          ]
-        ],
-        "3": [
-          [
-            [
-              "VB27 Command Name 1",
-              "VB28 Tree command 1"
-            ],
-            [
-              "VB28 Command Name 2",
-              "VB28 Tree command 2"
-            ],
-            [
-              "VB28 Command Name 3",
-              "VB28 Tree command 3"
-            ]
-          ]
-        ],
-        "4": [
-          [
-            [
-              "VB29 Command Name 1",
-              "VB29 Tree command 1"
-            ],
-            [
-              "VB29 Command Name 2",
-              "VB29 Tree command 2"
-            ],
-            [
-              "VB29 Command Name 3",
-              "VB29 Tree command 3"
-            ]
-          ]
-        ]
+          }
+        }
       }
     }
   }
