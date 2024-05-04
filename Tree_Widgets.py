@@ -80,6 +80,7 @@ class TabBarTree(ttk.Treeview):
         self.tree_name = "tab_tree"
         self.command_list = command_list
         self.tab_command_dict = tab_command_dict
+        self.init_dict()
 
         self.no_scroll_tags = self.bindtags()
         # Adding new tag for frame to allow scroll on TabTree and background.
@@ -92,6 +93,10 @@ class TabBarTree(ttk.Treeview):
         self.tree_select = self.bindtags() + ("tree_select",)
         self.bindtags(self.tree_select)
         self.populate_tree()
+
+    def init_dict(self):
+        if not self.tab_command_dict:
+            self.tab_command_dict = dict()
 
     def populate_tree(self):
         if self.command_list:

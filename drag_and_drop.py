@@ -2,48 +2,6 @@ import tkinter as tk
 from Tree_Widgets import ClientTabFrame, TabBarTree, TabTreeMouseOver
 
 
-# class ClientDragManager:
-#     def __init__(self,
-#                  target_frame,
-#                  clients_dictionary):
-#
-#         self.widget = None
-#         self.tree_selection = list()
-#         self.target_frame = target_frame
-#         self.clients_dictionary = clients_dictionary
-#
-#     def add_dragable(self, widget):
-#         self.widget = widget
-#         widget.bind('<<TreeviewSelect>>', self.on_start)
-#         # widget.bind("<B1-Motion>", self.on_drag) # todo
-#         widget.bind("<ButtonRelease-1>", self.on_drop)
-#         widget.configure(cursor="hand1")
-#
-#     def on_start(self, event):
-#         for i in self.widget.selection():
-#             self.tree_selection.append(self.widget.item(i)['values'][0])
-#         # you could use this method to create a floating window
-#         # that represents what is being dragged.
-#         # todo
-#
-#     def on_drag(self, event):
-#         # you could use this method to move a floating window that
-#         # represents what you're dragging
-#         # todo
-#         pass
-#
-#     def on_drop(self, event):
-#         # find the widget under the cursor
-#         x, y = event.widget.winfo_pointerxy()
-#         target = event.widget.winfo_containing(x, y)
-#         target_str = str(target)
-#         target_frame = str(self.target_frame) + ".!frame"
-#         if target_str == target_frame:
-#             for item in self.tree_selection:
-#                 self.target_frame.pack_trees([item, ], [None], self.clients_dictionary)
-#         self.tree_selection.clear()
-
-
 class ClientDragManager:
     def __init__(self,
                  target_frame):
@@ -92,15 +50,6 @@ class ClientDragManager:
         tree.grid(sticky='nsew')
         mouse_over.grid(sticky='nsew')
         self.target_frame.grid_tab_frame(frame)
-
-    # def create_new(self, parent, client, index):
-    #     frame = ClientTabFrame(parent, index)
-    #     tree = TabBarTree(frame, client)
-    #     mouse_over = TabTreeMouseOver(frame, tree)
-    #     tree.grid(sticky='nsew')
-    #     mouse_over.grid(sticky='nsew')
-    #     parent.grid_tab_frame(frame)
-    #     # print(self.target_frame)
 
 
 class CommandDragManager:
