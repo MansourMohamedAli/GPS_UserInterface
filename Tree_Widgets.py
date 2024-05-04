@@ -71,7 +71,7 @@ class CommandListTree(ttk.Treeview):
 
 
 class TabBarTree(ttk.Treeview):
-    def __init__(self, parent, client_name, command_list=None, tab_command_dict=None):
+    def __init__(self, parent, client_name, tab_command_dict, command_list=None):
         super().__init__(master=parent, columns=client_name, show='headings', bootstyle='primary')
         self.client_name = client_name
         self.heading(client_name, text=str(client_name))
@@ -80,7 +80,7 @@ class TabBarTree(ttk.Treeview):
         self.tree_name = "tab_tree"
         self.command_list = command_list
         self.tab_command_dict = tab_command_dict
-        self.init_dict()
+        self.bind('<Delete>', self.delete_row_keyboard_button)
 
         self.no_scroll_tags = self.bindtags()
         # Adding new tag for frame to allow scroll on TabTree and background.
@@ -93,10 +93,6 @@ class TabBarTree(ttk.Treeview):
         self.tree_select = self.bindtags() + ("tree_select",)
         self.bindtags(self.tree_select)
         self.populate_tree()
-
-    def init_dict(self):
-        if not self.tab_command_dict:
-            self.tab_command_dict = dict()
 
     def populate_tree(self):
         if self.command_list:
@@ -114,42 +110,8 @@ class TabBarTree(ttk.Treeview):
                 client_name = tree_info['client']
                 commands_dictionary = tree_info['tree_commands']
                 command_list = tree_info['command_list']
-                tab_tree_list.append(cls(parent_frame, client_name, command_list, commands_dictionary))
+                tab_tree_list.append(cls(parent_frame, client_name, commands_dictionary, command_list))
         return tab_tree_list
-
-        # @classmethod
-        # def from_json(cls,
-        #               parent,
-        #               clients_dictionary,
-        #               client_name,
-        #               command_name_value_pair):
-        # """
-        # Initializes tree in scroll frame "Tab Tree". Assigns tree heading with client name
-        # and initializes IP and MAC address using the client_dictionary.
-        #
-        # :param parent: The Client Tab Frame the tree is packed into.
-        # :param clients_dictionary: Dictionary containing IP, MAC definitions.
-        # :param client_name: The name of the client that this tree is made for.
-        # :param command_name_value_pair: A list of Command Name, Command Value pairs. This is
-        # passed here because the tree will modify it (adding and removing commands).
-        # :return: New TabBarTree instance.
-        # """
-        # ip_address, mac_address = clients_dictionary[client_name[0]]
-        #
-        # tree = cls(parent,
-        #            client_name,
-        #            ip_address,
-        #            mac_address,
-        #            command_name_value_pair)
-        #
-        # if command_name_value_pair[0]:
-        #     for name, value in command_name_value_pair:
-        #         cls.insert(tree, parent='', index=tk.END, values=[name])  # Insert name on to tree.
-        # else:
-        #     # This clears the "None" that appears at the beginning of the list.
-        #     # This line should execute when a new client is dropped in scroll frame.
-        #     cls.command_name_value_pair = list()
-        # return tree
 
     def enable_scroll(self, event):
         if not self.scroll_state:
@@ -166,21 +128,16 @@ class TabBarTree(ttk.Treeview):
     #     for h in self.client_name:
     #         self.heading(h, text=str(h))
 
-    def delete_row(self, event):
+    def delete_row_keyboard_button(self, event):
+        self.delete_row()
+
+    def delete_row(self):
         selected_items = self.selection()
-        for row in selected_items:
-            index = self.get_selected_row_number(row)
-            del self.tab_command_dict[index]
-            self.delete(row)
-
-    def get_selected_row_number(self, row):
-        """
-        Converts Tkinter 'I00*' notation to an integer.
-        :param row: Tkinter row number
-        :return: integer row number
-        """
-        return self.index(row)
-
+        for command in selected_items:
+            command_full_tree_info = self.item(command)
+            command_name = command_full_tree_info['values'][0]
+            del self.tab_command_dict[command_name]
+            self.delete(command)
 
 class ClientTabFrame(ttk.Frame):
     def __init__(self, parent, index):
@@ -274,9 +231,7 @@ class TabTreeMouseOver(ttk.Frame):
             self.client_tab_tree.move(row, "", self.client_tab_tree.index(row) + 1)
 
     def delete_command(self):
-        selected_items = self.client_tab_tree.selection()
-        for command in selected_items:
-            self.client_tab_tree.delete(command)
+        self.client_tab_tree.delete_row()
 
     def mouse_over(self, event):
         self.buttons_frame.grid(row=1, sticky='nsew')

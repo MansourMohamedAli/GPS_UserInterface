@@ -254,9 +254,10 @@ class Configuration(ttk.Frame):
         self.buttons_list = [self.move_left_button, self.delete_button, self.move_right_button]
         self.bind_class("tree_select", '<Button-1>', self.enable_nav_buttons)
 
-    @staticmethod
-    def write_json():
+    def write_json(self):
         with open('commandconfig_configtest.json', 'w') as f:
+            for tab in self.tabs_list:
+                print(tab.winfo_children())
             json.dump(ConfigurationManager.configurations, f, indent=2)
 
     @classmethod
