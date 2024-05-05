@@ -256,8 +256,6 @@ class Configuration(ttk.Frame):
 
     def write_json(self):
         with open('commandconfig_configtest.json', 'w') as f:
-            for tab in self.tabs_list:
-                print(tab.winfo_children())
             json.dump(ConfigurationManager.configurations, f, indent=2)
 
     @classmethod
@@ -308,14 +306,40 @@ class Configuration(ttk.Frame):
     def delete_client(self):
         if self.active_tab_tree_frame:
             self.unpack_client_frame()
+            index_to_delete = None
             for index, client_tab_frame in enumerate(self.active_scroll_frame.client_tab_frame_list):
                 if client_tab_frame.index == self.active_tab_tree_frame.index:
+                    index_to_delete = index + 1
                     del self.active_scroll_frame.client_tab_frame_list[index]
+                    del self.tabs_info[self.active_scroll_frame.tab_name][str(index + 1)]
 
             for client_tab_frame in self.active_scroll_frame.client_tab_frame_list:
                 if client_tab_frame.index > self.active_tab_tree_frame.index:
                     client_tab_frame.index -= 1
-                    print(f'After reducing: {client_tab_frame.index}\n')
+            print(index_to_delete)
+            temp_dict = dict()
+            for index, (key, value) in enumerate(self.tabs_info[self.active_scroll_frame.tab_name].items()):
+                if int(key) > index_to_delete:
+                    print(key, index_to_delete)
+                    # del self.tabs_info[self.active_scroll_frame.tab_name][key]
+                    # self.tabs_info[self.active_scroll_frame.tab_name][str(int(key) - 1)] = self.tabs_info[self.active_scroll_frame.tab_name].pop(key)
+                    temp_dict[index] = self.tabs_info[self.active_scroll_frame.tab_name][key]
+                    # self.tabs_info[self.active_scroll_frame.tab_name][int(key) - 1] = value
+            print(temp_dict)
+
+            # Reorder client index numbers:
+            # clients_to_reindex = list()
+            # for key, value in self.tabs_info[self.active_scroll_frame.tab_name].items():
+            #     clients_to_reindex.append(value)
+            # self.tabs_info[self.active_scroll_frame.tab_name] = None
+            # for index, item in enumerate(clients_to_reindex):
+            #     self.tabs_info[self.active_scroll_frame.tab_name][index + 1] = item
+
+            # updated_tab_indices = self.tabs_info[self.active_scroll_frame.tab_name]
+            # self.tabs_info[self.active_scroll_frame.tab_name] = None
+
+
+
 
             self.re_sort(self.client_tab_frame_list)
             for client_tab_frame in self.client_tab_frame_list:
@@ -446,6 +470,7 @@ class ScrollFrame(ttk.Frame):
         self.tab_data = tab_data
         self.client_tab_frame_list = list()
         self.client_tab_tree_index = 0
+        self.tab_tree_list = list()
         # canvas
         self.canvas = tk.Canvas(self)
         self.canvas.pack(expand=True, fill='both')
@@ -464,18 +489,17 @@ class ScrollFrame(ttk.Frame):
 
         # Creating tree frame:
         client_tab_frame_list = ClientTabFrame.from_tab_info(self.scroll_frame, self.tab_data)
-        tab_tree_list = TabBarTree.from_tab_data(client_tab_frame_list, self.tab_data)
-        tt_mouse_over_list = TabTreeMouseOver.from_client_tab_frame_list(client_tab_frame_list, tab_tree_list)
-        # self.client_tab_tree_index = len(client_tab_frame_list)
+        self.tab_tree_list = TabBarTree.from_tab_data(client_tab_frame_list, self.tab_data)
+        tt_mouse_over_list = TabTreeMouseOver.from_client_tab_frame_list(client_tab_frame_list, self.tab_tree_list)
 
         # packing trees and mouse_over frame to client tab_frame
-        for tree, mouse_over_frame in zip(tab_tree_list, tt_mouse_over_list):
+        for tree, mouse_over_frame in zip(self.tab_tree_list, tt_mouse_over_list):
             tree.grid(sticky='nsew')
 
         # put client_tab_frame on the scroll frame
         for tab_frame in client_tab_frame_list:
             self.grid_tab_frame(tab_frame)
-        # print(self.client_tab_tree_index)
+
         # events
         self.canvas.bind_class('scroll_frame_widgets', '<MouseWheel>',
                                lambda event: self.canvas.yview_scroll(-int(event.delta / 60), "units"))

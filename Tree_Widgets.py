@@ -76,7 +76,6 @@ class TabBarTree(ttk.Treeview):
         self.client_name = client_name
         self.heading(client_name, text=str(client_name))
         # self.get_tree_headings()
-        self.bind('<Delete>', self.delete_row)
         self.tree_name = "tab_tree"
         self.command_list = command_list
         self.tab_command_dict = tab_command_dict
@@ -138,6 +137,7 @@ class TabBarTree(ttk.Treeview):
             command_name = command_full_tree_info['values'][0]
             del self.tab_command_dict[command_name]
             self.delete(command)
+
 
 class ClientTabFrame(ttk.Frame):
     def __init__(self, parent, index):
