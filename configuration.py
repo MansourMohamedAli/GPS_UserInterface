@@ -72,6 +72,7 @@ class Configuration(ttk.Frame):
                  tabs_info,
                  m_config_selected):
         super().__init__(master=parent)
+        self.tab_trees_dict = None
         self.tab_id = None
 
         # self.minsize(400, 300)
@@ -83,6 +84,7 @@ class Configuration(ttk.Frame):
         self.active_tab_tree_frame = None
         self.client_tab_frame_list = None
         self.m_config_selected = m_config_selected
+
 
         self.tab_frame = ttk.Frame(self)
         self.side_bar_frame = ttk.Frame(self)
@@ -255,7 +257,7 @@ class Configuration(ttk.Frame):
         self.bind_class("tree_select", '<Button-1>', self.enable_nav_buttons)
 
     def write_json(self):
-        with open('commandconfig_configtest.json', 'w') as f:
+        with open('commandconfig.json', 'w') as f:
             json.dump(ConfigurationManager.configurations, f, indent=2)
 
     @classmethod
@@ -306,10 +308,12 @@ class Configuration(ttk.Frame):
     def delete_client(self):
         if self.active_tab_tree_frame:
             self.unpack_client_frame()
+            print(f'Before deleting: {self.tab_trees_dict.keys()}')
             for index, client_tab_frame in enumerate(self.active_scroll_frame.client_tab_frame_list):
                 if client_tab_frame.index == self.active_tab_tree_frame.index:
                     del self.active_scroll_frame.client_tab_frame_list[index]
-                    del self.tabs_info[self.active_scroll_frame.tab_name][str(index + 1)]
+                    del self.tab_trees_dict[str(index + 1)]
+            print(f'After deleting: {self.tab_trees_dict.keys()}')
 
             for client_tab_frame in self.active_scroll_frame.client_tab_frame_list:
                 if client_tab_frame.index > self.active_tab_tree_frame.index:
@@ -318,10 +322,10 @@ class Configuration(ttk.Frame):
             # Re-indexing trees to not have gaps in numbering by looping through dictionary and initializing
             # a new dictionary with the correct numbering as the key.
             temp_dict = dict()
-            for index, (key, value) in enumerate(self.tabs_info[self.active_scroll_frame.tab_name].items()):
-                temp_dict[index + 1] = self.tabs_info[self.active_scroll_frame.tab_name][key]
-            self.tabs_info[self.active_scroll_frame.tab_name] = temp_dict
-
+            for index, (key, value) in enumerate(self.tab_trees_dict.items()):
+                temp_dict[str(index + 1)] = self.tab_trees_dict[key]
+            self.tab_trees_dict = temp_dict
+            print(f'After shifting keys: {self.tab_trees_dict.keys()}')
             self.re_sort(self.client_tab_frame_list)
             for client_tab_frame in self.client_tab_frame_list:
                 row, column = self.get_row_and_column(client_tab_frame.index)
@@ -331,6 +335,7 @@ class Configuration(ttk.Frame):
             self.active_scroll_frame.reduce_tab_tree_index()
             # Get index of last frame as that is what determines the scroll area. Or I could count items in frame list.
             last_frame = len(self.client_tab_frame_list) - 1
+            # print(last_frame)
             last_row, last_column = self.get_row_and_column(last_frame)
             scroll_frame_height = (self.active_tab_tree_frame.winfo_height() * last_row
                                    + (last_row * 10))  # Row multiplied by pad (5 top + 5 bottom)
@@ -384,12 +389,11 @@ class Configuration(ttk.Frame):
             selected_tab = event.widget.select()
             self.tab_id = self.tabs_nb.index(selected_tab)
             scroll_frame = self.tabs_list[self.tab_id]
-            # todo Verify how class memory is managed. Is the old one being replaced?
-            # client_dnd = ClientDragManager(scroll_frame,
-            #                                self.clients_dictionary)
-            client_dnd = ClientDragManager(scroll_frame)
-            client_dnd.add_dragable(self.clients_tree)
             self.active_scroll_frame = scroll_frame
+            # Get the dictionary containing tree info for the selected tab.
+            self.tab_trees_dict = self.tabs_info[self.active_scroll_frame.tab_name]
+            client_dnd = ClientDragManager(scroll_frame, self.tab_trees_dict)
+            client_dnd.add_dragable(self.clients_tree)
             self.client_tab_frame_list = scroll_frame.client_tab_frame_list
 
     def insert_tab(self, window_instance, new_tab):
