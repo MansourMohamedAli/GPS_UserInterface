@@ -148,6 +148,23 @@
             ]
           },
           "2": {
+            "client": "VB2",
+            "tree_commands": {
+              "Load Graphic 11": "6",
+              "Load Graphic 7": "7",
+              "Load Graphic 8": "8",
+              "Load Graphic 9": "9",
+              "Load Graphic 10": "10"
+            },
+            "command_list": [
+              "Load Graphic 11",
+              "Load Graphic 7",
+              "Load Graphic 8",
+              "Load Graphic 9",
+              "Load Graphic 10"
+            ]
+          },
+          "3": {
             "client": "VB3",
             "tree_commands": {
               "Load Graphic 6": "0",
@@ -164,7 +181,7 @@
               "Load Graphic 10"
             ]
           },
-          "3": {
+          "4": {
             "client": "VB4",
             "tree_commands": {
               "Load Graphic 10": "10",

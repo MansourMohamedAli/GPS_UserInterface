@@ -306,40 +306,21 @@ class Configuration(ttk.Frame):
     def delete_client(self):
         if self.active_tab_tree_frame:
             self.unpack_client_frame()
-            index_to_delete = None
             for index, client_tab_frame in enumerate(self.active_scroll_frame.client_tab_frame_list):
                 if client_tab_frame.index == self.active_tab_tree_frame.index:
-                    index_to_delete = index + 1
                     del self.active_scroll_frame.client_tab_frame_list[index]
                     del self.tabs_info[self.active_scroll_frame.tab_name][str(index + 1)]
 
             for client_tab_frame in self.active_scroll_frame.client_tab_frame_list:
                 if client_tab_frame.index > self.active_tab_tree_frame.index:
                     client_tab_frame.index -= 1
-            print(index_to_delete)
+
+            # Re-indexing trees to not have gaps in numbering by looping through dictionary and initializing
+            # a new dictionary with the correct numbering as the key.
             temp_dict = dict()
             for index, (key, value) in enumerate(self.tabs_info[self.active_scroll_frame.tab_name].items()):
-                if int(key) > index_to_delete:
-                    print(key, index_to_delete)
-                    # del self.tabs_info[self.active_scroll_frame.tab_name][key]
-                    # self.tabs_info[self.active_scroll_frame.tab_name][str(int(key) - 1)] = self.tabs_info[self.active_scroll_frame.tab_name].pop(key)
-                    temp_dict[index] = self.tabs_info[self.active_scroll_frame.tab_name][key]
-                    # self.tabs_info[self.active_scroll_frame.tab_name][int(key) - 1] = value
-            print(temp_dict)
-
-            # Reorder client index numbers:
-            # clients_to_reindex = list()
-            # for key, value in self.tabs_info[self.active_scroll_frame.tab_name].items():
-            #     clients_to_reindex.append(value)
-            # self.tabs_info[self.active_scroll_frame.tab_name] = None
-            # for index, item in enumerate(clients_to_reindex):
-            #     self.tabs_info[self.active_scroll_frame.tab_name][index + 1] = item
-
-            # updated_tab_indices = self.tabs_info[self.active_scroll_frame.tab_name]
-            # self.tabs_info[self.active_scroll_frame.tab_name] = None
-
-
-
+                temp_dict[index + 1] = self.tabs_info[self.active_scroll_frame.tab_name][key]
+            self.tabs_info[self.active_scroll_frame.tab_name] = temp_dict
 
             self.re_sort(self.client_tab_frame_list)
             for client_tab_frame in self.client_tab_frame_list:
