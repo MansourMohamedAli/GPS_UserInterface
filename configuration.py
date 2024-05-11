@@ -308,24 +308,22 @@ class Configuration(ttk.Frame):
     def delete_client(self):
         if self.active_tab_tree_frame:
             self.unpack_client_frame()
-            print(f'Before deleting: {self.tab_trees_dict.keys()}')
             for index, client_tab_frame in enumerate(self.active_scroll_frame.client_tab_frame_list):
                 if client_tab_frame.index == self.active_tab_tree_frame.index:
                     del self.active_scroll_frame.client_tab_frame_list[index]
                     del self.tab_trees_dict[str(index + 1)]
-            print(f'After deleting: {self.tab_trees_dict.keys()}')
 
             for client_tab_frame in self.active_scroll_frame.client_tab_frame_list:
                 if client_tab_frame.index > self.active_tab_tree_frame.index:
                     client_tab_frame.index -= 1
-
+            print(self.active_tab_tree_frame.index)
             # Re-indexing trees to not have gaps in numbering by looping through dictionary and initializing
-            # a new dictionary with the correct numbering as the key.
+            # a new dictionary with the correct numbering as the key. Then updating with temp dictionary.
             temp_dict = dict()
             for index, (key, value) in enumerate(self.tab_trees_dict.items()):
                 temp_dict[str(index + 1)] = self.tab_trees_dict[key]
-            self.tab_trees_dict = temp_dict
-            print(f'After shifting keys: {self.tab_trees_dict.keys()}')
+            self.tab_trees_dict.clear()
+            self.tab_trees_dict.update(temp_dict)
             self.re_sort(self.client_tab_frame_list)
             for client_tab_frame in self.client_tab_frame_list:
                 row, column = self.get_row_and_column(client_tab_frame.index)

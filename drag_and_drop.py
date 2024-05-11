@@ -35,7 +35,7 @@ class ClientDragManager:
     def on_drop(self, event):
         # find the widget under the cursor
         # print(list(self.tab_trees_dict.keys())[-1])
-        print(len(self.tab_trees_dict.keys()))
+        # print(len(self.tab_trees_dict.keys()))
         x, y = event.widget.winfo_pointerxy()
         target = event.widget.winfo_containing(x, y)
         target_str = str(target)
@@ -46,6 +46,7 @@ class ClientDragManager:
         self.tree_selection.clear()
 
     def create_new(self, client):
+        print(self.target_frame.client_tab_tree_index)
         frame = ClientTabFrame(self.target_frame.scroll_frame, self.target_frame.client_tab_tree_index)
         tree = TabBarTree(frame, client, dict())
         self.tab_trees_dict[str(len(self.tab_trees_dict.keys()) + 1)] = {"client": client,
