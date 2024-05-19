@@ -166,6 +166,7 @@ class Configuration(ttk.Frame):
 
         self.tabs_nb = ttk.Notebook(self.tab_frame, width=1080)
         self.tabs_nb.bind("<B1-Motion>", self.reorder)
+        self.tabs_nb.bind("<ButtonRelease-1>", self.reorder_save)
         tab_style = ttk.Style()
         tab_style.configure('TNotebook', tabposition='new')
         # tab_style.configure('TNotebook', tabposition='en')
@@ -255,11 +256,21 @@ class Configuration(ttk.Frame):
         self.buttons_list = [self.move_left_button, self.delete_button, self.move_right_button]
         self.bind_class("tree_select", '<Button-1>', self.enable_nav_buttons)
 
+    def reorder_save(self, event):
+        # print(self.tabs_info)
+        tab_names = [self.tabs_nb.tab(i, option="text") for i in self.tabs_nb.tabs()]
+        temp_dict = dict()
+        for tab in tab_names:
+            temp_dict[tab] = self.tabs_info[tab]
+        self.tabs_info = temp_dict
+        print(self.tabs_info)
+            # print(f'{tab}:{self.tabs_info[tab]}')
+        # print(self.tabs_list)
+
     def reorder(self, event):
         try:
             index = self.tabs_nb.index(f"@{event.x},{event.y}")
             self.tabs_nb.insert(index, child=self.tabs_nb.select())
-
         except tk.TclError:
             pass
 
