@@ -16,6 +16,7 @@ class ConfigurationManager(ttk.Toplevel):
         super().__init__()
         self.title('Configuration')
         self.geometry("1340x600")
+        self.geometry("2000x1000")
         self.resizable(True, True)
         ConfigurationManager.configurations = configurations
 
@@ -89,7 +90,7 @@ class Configuration(ttk.Frame):
 
         self.rowconfigure(1, weight=10)
         self.columnconfigure(0, weight=1)
-        self.columnconfigure(1, weight=1)
+        self.columnconfigure(1, weight=3)
 
         # Side Bar Configuration
         self.side_bar_frame.rowconfigure(0, weight=1)
@@ -164,7 +165,7 @@ class Configuration(ttk.Frame):
         self.tab_frame.columnconfigure(2, weight=5, uniform='a')
 
         self.tabs_nb = ttk.Notebook(self.tab_frame, width=1080)
-
+        self.tabs_nb.bind("<B1-Motion>", self.reorder)
         tab_style = ttk.Style()
         tab_style.configure('TNotebook', tabposition='new')
         # tab_style.configure('TNotebook', tabposition='en')
@@ -253,6 +254,14 @@ class Configuration(ttk.Frame):
 
         self.buttons_list = [self.move_left_button, self.delete_button, self.move_right_button]
         self.bind_class("tree_select", '<Button-1>', self.enable_nav_buttons)
+
+    def reorder(self, event):
+        try:
+            index = self.tabs_nb.index(f"@{event.x},{event.y}")
+            self.tabs_nb.insert(index, child=self.tabs_nb.select())
+
+        except tk.TclError:
+            pass
 
     def write_json(self):
         with open('commandconfig_configtest.json', 'w') as f:
