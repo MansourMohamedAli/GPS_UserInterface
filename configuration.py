@@ -316,7 +316,9 @@ class Configuration(ttk.Frame):
             for client_tab_frame in self.active_scroll_frame.client_tab_frame_list:
                 if client_tab_frame.index > self.active_tab_tree_frame.index:
                     client_tab_frame.index -= 1
-            print(self.active_tab_tree_frame.index)
+
+            # print(self.active_scroll_frame.client_tab_tree_index)
+            # self.active_scroll_frame.client_tab_tree_index -= 1
             # Re-indexing trees to not have gaps in numbering by looping through dictionary and initializing
             # a new dictionary with the correct numbering as the key. Then updating with temp dictionary.
             temp_dict = dict()
@@ -327,6 +329,7 @@ class Configuration(ttk.Frame):
             self.re_sort(self.client_tab_frame_list)
             for client_tab_frame in self.client_tab_frame_list:
                 row, column = self.get_row_and_column(client_tab_frame.index)
+                # print(row, column)
                 self.repack_client_frame(client_tab_frame, row, column)
 
             # drop tab tree index by one so next client dragged and dropped doesn't skip a number
@@ -549,6 +552,8 @@ class ScrollFrame(ttk.Frame):
 
     def grid_tab_frame(self, tab_frame):
         client_tab_frame_row, client_tab_frame_col = self.assign_row_column(self.client_tab_tree_index)
+        print(self.client_tab_tree_index)
+        print(client_tab_frame_row,client_tab_frame_col)
         self.scroll_frame.rowconfigure(client_tab_frame_row)
         tab_frame.grid(row=client_tab_frame_row, column=client_tab_frame_col,
                        padx=5,
