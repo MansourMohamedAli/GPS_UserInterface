@@ -257,15 +257,13 @@ class Configuration(ttk.Frame):
         self.bind_class("tree_select", '<Button-1>', self.enable_nav_buttons)
 
     def reorder_save(self, event):
-        # print(self.tabs_info)
         tab_names = [self.tabs_nb.tab(i, option="text") for i in self.tabs_nb.tabs()]
         temp_dict = dict()
         for tab in tab_names:
             temp_dict[tab] = self.tabs_info[tab]
-        self.tabs_info = temp_dict
-        print(self.tabs_info)
-            # print(f'{tab}:{self.tabs_info[tab]}')
-        # print(self.tabs_list)
+        self.tabs_info.clear()
+        for tab in tab_names:
+            self.tabs_info[tab] = temp_dict[tab]
 
     def reorder(self, event):
         try:
