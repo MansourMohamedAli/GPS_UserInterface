@@ -1,6 +1,6 @@
 import tkinter as tk
 import ttkbootstrap as ttk
-from add_button_dlg import CommandWindow, ClientWindow, NewTabWindow
+from add_button_dlg import CommandWindow, ClientWindow, NewTabWindow, RenameTabWindow
 from drag_and_drop import CommandDragManager, ClientDragManager
 from Tree_Widgets import ClientListTree, CommandListTree, TabBarTree, ClientTabFrame, TabTreeMouseOver
 from math import floor
@@ -167,6 +167,7 @@ class Configuration(ttk.Frame):
         self.tabs_nb = ttk.Notebook(self.tab_frame, width=1080)
         self.tabs_nb.bind("<B1-Motion>", self.reorder)
         self.tabs_nb.bind("<ButtonRelease-1>", self.reorder_save)
+        self.tabs_nb.bind("<Double-Button-1>", self.change_tab_name)
         tab_style = ttk.Style()
         tab_style.configure('TNotebook', tabposition='new')
         # tab_style.configure('TNotebook', tabposition='en')
@@ -255,6 +256,9 @@ class Configuration(ttk.Frame):
 
         self.buttons_list = [self.move_left_button, self.delete_button, self.move_right_button]
         self.bind_class("tree_select", '<Button-1>', self.enable_nav_buttons)
+
+    def change_tab_name(self, event):
+        RenameTabWindow(self.tabs_nb, self.tab_id)
 
     def reorder_save(self, event):
         tab_names = [self.tabs_nb.tab(i, option="text") for i in self.tabs_nb.tabs()]
@@ -586,45 +590,12 @@ class ScrollFrame(ttk.Frame):
         :param tab_frame_index: ScrollFrame attribute, Frame that tree and buttons are packed into.
         :return: row and column for frame that contains tree and buttons,
         """
-        # row = (floor(int(tab_frame.index) / 5)) + 1
-        # column = (int(tab_frame.index) % 5) + 1
         row = (floor(tab_frame_index / 5)) + 1
         column = (tab_frame_index % 5) + 1
         return row, column
 
     def reduce_tab_tree_index(self):
         self.client_tab_tree_index -= 1
-
-    # def pack_trees(self, client_name, tab_commands, clients_dictionary):
-    #     # todo simplify code below. client_tab_tree and TabTreeMouseOver can called from ClientTabFrame Class.
-    #     client_tab_frame = ClientTabFrame(self.scroll_frame, self.client_tab_tree_index)
-    #     client_tab_tree = TabBarTree.from_json(client_tab_frame,
-    #                                            clients_dictionary,
-    #                                            client_name,
-    #                                            tab_commands)
-    #     client_tab_frame_row, client_tab_frame_col = self.assign_row_column(client_tab_tree, self.client_tab_tree_index)
-    #     self.scroll_frame.rowconfigure(client_tab_frame_row)
-    #     client_tab_tree.grid(row=0, sticky='nsew')
-    #
-    #     TabTreeMouseOver(client_tab_frame,
-    #                      client_tab_tree)
-    #
-    #     tree_pad_x = 5
-    #     tree_pad_y = 5
-    #
-    #     client_tab_frame.grid(row=client_tab_frame_row, column=client_tab_frame_col,
-    #                           padx=tree_pad_x,
-    #                           pady=tree_pad_y,
-    #                           sticky="nsew")
-    #
-    #     self.scroll_frame.grid_propagate(False)
-    #     self.scroll_frame.update_idletasks()
-    #     scroll_frame_height = (client_tab_frame.winfo_height() * client_tab_frame_row
-    #                            + ((client_tab_frame_row * 2) * tree_pad_y))
-    #     self.update_scroll_area(scroll_frame_height)
-    #     self.client_tab_frame_list.append(client_tab_frame)
-    #     self.client_tab_tree_index += 1
-
 
 class WindowMenu(ttk.Menu):
     def __init__(self):

@@ -261,3 +261,48 @@ class NewTabWindow(tk.Toplevel):
         self.labels_frame.grid(row=0, column=0, rowspan=2, sticky='nsew')
         self.text_frame.grid(row=0, column=1, rowspan=2, sticky='nsew')
         self.buttons_frame.grid(row=1, column=1, sticky='nsew')
+
+
+class RenameTabWindow(tk.Toplevel):
+    def __init__(self, tabs_nb, tab_id):
+        super().__init__()
+        self.title('Rename Tab')
+        self.geometry("500x75")
+        self.tabs_nb = tabs_nb
+        self.tab_id = tab_id
+
+        # Frame for left text
+        self.labels_frame = ttk.Frame(self)
+        # Command Name Label
+        self.tab_name_label = ttk.Label(self.labels_frame, text="Tab Name:")
+        # Placing Labels
+        self.tab_name_label.place(relx=0.1, rely=0.1)
+        # Frame for text entries
+        self.text_frame = ttk.Frame(self)
+        # Text box for commands
+        self.tab_name_entry = tk.Entry(self.text_frame, width=53)
+        # Placing Text Boxes
+        self.tab_name_entry.place(relx=0, rely=0.1)
+        # Button Frame
+        self.buttons_frame = ttk.Frame(self)
+        # Done button
+
+        #
+        self.done_button = ttk.Button(self.buttons_frame,
+                                      text="Done",
+                                      command=lambda: self.rename_tab(self.tab_name_entry.get()))
+        # Placing Buttons
+        self.done_button.place(relx=0.125, rely=0)
+        # Configuring Grid
+        self.rowconfigure(0, weight=1)
+        self.rowconfigure(1, weight=1)
+        self.columnconfigure(0, weight=1)
+        self.columnconfigure(1, weight=3)
+
+        self.labels_frame.grid(row=0, column=0, rowspan=2, sticky='nsew')
+        self.text_frame.grid(row=0, column=1, rowspan=2, sticky='nsew')
+        self.buttons_frame.grid(row=1, column=1, sticky='nsew')
+        # print(self.tabs_nb.tab(self.tab_id, 'text'))
+
+    def rename_tab(self, entry):
+        self.tabs_nb.tab(self.tab_id, text=entry)

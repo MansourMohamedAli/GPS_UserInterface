@@ -225,14 +225,9 @@ class CommandButtons(ttk.Button):
 
     def create_commands_list(self):
         for index, (client, command_name_list) in enumerate(zip(self.clients, self.command_name_lists)):
-            # print(client)
-            # print(command_name_list)
             for command_name in command_name_list:
                 self.client_list.append(client)
                 self.command_list.append(self.commands_dict[index][command_name])
-
-
-
 
     @classmethod
     def from_buttons_info(cls, buttons_info, menu_frame):
