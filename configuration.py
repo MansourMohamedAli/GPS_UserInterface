@@ -258,7 +258,7 @@ class Configuration(ttk.Frame):
         self.bind_class("tree_select", '<Button-1>', self.enable_nav_buttons)
 
     def change_tab_name(self, event):
-        RenameTabWindow(self.tabs_nb, self.tab_id)
+        RenameTabWindow(self.tabs_nb, self.tab_id, self.tabs_info)
 
     def reorder_save(self, event):
         tab_names = [self.tabs_nb.tab(i, option="text") for i in self.tabs_nb.tabs()]
@@ -277,7 +277,7 @@ class Configuration(ttk.Frame):
             pass
 
     def write_json(self):
-        with open('commandconfig_configtest.json', 'w') as f:
+        with open('commandconfig.json', 'w') as f:
             json.dump(ConfigurationManager.configurations, f, indent=2)
 
     @classmethod

@@ -264,12 +264,13 @@ class NewTabWindow(tk.Toplevel):
 
 
 class RenameTabWindow(tk.Toplevel):
-    def __init__(self, tabs_nb, tab_id):
+    def __init__(self, tabs_nb, tab_id, tabs_info):
         super().__init__()
         self.title('Rename Tab')
-        self.geometry("500x75")
+        self.geometry("600x100")
         self.tabs_nb = tabs_nb
         self.tab_id = tab_id
+        self.tabs_info = tabs_info
 
         # Frame for left text
         self.labels_frame = ttk.Frame(self)
@@ -292,17 +293,28 @@ class RenameTabWindow(tk.Toplevel):
                                       text="Done",
                                       command=lambda: self.rename_tab(self.tab_name_entry.get()))
         # Placing Buttons
-        self.done_button.place(relx=0.125, rely=0)
+        # self.done_button.pack(expand=True, fill='both')
+        self.done_button.pack()
         # Configuring Grid
         self.rowconfigure(0, weight=1)
-        self.rowconfigure(1, weight=1)
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=3)
+        self.columnconfigure(1, weight=3)
 
-        self.labels_frame.grid(row=0, column=0, rowspan=2, sticky='nsew')
-        self.text_frame.grid(row=0, column=1, rowspan=2, sticky='nsew')
-        self.buttons_frame.grid(row=1, column=1, sticky='nsew')
+        self.labels_frame.grid(row=0, column=0, rowspan=1, sticky='nsew')
+        self.text_frame.grid(row=0, column=1, rowspan=1, sticky='nsew')
+        self.buttons_frame.grid(row=0, column=2, sticky='nsew')
         # print(self.tabs_nb.tab(self.tab_id, 'text'))
 
     def rename_tab(self, entry):
-        self.tabs_nb.tab(self.tab_id, text=entry)
+        old_key = self.tabs_nb.tab(self.tab_id, 'text')
+        if entry:
+            self.tabs_nb.tab(self.tab_id, text=entry)
+            self.tabs_info[entry] = self.tabs_info.pop(old_key)
+            tab_names = [self.tabs_nb.tab(i, option="text") for i in self.tabs_nb.tabs()]
+            temp_dict = dict()
+            for tab in tab_names:
+                temp_dict[tab] = self.tabs_info[tab]
+            self.tabs_info.clear()
+            for tab in tab_names:
+                self.tabs_info[tab] = temp_dict[tab]
