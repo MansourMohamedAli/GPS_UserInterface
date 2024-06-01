@@ -4,11 +4,13 @@ from Tree_Widgets import ClientTabFrame, TabBarTree, TabTreeMouseOver
 
 class ClientDragManager:
     def __init__(self,
-                 target_frame):
+                 target_frame,
+                 tab_trees_dict):
 
         self.widget = None
         self.tree_selection = list()
         self.target_frame = target_frame
+        self.tab_trees_dict = tab_trees_dict
 
     def add_dragable(self, widget):
         self.widget = widget
@@ -42,8 +44,12 @@ class ClientDragManager:
         self.tree_selection.clear()
 
     def create_new(self, client):
+        # print(self.target_frame.client_tab_tree_index)
         frame = ClientTabFrame(self.target_frame.scroll_frame, self.target_frame.client_tab_tree_index)
         tree = TabBarTree(frame, client, dict())
+        self.tab_trees_dict[str(len(self.tab_trees_dict.keys()) + 1)] = {"client": client,
+                                                                         "tree_commands": dict(),
+                                                                         "command_list": list()}
         mouse_over = TabTreeMouseOver(frame, tree)
         tree.grid(sticky='nsew')
         mouse_over.grid(sticky='nsew')
