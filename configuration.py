@@ -569,7 +569,11 @@ class ScrollFrame(ttk.Frame):
 
     def grid_tab_frame(self, tab_frame):
         client_tab_frame_row, client_tab_frame_col = self.assign_row_column(self.client_tab_tree_index)
-        self.scroll_frame.rowconfigure(client_tab_frame_row)
+        self.scroll_frame.columnconfigure(1, weight=1, uniform='a')
+        self.scroll_frame.columnconfigure(2, weight=1, uniform='a')
+        self.scroll_frame.columnconfigure(3, weight=1, uniform='a')
+        self.scroll_frame.columnconfigure(4, weight=1, uniform='a')
+        self.scroll_frame.columnconfigure(5, weight=1, uniform='a')
         tab_frame.grid(row=client_tab_frame_row, column=client_tab_frame_col,
                        padx=5,
                        pady=5,
@@ -581,7 +585,6 @@ class ScrollFrame(ttk.Frame):
         self.update_scroll_area(scroll_frame_height)
         self.client_tab_frame_list.append(tab_frame)
         self.client_tab_tree_index += 1
-
 
     @staticmethod
     def assign_row_column(tab_frame_index):
@@ -596,6 +599,7 @@ class ScrollFrame(ttk.Frame):
 
     def reduce_tab_tree_index(self):
         self.client_tab_tree_index -= 1
+
 
 class WindowMenu(ttk.Menu):
     def __init__(self):
