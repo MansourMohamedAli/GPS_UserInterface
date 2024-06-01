@@ -407,9 +407,7 @@ class Configuration(ttk.Frame):
             self.tab_id = self.tabs_nb.index(selected_tab)
             scroll_frame = self.tabs_list[self.tab_id]
             # todo Verify how class memory is managed. Is the old one being replaced?
-            # client_dnd = ClientDragManager(scroll_frame,
-            #                                self.clients_dictionary)
-            client_dnd = ClientDragManager(scroll_frame)
+            client_dnd = ClientDragManager(scroll_frame, self.tabs_info[scroll_frame.tab_name])
             client_dnd.add_dragable(self.clients_tree)
             self.active_scroll_frame = scroll_frame
             self.client_tab_frame_list = scroll_frame.client_tab_frame_list
