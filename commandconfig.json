@@ -130,182 +130,48 @@
       "tabs_info": {
         "tab 1": {
           "1": {
-            "client": "VB1",
-            "tree_commands": {
-              "Load Graphic 1": "test1",
-              "Load Graphic 2": "test2",
-              "Load Graphic 3": "test3",
-              "Load Graphic 4": "test4",
-              "Load Graphic 5": "test5"
-            },
-            "command_list": [
-              "Load Graphic 1",
-              "Load Graphic 1",
-              "Load Graphic 2",
-              "Load Graphic 3",
-              "Load Graphic 4",
-              "Load Graphic 5"
-            ]
-          },
-          "2": {
             "client": "VB2",
             "tree_commands": {
-              "Load Graphic 11": "6",
-              "Load Graphic 7": "7",
-              "Load Graphic 8": "8",
-              "Load Graphic 9": "9",
-              "Load Graphic 10": "10"
+              "Load Graphic 1": "111",
+              "Load Graphic 2": "222",
+              "Load Graphic 3": "333"
             },
-            "command_list": [
-              "Load Graphic 11",
-              "Load Graphic 7",
-              "Load Graphic 8",
-              "Load Graphic 9",
-              "Load Graphic 10"
-            ]
+            "command_list": []
+          },
+          "2": {
+            "client": "VB7",
+            "tree_commands": {},
+            "command_list": []
           },
           "3": {
-            "client": "VB3",
-            "tree_commands": {
-              "Load Graphic 6": "0",
-              "Load Graphic 7": "00",
-              "Load Graphic 8": "000",
-              "Load Graphic 9": "0000",
-              "Load Graphic 10": "00000"
-            },
-            "command_list": [
-              "Load Graphic 6",
-              "Load Graphic 7",
-              "Load Graphic 8",
-              "Load Graphic 9",
-              "Load Graphic 10"
-            ]
+            "client": "VB1",
+            "tree_commands": {},
+            "command_list": []
           },
           "4": {
+            "client": "VB2",
+            "tree_commands": {},
+            "command_list": []
+          },
+          "5": {
+            "client": "VB3",
+            "tree_commands": {},
+            "command_list": []
+          },
+          "6": {
             "client": "VB4",
-            "tree_commands": {
-              "Load Graphic 10": "10",
-              "Load Graphic 11": "11",
-              "Load Graphic 12": "12",
-              "Load Graphic 13": "13",
-              "Load Graphic 14": "14"
-            },
-            "command_list": [
-              "Load Graphic 10",
-              "Load Graphic 11",
-              "Load Graphic 12",
-              "Load Graphic 13",
-              "Load Graphic 14"
-            ]
-          }
-        },
-        "tab 2": {
-          "1": {
-            "client": "VB17",
-            "tree_commands": {
-              "Load Graphic 6": "666",
-              "Load Graphic 7": "777",
-              "Load Graphic 8": "888",
-              "Load Graphic 9": "999",
-              "Load Graphic 10": "1000"
-            },
-            "command_list": [
-              "Load Graphic 6",
-              "Load Graphic 7",
-              "Load Graphic 8",
-              "Load Graphic 9",
-              "Load Graphic 10"
-            ]
+            "tree_commands": {},
+            "command_list": []
           },
-          "2": {
-            "client": "VB18",
-            "tree_commands": {
-              "Load Graphic 6": "666",
-              "Load Graphic 7": "777",
-              "Load Graphic 8": "888",
-              "Load Graphic 9": "999",
-              "Load Graphic 10": "1000"
-            },
-            "command_list": [
-              "Load Graphic 6",
-              "Load Graphic 7",
-              "Load Graphic 8",
-              "Load Graphic 9",
-              "Load Graphic 10"
-            ]
-          }
-        },
-        "sadfas": {
-          "1": {
-            "client": "VB19",
-            "tree_commands": {
-              "Load Graphic 6": "666",
-              "Load Graphic 7": "777",
-              "Load Graphic 8": "888",
-              "Load Graphic 9": "999",
-              "Load Graphic 10": "1000"
-            },
-            "command_list": [
-              "Load Graphic 6",
-              "Load Graphic 7",
-              "Load Graphic 8",
-              "Load Graphic 9",
-              "Load Graphic 10"
-            ]
+          "7": {
+            "client": "VB5",
+            "tree_commands": {},
+            "command_list": []
           },
-          "2": {
-            "client": "VB20",
-            "tree_commands": {
-              "Load Graphic 6": "666",
-              "Load Graphic 7": "777",
-              "Load Graphic 8": "888",
-              "Load Graphic 9": "999",
-              "Load Graphic 10": "1000"
-            },
-            "command_list": [
-              "Load Graphic 6",
-              "Load Graphic 7",
-              "Load Graphic 8",
-              "Load Graphic 9",
-              "Load Graphic 10"
-            ]
-          }
-        },
-        "tab 4": {
-          "1": {
-            "client": "VB19",
-            "tree_commands": {
-              "name 1": "name 1",
-              "name 2": "name 2",
-              "name 3": "name 3",
-              "name 4": "name 4",
-              "name 5": "name 5"
-            },
-            "command_list": [
-              "name 1",
-              "name 2",
-              "name 2",
-              "name 3",
-              "name 4",
-              "name 5"
-            ]
-          },
-          "2": {
-            "client": "VB20",
-            "tree_commands": {
-              "Load Graphic 6": "666",
-              "Load Graphic 7": "777",
-              "Load Graphic 8": "888",
-              "Load Graphic 9": "999",
-              "Load Graphic 10": "1000"
-            },
-            "command_list": [
-              "Load Graphic 6",
-              "Load Graphic 7",
-              "Load Graphic 8",
-              "Load Graphic 9",
-              "Load Graphic 10"
-            ]
+          "8": {
+            "client": "VB6",
+            "tree_commands": {},
+            "command_list": []
           }
         }
       }

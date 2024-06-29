@@ -154,6 +154,7 @@ class ClientTabFrame(ttk.Frame):
         tab_frame_list = list()
         if tab_data:
             for index in tab_data:
+                # print(index)
                 tab_frame_list.append(cls(parent, index))
         return tab_frame_list
 

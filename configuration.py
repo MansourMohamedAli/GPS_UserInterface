@@ -16,7 +16,7 @@ class ConfigurationManager(ttk.Toplevel):
         super().__init__()
         self.title('Configuration')
         self.geometry("1340x600")
-        self.geometry("2000x1000")
+        # self.geometry("2000x1000")
         self.resizable(True, True)
         ConfigurationManager.configurations = configurations
 
@@ -341,18 +341,19 @@ class Configuration(ttk.Frame):
             # a new dictionary with the correct numbering as the key.
             temp_dict = dict()
             for index, (key, value) in enumerate(self.tabs_info[self.active_scroll_frame.tab_name].items()):
-                temp_dict[index + 1] = self.tabs_info[self.active_scroll_frame.tab_name][key]
-            self.tabs_info[self.active_scroll_frame.tab_name] = temp_dict
-
+                temp_dict[str(index + 1)] = self.tabs_info[self.active_scroll_frame.tab_name][key]
+            self.tabs_info[self.active_scroll_frame.tab_name].update(temp_dict)
             self.re_sort(self.client_tab_frame_list)
             for client_tab_frame in self.client_tab_frame_list:
                 row, column = self.get_row_and_column(client_tab_frame.index)
                 self.repack_client_frame(client_tab_frame, row, column)
 
             # drop tab tree index by one so next client dragged and dropped doesn't skip a number
-            self.active_scroll_frame.reduce_tab_tree_index()
+            # self.active_scroll_frame.reduce_tab_tree_index()
+            self.active_scroll_frame.client_tab_tree_index -= 1
+
             # Get index of last frame as that is what determines the scroll area. Or I could count items in frame list.
-            last_frame = len(self.client_tab_frame_list) - 1
+            last_frame = len(self.client_tab_frame_list) + 1
             last_row, last_column = self.get_row_and_column(last_frame)
             scroll_frame_height = (self.active_tab_tree_frame.winfo_height() * last_row
                                    + (last_row * 10))  # Row multiplied by pad (5 top + 5 bottom)
@@ -397,8 +398,8 @@ class Configuration(ttk.Frame):
 
     @staticmethod
     def get_row_and_column(client_frame_index):
-        row = (floor(client_frame_index / 5)) + 1
-        column = (client_frame_index % 5) + 1
+        row = (floor((client_frame_index - 1) / 5)) + 1
+        column = ((client_frame_index - 1) % 5) + 1
         return row, column
 
     def on_tab_selected(self, event):
