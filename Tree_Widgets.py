@@ -218,7 +218,6 @@ class TabTreeMouseOver(ttk.Frame):
         tt_mouse_over_list = list()
         for frame, tree in zip(client_tab_frame_list, tab_tree_list):
             tt_mouse_over_list.append(cls(frame, tree))
-        # print(tt_mouse_over_list)
         return tt_mouse_over_list
 
     def move_up(self):

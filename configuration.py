@@ -262,6 +262,8 @@ class Configuration(ttk.Frame):
 
     def reorder_save(self, event):
         tab_names = [self.tabs_nb.tab(i, option="text") for i in self.tabs_nb.tabs()]
+        print(tab_names)
+        print(self.tabs_info)
         temp_dict = dict()
         for tab in tab_names:
             temp_dict[tab] = self.tabs_info[tab]
@@ -419,6 +421,8 @@ class Configuration(ttk.Frame):
                               self.clients_dictionary)
             self.tabs_list.append(tab)
             self.tabs_nb.add(tab, text=f'{new_tab}')
+            #TODO Create proper structure
+            self.tabs_info[new_tab] = dict()
         window_instance.destroy()
 
     def insert_another_tab(self, new_tab):
