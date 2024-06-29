@@ -253,7 +253,7 @@ class Configuration(ttk.Frame):
         self.tabs_list = ScrollFrame.from_tabs_info(self.tabs_nb, self.tabs_info)
         for tab in self.tabs_list:
             self.tabs_nb.add(tab, text=f'{tab.tab_name}')
-            tab.initialize_scroll_height()
+            tab.update_scroll_height()
 
         self.buttons_list = [self.move_left_button, self.delete_button, self.move_right_button]
         self.bind_class("tree_select", '<Button-1>', self.enable_nav_buttons)
@@ -352,11 +352,10 @@ class Configuration(ttk.Frame):
                 self.repack_client_frame(client_tab_frame, row, column)
 
             # drop tab tree index by one so next client dragged and dropped doesn't skip a number
-            # self.active_scroll_frame.reduce_tab_tree_index()
             self.active_scroll_frame.client_tab_tree_index -= 1
 
             # Get index of last frame as that is what determines the scroll area. Or I could count items in frame list.
-            self.active_scroll_frame.initialize_scroll_height()
+            self.active_scroll_frame.update_scroll_height()
             # Setting active_tab_tree_frame to none.
             self.active_tab_tree_frame = None
 
@@ -503,15 +502,15 @@ class ScrollFrame(ttk.Frame):
         for tab_frame in client_tab_frame_list:
             row, column = self.get_row_and_column(tab_frame.index)
             self.grid_tab_frame(tab_frame, row, column)
-            self.client_tab_frame_list.append(tab_frame)
-            self.client_tab_tree_index += 1
+            # self.client_tab_frame_list.append(tab_frame)
+            # self.client_tab_tree_index += 1
 
         # events
         self.canvas.bind_class('scroll_frame_widgets', '<MouseWheel>',
                                lambda event: self.canvas.yview_scroll(-int(event.delta / 60), "units"))
         self.bind('<Configure>', self.update_scroll_area_resize_event)
 
-    def initialize_scroll_height(self):
+    def update_scroll_height(self):
         self.update_idletasks()
         scroll_frame_height = (self.scroll_frame.grid_bbox()[-1])
         self.update_scroll_area(scroll_frame_height)
@@ -581,47 +580,15 @@ class ScrollFrame(ttk.Frame):
         column = ((client_frame_index - 1) % 5) + 1
         return row, column
 
-    @staticmethod
-    def grid_tab_frame(client_tab_frame, row, column):
+    def grid_tab_frame(self, client_tab_frame, row, column):
         tree_pad_x = 5
         tree_pad_y = 5
         client_tab_frame.grid(row=row, column=column,
                               padx=tree_pad_x,
                               pady=tree_pad_y,
                               sticky="nsew")
-
-    # def grid_tab_frame(self, tab_frame):
-    #     client_tab_frame_row, client_tab_frame_col = self.assign_row_column(self.client_tab_tree_index)
-    #     self.scroll_frame.columnconfigure(1, weight=1, uniform='a')
-    #     self.scroll_frame.columnconfigure(2, weight=1, uniform='a')
-    #     self.scroll_frame.columnconfigure(3, weight=1, uniform='a')
-    #     self.scroll_frame.columnconfigure(4, weight=1, uniform='a')
-    #     self.scroll_frame.columnconfigure(5, weight=1, uniform='a')
-    #     tab_frame.grid(row=client_tab_frame_row, column=client_tab_frame_col,
-    #                    padx=5,
-    #                    pady=5,
-    #                    sticky="nsew")
-    #     self.scroll_frame.grid_propagate(False)
-    #     self.scroll_frame.update_idletasks()
-    #     scroll_frame_height = (tab_frame.winfo_height() * client_tab_frame_row
-    #                            + ((client_tab_frame_row * 2) * 5))
-    #     self.update_scroll_area(scroll_frame_height)
-    #     self.client_tab_frame_list.append(tab_frame)
-    #     self.client_tab_tree_index += 1
-    #
-    # @staticmethod
-    # def assign_row_column(tab_frame_index):
-    #     """
-    #     ScrollFrame needs to be in charge of managing its trees.
-    #     :param tab_frame_index: ScrollFrame attribute, Frame that tree and buttons are packed into.
-    #     :return: row and column for frame that contains tree and buttons,
-    #     """
-    #     row = (floor(tab_frame_index / 5)) + 1
-    #     column = (tab_frame_index % 5) + 1
-    #     return row, column
-
-    def reduce_tab_tree_index(self):
-        self.client_tab_tree_index -= 1
+        self.client_tab_frame_list.append(client_tab_frame)
+        self.client_tab_tree_index += 1
 
 
 class WindowMenu(ttk.Menu):

@@ -52,7 +52,9 @@ class ClientDragManager:
         mouse_over = TabTreeMouseOver(frame, tree)
         tree.grid(sticky='nsew')
         mouse_over.grid(sticky='nsew')
-        self.target_frame.grid_tab_frame(frame)
+        row, column = self.target_frame.get_row_and_column(frame.index)
+        self.target_frame.grid_tab_frame(frame, row, column)
+        self.target_frame.update_scroll_height()
 
 
 class CommandDragManager:
