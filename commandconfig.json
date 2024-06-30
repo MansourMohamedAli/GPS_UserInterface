@@ -129,78 +129,28 @@
       },
       "tabs_info": {
         "tab 1": {
-          "3": {
-            "client": "VB6",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "4": {
-            "client": "VB3",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "5": {
-            "client": "VB6",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "9": {
-            "client": "VB2",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "14": {
-            "client": "VB5",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "15": {
-            "client": "VB6",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "2": {
+          "1": {
             "client": "VB1",
             "tree_commands": {},
             "command_list": []
           },
-          "6": {
-            "client": "VB6",
+          "2": {
+            "client": "VB2",
             "tree_commands": {},
             "command_list": []
           },
-          "10": {
-            "client": "VB6",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "8": {
-            "client": "VB6",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "1": {
-            "client": "VB5",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "7": {
-            "client": "VB4",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "13": {
-            "client": "VB6",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "12": {
+          "3": {
             "client": "VB3",
             "tree_commands": {},
             "command_list": []
           },
-          "11": {
-            "client": "VB6",
+          "4": {
+            "client": "VB4",
+            "tree_commands": {},
+            "command_list": []
+          },
+          "5": {
+            "client": "VB5",
             "tree_commands": {},
             "command_list": []
           }

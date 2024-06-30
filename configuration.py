@@ -15,7 +15,8 @@ class ConfigurationManager(ttk.Toplevel):
     def __init__(self, configurations):
         super().__init__()
         self.title('Configuration')
-        self.geometry("1340x600")
+        # self.geometry("1340x600")
+        self.geometry("1080x700-1910-670")
         # self.geometry("2000x1000")
         self.resizable(True, True)
         ConfigurationManager.configurations = configurations
@@ -470,6 +471,7 @@ class ScrollFrame(ttk.Frame):
         self.list_height = 0
         self.tab_name = tab_name
         self.tab_data = tab_data
+        print(tab_data)
         self.client_tab_frame_list = list()
         self.client_tab_tree_index = 0
         self.tab_tree_list = list()
@@ -502,8 +504,6 @@ class ScrollFrame(ttk.Frame):
         for tab_frame in client_tab_frame_list:
             row, column = self.get_row_and_column(tab_frame.index)
             self.grid_tab_frame(tab_frame, row, column)
-            # self.client_tab_frame_list.append(tab_frame)
-            # self.client_tab_tree_index += 1
 
         # events
         self.canvas.bind_class('scroll_frame_widgets', '<MouseWheel>',
