@@ -92,18 +92,7 @@ class TabBarTree(ttk.Treeview):
         self.tree_select = self.bindtags() + ("tree_select",)
         self.bindtags(self.tree_select)
         self.populate_tree()
-        self.clean_dict()
-
-    def clean_dict(self):
-        """
-        Clean up commands in command dictionary that aren't in the list
-        """
-        temp_dict = dict()
-        for key, value in self.tab_command_dict.items():
-            if key in self.command_list:
-                temp_dict[key] = value
-        self.tab_command_dict.clear()
-        self.tab_command_dict.update(temp_dict)
+        self.update_dict()
 
     def populate_tree(self):
         if self.command_list:
@@ -149,6 +138,39 @@ class TabBarTree(ttk.Treeview):
             command_name = command_full_tree_info['values'][0]
             del self.tab_command_dict[command_name]
             self.delete(command)
+        self.update_command_list()
+
+    def update_command_list(self):
+        """
+        Clears list and repacks in order of tree widget children.
+        """
+        self.command_list.clear()
+        for child in self.get_children():
+            command_full_tree_info = self.item(child)
+            command_name = command_full_tree_info['values'][0]
+            self.command_list.append(command_name)
+
+    def update_dict(self):
+        """
+        Re-ordering dictionary. Not necessary but it's nice to have dictionary
+        in same order as command list (excluding repeat commands).
+        """
+        temp_dict = dict()
+        for command in self.command_list:
+            temp_dict[command] = self.tab_command_dict[command]
+        self.tab_command_dict.clear()
+        self.tab_command_dict.update(temp_dict)
+
+    # def clean_dict(self):
+    #     """
+    #     Clean up commands in command dictionary that aren't in the list
+    #     """
+    #     temp_dict = dict()
+    #     for key, value in self.tab_command_dict.items():
+    #         if key in self.command_list:
+    #             temp_dict[key] = value
+    #     self.tab_command_dict.clear()
+    #     self.tab_command_dict.update(temp_dict)
 
 
 class ClientTabFrame(ttk.Frame):
@@ -235,11 +257,15 @@ class TabTreeMouseOver(ttk.Frame):
         rows = self.client_tab_tree.selection()
         for row in rows:
             self.client_tab_tree.move(row, "", self.client_tab_tree.index(row) - 1)
+        self.client_tab_tree.update_command_list()
+        self.client_tab_tree.update_dict()
 
     def move_down(self):
         rows = self.client_tab_tree.selection()
         for row in reversed(rows):
             self.client_tab_tree.move(row, "", self.client_tab_tree.index(row) + 1)
+        self.client_tab_tree.update_command_list()
+        self.client_tab_tree.update_dict()
 
     def delete_command(self):
         self.client_tab_tree.delete_row()
