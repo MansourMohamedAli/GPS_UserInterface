@@ -315,6 +315,7 @@ class Configuration(ttk.Frame):
         if self.active_tab_tree_frame:
             self.shift_index_up()
             self.re_sort(self.client_tab_frame_list)
+            self.re_sort_dict()
             self.unpack_client_frame()
             for client_tab_frame in self.client_tab_frame_list:
                 row, column = self.get_row_and_column(client_tab_frame.index)
@@ -323,6 +324,7 @@ class Configuration(ttk.Frame):
     def move_left(self):
         if self.active_tab_tree_frame:
             self.shift_index_down()
+            self.re_sort_dict()
             self.re_sort(self.client_tab_frame_list)
             self.unpack_client_frame()
             for client_tab_frame in self.client_tab_frame_list:
@@ -341,12 +343,14 @@ class Configuration(ttk.Frame):
                 if client_tab_frame.index > self.active_tab_tree_frame.index:
                     client_tab_frame.index -= 1
 
-            # Re-indexing trees to not have gaps in numbering by looping through dictionary and initializing
-            # a new dictionary with the correct numbering as the key.
-            temp_dict = dict()
-            for index, (key, value) in enumerate(self.tabs_info[self.active_scroll_frame.tab_name].items()):
-                temp_dict[str(index + 1)] = self.tabs_info[self.active_scroll_frame.tab_name][key]
-            self.tabs_info[self.active_scroll_frame.tab_name].update(temp_dict)
+            # # Re-indexing trees to not have gaps in numbering by looping through dictionary and initializing
+            # # a new dictionary with the correct numbering as the key.
+            # temp_dict = dict()
+            # for index, (key, value) in enumerate(self.tabs_info[self.active_scroll_frame.tab_name].items()):
+            #     temp_dict[str(index + 1)] = self.tabs_info[self.active_scroll_frame.tab_name][key]
+            # self.tabs_info[self.active_scroll_frame.tab_name].clear()
+            # self.tabs_info[self.active_scroll_frame.tab_name].update(temp_dict)
+            self.re_sort_dict()
             self.re_sort(self.client_tab_frame_list)
             for client_tab_frame in self.client_tab_frame_list:
                 row, column = self.get_row_and_column(client_tab_frame.index)
@@ -359,6 +363,15 @@ class Configuration(ttk.Frame):
             self.active_scroll_frame.update_scroll_height()
             # Setting active_tab_tree_frame to none.
             self.active_tab_tree_frame = None
+
+    def re_sort_dict(self):
+        # Re-indexing trees to not have gaps in numbering by looping through dictionary and initializing
+        # a new dictionary with the correct numbering as the key.
+        temp_dict = dict()
+        for index, (key, value) in enumerate(self.tabs_info[self.active_scroll_frame.tab_name].items()):
+            temp_dict[str(index + 1)] = self.tabs_info[self.active_scroll_frame.tab_name][key]
+        self.tabs_info[self.active_scroll_frame.tab_name].clear()
+        self.tabs_info[self.active_scroll_frame.tab_name].update(temp_dict)
 
     def shift_index_up(self):
         try:
@@ -376,7 +389,7 @@ class Configuration(ttk.Frame):
             if client_tab_frame.index == (self.active_tab_tree_frame.index - 1):  # One below
                 client_tab_frame.index += 1
         self.active_tab_tree_frame.index -= 1
-        self.active_tab_tree_frame.index = max(self.active_tab_tree_frame.index, 0)  # Limit to 0
+        self.active_tab_tree_frame.index = max(self.active_tab_tree_frame.index, 1)  # Limit to 0
 
     def unpack_client_frame(self):
         for frame in self.client_tab_frame_list:
@@ -418,7 +431,7 @@ class Configuration(ttk.Frame):
                               self.clients_dictionary)
             self.tabs_list.append(tab)
             self.tabs_nb.add(tab, text=f'{new_tab}')
-            #TODO Create proper structure
+            # TODO Create proper structure
             self.tabs_info[new_tab] = dict()
         window_instance.destroy()
 
@@ -471,7 +484,6 @@ class ScrollFrame(ttk.Frame):
         self.list_height = 0
         self.tab_name = tab_name
         self.tab_data = tab_data
-        print(tab_data)
         self.client_tab_frame_list = list()
         self.client_tab_tree_index = 0
         self.tab_tree_list = list()
@@ -604,3 +616,8 @@ class WindowMenu(ttk.Menu):
         help_menu = ttk.Menu(self, tearoff=False)
         help_menu.add_command(label='Help entry', command=lambda: print("test"))
         self.add_cascade(label='Help', menu=help_menu)
+
+
+if __name__ == "__main__":
+    ConfigurationManager.from_json('commandconfig.json')
+

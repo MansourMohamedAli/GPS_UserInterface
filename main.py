@@ -43,7 +43,6 @@ class App(ttk.Window):
             return
         else:
             # Setting new active config
-            print(selected_config)
             App.active_config_name = selected_config
             self.write_active_config()
             # Getting Config Data
@@ -52,7 +51,7 @@ class App(ttk.Window):
             # Destroying old config window
             self.menu.destroy()
             # Loading Configuration with new configuration data
-            self.menu = Menu(self,buttons_info, self.config_selected)
+            self.menu = Menu(self, buttons_info, self.config_selected)
 
     def write_active_config(self):
         self.configurations['active_config'] = self.active_config_name
@@ -246,5 +245,5 @@ class CommandButtons(ttk.Button):
             button_frames_list.append(button_frame)
         return button_frames_list
 
-
-App('Glass Panel Control', (400, 500), 'darkly')
+if __name__ == "__main__":
+    App('Glass Panel Control', (400, 500), 'darkly')

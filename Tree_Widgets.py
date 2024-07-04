@@ -92,6 +92,18 @@ class TabBarTree(ttk.Treeview):
         self.tree_select = self.bindtags() + ("tree_select",)
         self.bindtags(self.tree_select)
         self.populate_tree()
+        self.clean_dict()
+
+    def clean_dict(self):
+        """
+        Clean up commands in command dictionary that aren't in the list
+        """
+        temp_dict = dict()
+        for key, value in self.tab_command_dict.items():
+            if key in self.command_list:
+                temp_dict[key] = value
+        self.tab_command_dict.clear()
+        self.tab_command_dict.update(temp_dict)
 
     def populate_tree(self):
         if self.command_list:

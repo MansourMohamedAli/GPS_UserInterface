@@ -130,9 +130,13 @@
       "tabs_info": {
         "tab 1": {
           "1": {
-            "client": "VB1",
-            "tree_commands": {},
-            "command_list": []
+            "client": "VB9",
+            "tree_commands": {
+              "Load Graphic 1": "111"
+            },
+            "command_list": [
+              "Load Graphic 1"
+            ]
           },
           "2": {
             "client": "VB2",
@@ -140,17 +144,17 @@
             "command_list": []
           },
           "3": {
-            "client": "VB3",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "4": {
             "client": "VB4",
             "tree_commands": {},
             "command_list": []
           },
-          "5": {
+          "4": {
             "client": "VB5",
+            "tree_commands": {},
+            "command_list": []
+          },
+          "5": {
+            "client": "VB6",
             "tree_commands": {},
             "command_list": []
           }

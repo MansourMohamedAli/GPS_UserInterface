@@ -95,7 +95,7 @@ class CommandDragManager:
                     command_value = self.commands_tree.command_dictionary[command_name]
                     # Add command names and commands to two separate lists.
                     target.tab_command_dict[command_name] = command_value
-                    print(target.tab_command_dict)
+                    target.command_list.append(command_name)
         except AttributeError:
             pass
         self.tree_selection.clear()
