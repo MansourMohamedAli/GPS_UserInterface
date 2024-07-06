@@ -617,6 +617,11 @@ class ScrollFrame(ttk.Frame):
     def grid_tab_frame(self, client_tab_frame, row, column):
         tree_pad_x = 5
         tree_pad_y = 5
+        self.scroll_frame.columnconfigure(1, weight=1, uniform='a')
+        self.scroll_frame.columnconfigure(2, weight=1, uniform='a')
+        self.scroll_frame.columnconfigure(3, weight=1, uniform='a')
+        self.scroll_frame.columnconfigure(4, weight=1, uniform='a')
+        self.scroll_frame.columnconfigure(5, weight=1, uniform='a')
         client_tab_frame.grid(row=row, column=column,
                               padx=tree_pad_x,
                               pady=tree_pad_y,
