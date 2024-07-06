@@ -41,6 +41,12 @@ class ConfigurationManager(ttk.Toplevel):
 
         self.get_dimensions()
 
+        if __name__ == "__main__":
+            self.main_loop()
+
+    def main_loop(self):
+        self.mainloop()
+
     def config_selected(self, config):
         selected_config = config.get()
         if selected_config == ConfigurationManager.active_config_name:
@@ -333,8 +339,8 @@ class Configuration(ttk.Frame):
     def move_left(self):
         if self.active_tab_tree_frame:
             self.shift_index_down()
-            self.re_sort_dict()
             self.re_sort(self.client_tab_frame_list)
+            self.re_sort_dict()
             self.unpack_client_frame()
             for client_tab_frame in self.client_tab_frame_list:
                 row, column = self.get_row_and_column(client_tab_frame.index)
@@ -343,10 +349,10 @@ class Configuration(ttk.Frame):
     def delete_client(self):
         if self.active_tab_tree_frame:
             self.unpack_client_frame()
-            for index, client_tab_frame in enumerate(self.active_scroll_frame.client_tab_frame_list):
+            for i, client_tab_frame in enumerate(self.active_scroll_frame.client_tab_frame_list):
                 if client_tab_frame.index == self.active_tab_tree_frame.index:
-                    del self.active_scroll_frame.client_tab_frame_list[index]
-                    del self.tabs_info[self.active_scroll_frame.tab_name][str(index + 1)]
+                    del self.active_scroll_frame.client_tab_frame_list[i]
+                    del self.tabs_info[self.active_scroll_frame.tab_name][str(i + 1)]
 
             for client_tab_frame in self.active_scroll_frame.client_tab_frame_list:
                 if client_tab_frame.index > self.active_tab_tree_frame.index:
@@ -386,19 +392,26 @@ class Configuration(ttk.Frame):
         try:
             # Making sure frame is not last.
             if self.active_tab_tree_frame.index < self.client_tab_frame_list[-1].index:
-                for client_tab_frame in self.client_tab_frame_list:
+                for i, client_tab_frame in enumerate(self.client_tab_frame_list):
                     if client_tab_frame.index == (self.active_tab_tree_frame.index + 1):  # One above
                         client_tab_frame.index -= 1
+                        temp = self.tabs_info[self.active_scroll_frame.tab_name][str(i)]
+                        self.tabs_info[self.active_scroll_frame.tab_name][str(i)] = self.tabs_info[self.active_scroll_frame.tab_name][str(i + 1)]
+                        self.tabs_info[self.active_scroll_frame.tab_name][str(i + 1)] = temp
                 self.active_tab_tree_frame.index += 1
         except IndexError or AttributeError:
             pass
 
     def shift_index_down(self):
-        for client_tab_frame in self.client_tab_frame_list:
+        for i, client_tab_frame in enumerate(self.client_tab_frame_list):
             if client_tab_frame.index == (self.active_tab_tree_frame.index - 1):  # One below
                 client_tab_frame.index += 1
+                temp = self.tabs_info[self.active_scroll_frame.tab_name][str(i + 1)]
+                self.tabs_info[self.active_scroll_frame.tab_name][str(i + 1)] = self.tabs_info[self.active_scroll_frame.tab_name][str(i + 2)]
+                self.tabs_info[self.active_scroll_frame.tab_name][str(i + 2)] = temp
         self.active_tab_tree_frame.index -= 1
         self.active_tab_tree_frame.index = max(self.active_tab_tree_frame.index, 1)  # Limit to 0
+
 
     def unpack_client_frame(self):
         for frame in self.client_tab_frame_list:
