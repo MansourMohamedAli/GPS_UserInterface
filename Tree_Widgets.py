@@ -205,14 +205,14 @@ class TabTreeMouseOver(ttk.Frame):
         self.client_tab_frame = client_tab_frame
         self.client_tab_tree = client_tab_tree
         self.m_delete_client = m_delete_client
-        self.buttons_frame = ttk.Frame(self.client_tab_frame)
+        self.buttons_frame = ttk.Frame(self)
         self.client_tab_frame.bind('<Enter>', self.mouse_over)
         self.client_tab_frame.bind('<Leave>', self.mouse_leave)
-        self.rowconfigure(0, weight=1, uniform='a')
-        self.columnconfigure(0, weight=1, uniform='a')
-        self.columnconfigure(1, weight=1, uniform='a')
-        self.columnconfigure(2, weight=1, uniform='a')
-        self.columnconfigure(3, weight=1, uniform='a')
+        self.buttons_frame.rowconfigure(0, weight=1, uniform='a')
+        self.buttons_frame.columnconfigure(0, weight=1, uniform='a')
+        self.buttons_frame.columnconfigure(1, weight=1, uniform='a')
+        self.buttons_frame.columnconfigure(2, weight=1, uniform='a')
+        self.buttons_frame.columnconfigure(3, weight=1, uniform='a')
         self.move_up_button = ttk.Button(self.buttons_frame,
                                          text="\u2B9D",
                                          width=5,
@@ -273,10 +273,18 @@ class TabTreeMouseOver(ttk.Frame):
         self.client_tab_tree.update_dict()
 
     def mouse_over(self, event):
-        self.buttons_frame.grid(row=1, sticky='nsew')
+        self.buttons_frame.pack()
+        # self.move_up_button.grid(row=0, column=0, sticky='nsew')
+        # self.move_down_button.grid(row=0, column=1, sticky='nsew')
+        # self.new_command_button.grid(row=0, column=2, sticky='nsew')
+        # self.del_command_button.grid(row=0, column=3, sticky='nsew')
 
     def mouse_leave(self, event):
-        self.buttons_frame.grid_forget()
+        self.buttons_frame.pack_forget()
+        # self.move_up_button.grid_forget()
+        # self.move_down_button.grid_forget()
+        # self.new_command_button.grid_forget()
+        # self.del_command_button.grid_forget()
 
     def insert_command(self, window_instance, new_command):
         if new_command:

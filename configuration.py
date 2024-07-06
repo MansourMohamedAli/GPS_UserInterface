@@ -520,7 +520,9 @@ class ScrollFrame(ttk.Frame):
 
         # packing trees and mouse_over frame to client tab_frame
         for tree, mouse_over_frame in zip(self.tab_tree_list, tt_mouse_over_list):
-            tree.grid(sticky='nsew')
+            tree.grid(row=0, sticky='nsew')
+            mouse_over_frame.grid(row=1, sticky='nsew')
+
 
         # put client_tab_frame on the scroll frame
         for tab_frame in client_tab_frame_list:
