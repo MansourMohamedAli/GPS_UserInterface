@@ -148,23 +148,34 @@
             ]
           },
           "2": {
-            "client": "VB2",
+            "client": "VB4",
             "tree_commands": {},
             "command_list": []
           },
           "3": {
-            "client": "VB7",
-            "tree_commands": {
-              "Load Graphic 4": "444"
-            },
-            "command_list": [
-              "Load Graphic 4"
-            ]
-          },
-          "4": {
-            "client": "VB8",
+            "client": "VB6",
             "tree_commands": {},
             "command_list": []
+          },
+          "4": {
+            "client": "VB3",
+            "tree_commands": {},
+            "command_list": []
+          },
+          "5": {
+            "client": "VB5",
+            "tree_commands": {
+              "Load Graphic 1": "111",
+              "Load Graphic 3": "333",
+              "Load Graphic 4": "444",
+              "Load Graphic 5": "555"
+            },
+            "command_list": [
+              "Load Graphic 1",
+              "Load Graphic 3",
+              "Load Graphic 4",
+              "Load Graphic 5"
+            ]
           }
         }
       }

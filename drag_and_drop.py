@@ -45,10 +45,13 @@ class ClientDragManager:
 
     def create_new(self, client):
         frame = ClientTabFrame(self.target_frame.scroll_frame, self.target_frame.client_tab_tree_index + 1)
-        tree = TabBarTree(frame, client, dict())
-        self.tab_trees_dict[str(frame.index)] = {"client": client,
-                                                 "tree_commands": dict(),
-                                                 "command_list": list()}
+        new_index = str(frame.index)
+        new_dict = dict()
+        new_list = list()
+        tree = TabBarTree(frame, client, new_dict, new_list)
+        self.tab_trees_dict[new_index] = {"client": client,
+                                          "tree_commands": new_dict,
+                                          "command_list": new_list}
         mouse_over = TabTreeMouseOver(frame, tree)
         tree.grid(sticky='nsew')
         mouse_over.grid(sticky='nsew')
@@ -96,7 +99,6 @@ class CommandDragManager:
                     # Add command names and commands to two separate lists.
                     target.tab_command_dict[command_name] = command_value
                     target.command_list.append(command_name)
-                    print(id(target.command_list))
         except AttributeError:
             pass
         self.tree_selection.clear()

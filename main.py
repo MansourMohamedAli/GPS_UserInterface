@@ -13,14 +13,15 @@ class App(ttk.Window):
     config_names = list()
     active_config_name = None
 
-    def __init__(self, title, dimensions, theme):
+    def __init__(self, title, theme):
         # main setup
         super().__init__(themename=theme)
         self.title(title)
-        self.geometry(f"{dimensions[0]}x{dimensions[1]}")
-        self.minsize(100, 100)
+        x, y = self.get_dimensions()
+        self.geometry(f'{int(x * 0.25)}x{int(y * 0.35)}')
+        self.minsize(int(x * 0.10), int(y * 0.15))
+        self.maxsize(int(x * 0.35), int(y * 0.45))
         # self.resizable(False, False)
-        self.maxsize(400, 500)
         self.configurations = self.load_data()
         App.config_names = list(self.configurations['configurations'].keys())
         App.active_config_name = self.configurations['active_config']
@@ -33,6 +34,11 @@ class App(ttk.Window):
         self.configure(menu=window_menu)
         # Run
         self.mainloop()
+
+    def get_dimensions(self):
+        x = self.winfo_screenwidth()
+        y = self.winfo_screenheight()
+        return x, y
 
     def get_tab_name(self):
         pass
@@ -246,4 +252,4 @@ class CommandButtons(ttk.Button):
         return button_frames_list
 
 if __name__ == "__main__":
-    App('Glass Panel Control', (400, 500), 'darkly')
+    App('Glass Panel Control', 'darkly')

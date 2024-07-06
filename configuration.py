@@ -16,11 +16,13 @@ class ConfigurationManager(ttk.Toplevel):
         super().__init__()
         self.title('Configuration')
         # self.geometry("1340x600")
-        self.geometry("1080x700-1910-670")
-        # self.geometry("2000x1000")
+        # self.geometry("1080x700-1910-670") #LEGION VERTICAL MONITOR
+        x, y = self.get_dimensions()
+        self.geometry(f'{int(x * 0.75)}x{int(y * 0.65)}')
+        self.minsize(int(x * 0.65), int(y * 0.55))
+        self.maxsize(int(x * 0.85), int(y * 0.75))
         self.resizable(True, True)
         ConfigurationManager.configurations = configurations
-
         ConfigurationManager.active_config_name = ConfigurationManager.configurations['active_config']
         active_config_data = ConfigurationManager.configurations['configurations'][
             ConfigurationManager.active_config_name]
@@ -36,6 +38,8 @@ class ConfigurationManager(ttk.Toplevel):
         # Menu
         menu = WindowMenu()
         self.configure(menu=menu)
+
+        self.get_dimensions()
 
     def config_selected(self, config):
         selected_config = config.get()
@@ -64,6 +68,11 @@ class ConfigurationManager(ttk.Toplevel):
             print(e)
         except json.decoder.JSONDecodeError as e:
             print(e)
+
+    def get_dimensions(self):
+        x = self.winfo_screenwidth()
+        y = self.winfo_screenheight()
+        return x, y
 
 
 class Configuration(ttk.Frame):
