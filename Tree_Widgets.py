@@ -198,11 +198,13 @@ class ClientTabFrame(ttk.Frame):
 class TabTreeMouseOver(ttk.Frame):
     def __init__(self,
                  client_tab_frame,
-                 client_tab_tree):
+                 client_tab_tree,
+                 m_delete_client):
         super().__init__(master=client_tab_frame)
 
         self.client_tab_frame = client_tab_frame
         self.client_tab_tree = client_tab_tree
+        self.m_delete_client = m_delete_client
         self.buttons_frame = ttk.Frame(self.client_tab_frame)
         self.client_tab_frame.bind('<Enter>', self.mouse_over)
         self.client_tab_frame.bind('<Leave>', self.mouse_leave)
@@ -233,7 +235,7 @@ class TabTreeMouseOver(ttk.Frame):
         self.del_command_button = ttk.Button(self.buttons_frame,
                                              text=u"\U0001F5D1",
                                              width=5,
-                                             command=self.delete_command,
+                                             command=lambda: self.m_delete_client(self.client_tab_frame),
                                              bootstyle='danger')
 
         self.move_up_button.grid(row=0, column=0, sticky='nsew')
@@ -250,10 +252,10 @@ class TabTreeMouseOver(ttk.Frame):
         self.bindtags(scroll_tags)
 
     @classmethod
-    def from_client_tab_frame_list(cls, client_tab_frame_list, tab_tree_list):
+    def from_client_tab_frame_list(cls, client_tab_frame_list, tab_tree_list, m_delete_client):
         tt_mouse_over_list = list()
         for frame, tree in zip(client_tab_frame_list, tab_tree_list):
-            tt_mouse_over_list.append(cls(frame, tree))
+            tt_mouse_over_list.append(cls(frame, tree, m_delete_client))
         return tt_mouse_over_list
 
     def move_up(self):
@@ -269,9 +271,6 @@ class TabTreeMouseOver(ttk.Frame):
             self.client_tab_tree.move(row, "", self.client_tab_tree.index(row) + 1)
         self.client_tab_tree.update_command_list()
         self.client_tab_tree.update_dict()
-
-    def delete_command(self):
-        self.client_tab_tree.delete_row()
 
     def mouse_over(self, event):
         self.buttons_frame.grid(row=1, sticky='nsew')

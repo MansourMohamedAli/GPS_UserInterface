@@ -196,11 +196,6 @@ class Configuration(ttk.Frame):
                                            command=lambda: self.move_left(),
                                            bootstyle="outline")
 
-        self.delete_button = ttk.Button(self.tab_frame,
-                                        text="\U0001F5D1",
-                                        command=lambda: self.delete_client(),
-                                        bootstyle="outline")
-
         self.move_right_button = ttk.Button(self.tab_frame,
                                             text="\u2B9E",
                                             command=lambda: self.move_right(),
@@ -209,8 +204,7 @@ class Configuration(ttk.Frame):
         # New and Delete Buttons for tabs.
         self.tabs_nb.grid(row=1, column=0, columnspan=3, sticky='nsew')
         self.move_left_button.grid(row=2, column=0, sticky='new')
-        self.delete_button.grid(row=2, column=1, sticky='new')
-        self.move_right_button.grid(row=2, column=2, sticky='new')
+        self.move_right_button.grid(row=2, column=1, sticky='new')
 
         # Packing Tab Frame Widgets
         self.button_frame = ttk.Frame(self.tab_frame)
@@ -221,8 +215,6 @@ class Configuration(ttk.Frame):
         # Binding for tree select
         self.tree_select = self.move_left_button.bindtags() + ("tree_select",)
         self.move_left_button.bindtags(self.tree_select)
-        self.tree_select = self.delete_button.bindtags() + ("tree_select",)
-        self.delete_button.bindtags(self.tree_select)
         self.tree_select = self.move_right_button.bindtags() + ("tree_select",)
         self.move_right_button.bindtags(self.tree_select)
 
@@ -266,12 +258,12 @@ class Configuration(ttk.Frame):
         self.side_bar_frame.grid(row=0, column=0, sticky='new', rowspan=3, padx=(5, 5))
 
         # Creating Tabs. Class method appends to tabs to list and returns list of tab objects
-        self.tabs_list = ScrollFrame.from_tabs_info(self.tabs_nb, self.tabs_info)
+        self.tabs_list = ScrollFrame.from_tabs_info(self.delete_client, self.tabs_nb, self.tabs_info)
         for tab in self.tabs_list:
             self.tabs_nb.add(tab, text=f'{tab.tab_name}')
             tab.update_scroll_height()
 
-        self.buttons_list = [self.move_left_button, self.delete_button, self.move_right_button]
+        self.buttons_list = [self.move_left_button, self.move_right_button]
         self.bind_class("tree_select", '<Button-1>', self.enable_nav_buttons)
 
     def change_tab_name(self, event):
@@ -346,38 +338,32 @@ class Configuration(ttk.Frame):
                 row, column = self.get_row_and_column(client_tab_frame.index)
                 self.repack_client_frame(client_tab_frame, row, column)
 
-    def delete_client(self):
-        if self.active_tab_tree_frame:
-            self.unpack_client_frame()
-            for i, client_tab_frame in enumerate(self.active_scroll_frame.client_tab_frame_list):
-                if client_tab_frame.index == self.active_tab_tree_frame.index:
-                    del self.active_scroll_frame.client_tab_frame_list[i]
-                    del self.tabs_info[self.active_scroll_frame.tab_name][str(i + 1)]
+    def delete_client(self, tree_frame):
+        '''
+        This will be passed to TabTreeMouse Over.
+        :return:None
+        '''
+        self.unpack_client_frame()
+        for i, client_tab_frame in enumerate(self.active_scroll_frame.client_tab_frame_list):
+            if client_tab_frame.index == tree_frame.index:
+                del self.active_scroll_frame.client_tab_frame_list[i]
+                del self.tabs_info[self.active_scroll_frame.tab_name][str(i + 1)]
 
-            for client_tab_frame in self.active_scroll_frame.client_tab_frame_list:
-                if client_tab_frame.index > self.active_tab_tree_frame.index:
-                    client_tab_frame.index -= 1
+        for client_tab_frame in self.active_scroll_frame.client_tab_frame_list:
+            if client_tab_frame.index > tree_frame.index:
+                client_tab_frame.index -= 1
 
-            # # Re-indexing trees to not have gaps in numbering by looping through dictionary and initializing
-            # # a new dictionary with the correct numbering as the key.
-            # temp_dict = dict()
-            # for index, (key, value) in enumerate(self.tabs_info[self.active_scroll_frame.tab_name].items()):
-            #     temp_dict[str(index + 1)] = self.tabs_info[self.active_scroll_frame.tab_name][key]
-            # self.tabs_info[self.active_scroll_frame.tab_name].clear()
-            # self.tabs_info[self.active_scroll_frame.tab_name].update(temp_dict)
-            self.re_sort_dict()
-            self.re_sort(self.client_tab_frame_list)
-            for client_tab_frame in self.client_tab_frame_list:
-                row, column = self.get_row_and_column(client_tab_frame.index)
-                self.repack_client_frame(client_tab_frame, row, column)
+        self.re_sort_dict()
+        self.re_sort(self.client_tab_frame_list)
+        for client_tab_frame in self.client_tab_frame_list:
+            row, column = self.get_row_and_column(client_tab_frame.index)
+            self.repack_client_frame(client_tab_frame, row, column)
 
-            # drop tab tree index by one so next client dragged and dropped doesn't skip a number
-            self.active_scroll_frame.client_tab_tree_index -= 1
+        # drop tab tree index by one so next client dragged and dropped doesn't skip a number
+        self.active_scroll_frame.client_tab_tree_index -= 1
 
-            # Get index of last frame as that is what determines the scroll area. Or I could count items in frame list.
-            self.active_scroll_frame.update_scroll_height()
-            # Setting active_tab_tree_frame to none.
-            self.active_tab_tree_frame = None
+        # Get index of last frame as that is what determines the scroll area. Or I could count items in frame list.
+        self.active_scroll_frame.update_scroll_height()
 
     def re_sort_dict(self):
         # Re-indexing trees to not have gaps in numbering by looping through dictionary and initializing
@@ -442,7 +428,7 @@ class Configuration(ttk.Frame):
             self.tab_id = self.tabs_nb.index(selected_tab)
             scroll_frame = self.tabs_list[self.tab_id]
             # todo Verify how class memory is managed. Is the old one being replaced?
-            client_dnd = ClientDragManager(scroll_frame, self.tabs_info[scroll_frame.tab_name])
+            client_dnd = ClientDragManager(scroll_frame, self.tabs_info[scroll_frame.tab_name], self.delete_client)
             client_dnd.add_dragable(self.clients_tree)
             self.active_scroll_frame = scroll_frame
             self.client_tab_frame_list = scroll_frame.client_tab_frame_list
@@ -499,11 +485,13 @@ class ScrollFrame(ttk.Frame):
     def __init__(self,
                  parent,
                  tab_name,
+                 m_delete_client,
                  tab_data=None):
         super().__init__(master=parent)
 
         # widget data
         self.list_height = 0
+        self.m_delete_client = m_delete_client
         self.tab_name = tab_name
         self.tab_data = tab_data
         self.client_tab_frame_list = list()
@@ -528,7 +516,7 @@ class ScrollFrame(ttk.Frame):
         # Creating tree frame:
         client_tab_frame_list = ClientTabFrame.from_tab_info(self.scroll_frame, self.tab_data)
         self.tab_tree_list = TabBarTree.from_tab_data(client_tab_frame_list, self.tab_data)
-        tt_mouse_over_list = TabTreeMouseOver.from_client_tab_frame_list(client_tab_frame_list, self.tab_tree_list)
+        tt_mouse_over_list = TabTreeMouseOver.from_client_tab_frame_list(client_tab_frame_list, self.tab_tree_list, self.m_delete_client)
 
         # packing trees and mouse_over frame to client tab_frame
         for tree, mouse_over_frame in zip(self.tab_tree_list, tt_mouse_over_list):
@@ -601,11 +589,12 @@ class ScrollFrame(ttk.Frame):
 
     @classmethod
     def from_tabs_info(cls,
+                       m_delete_client,
                        tabs_nb,
                        tabs_info):
         tabs_data_list = list()
         for tab_name, tab_data in tabs_info.items():
-            tabs_data_list.append(cls(tabs_nb, tab_name, tab_data))
+            tabs_data_list.append(cls(tabs_nb, tab_name, m_delete_client, tab_data))
         return tabs_data_list
 
     @staticmethod
