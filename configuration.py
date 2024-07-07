@@ -179,6 +179,7 @@ class Configuration(ttk.Frame):
         self.tab_frame.columnconfigure(0, weight=5, uniform='a')
         self.tab_frame.columnconfigure(1, weight=5, uniform='a')
         self.tab_frame.columnconfigure(2, weight=5, uniform='a')
+        self.tab_frame.columnconfigure(3, weight=5, uniform='a')
 
         self.tabs_nb = ttk.Notebook(self.tab_frame, width=1080)
         self.tabs_nb.bind("<B1-Motion>", self.reorder)
@@ -194,17 +195,19 @@ class Configuration(ttk.Frame):
         self.move_left_button = ttk.Button(self.tab_frame,
                                            text="\u2B9C",
                                            command=lambda: self.move_left(),
-                                           bootstyle="outline")
+                                           bootstyle="outline",
+                                           state="disabled")
 
         self.move_right_button = ttk.Button(self.tab_frame,
                                             text="\u2B9E",
                                             command=lambda: self.move_right(),
-                                            bootstyle="outline")
+                                            bootstyle="outline",
+                                            state="disabled")
 
         # New and Delete Buttons for tabs.
-        self.tabs_nb.grid(row=1, column=0, columnspan=3, sticky='nsew')
-        self.move_left_button.grid(row=2, column=0, sticky='new')
-        self.move_right_button.grid(row=2, column=1, sticky='new')
+        self.tabs_nb.grid(row=1, column=0, columnspan=4, sticky='nsew')
+        self.move_left_button.grid(row=2, column=0, columnspan=2, sticky='new')
+        self.move_right_button.grid(row=2, column=2, columnspan=2, sticky='new')
 
         # Packing Tab Frame Widgets
         self.button_frame = ttk.Frame(self.tab_frame)
@@ -232,7 +235,7 @@ class Configuration(ttk.Frame):
         self.new_tab_button.pack(expand=True, fill='both', side='right')
         self.delete_tab_button.pack(expand=True, fill='both', side='right')
 
-        self.button_frame.grid(row=0, column=2, sticky='se')
+        self.button_frame.grid(row=0, column=3, sticky='se')
 
         # Configuration Dropdown
         drop_down_frame = ttk.Frame(self.tab_frame)
@@ -311,17 +314,20 @@ class Configuration(ttk.Frame):
             for tree in self.active_scroll_frame.tab_tree_list:
                 if tree == target:
                     tree.disable_scroll()
+                    self.move_left_button.configure(state='enabled')
+                    self.move_right_button.configure(state='enabled')
                 else:
                     tree.enable_scroll()
         elif target in self.buttons_list:
             pass
         else:
             self.move_left_button.configure(state='disabled')
+            self.move_right_button.configure(state='disabled')
             self.active_tab_tree_frame = None
 
-    def on_start_hover(self, event):
-        if self.active_tab_tree_frame:
-            self.move_left_button.configure(state='enabled')
+    # def on_start_hover(self, event):
+    #     if self.active_tab_tree_frame:
+    #         self.move_left_button.configure(state='enabled')
 
     def move_right(self):
         if self.active_tab_tree_frame:
@@ -510,7 +516,7 @@ class ScrollFrame(ttk.Frame):
         self.scroll_frame = ttk.Frame(self)
 
         # Adding new tag for frame to allow scroll on TabTree and background.
-        self.new_tags = self.scroll_frame.bindtags() + ("scroll_frame_widgets",)
+        self.new_tags = self.scroll_frame.bindtags() + ("scroll_frame_widgets","tree_select",)
         self.scroll_frame.bindtags(self.new_tags)
 
         # scrollbar
