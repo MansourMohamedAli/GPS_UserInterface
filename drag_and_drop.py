@@ -60,6 +60,7 @@ class ClientDragManager:
         row, column = self.target_frame.get_row_and_column(frame.index)
         self.target_frame.grid_tab_frame(frame, row, column)
         self.target_frame.update_scroll_height()
+        self.target_frame.tab_tree_list.append(tree)
 
 
 class CommandDragManager:

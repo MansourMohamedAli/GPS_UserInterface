@@ -306,12 +306,17 @@ class Configuration(ttk.Frame):
         x, y = event.widget.winfo_pointerxy()
         target = event.widget.winfo_containing(x, y)
         master_target = event.widget.winfo_containing(x, y).master
-        # if master_target in self.client_tab_frame_list:
         if master_target in self.active_scroll_frame.client_tab_frame_list:
             self.active_tab_tree_frame = master_target
+            for tree in self.active_scroll_frame.tab_tree_list:
+                if tree == target:
+                    tree.disable_scroll()
+                else:
+                    tree.enable_scroll()
         elif target in self.buttons_list:
             pass
         else:
+            self.move_left_button.configure(state='disabled')
             self.active_tab_tree_frame = None
 
     def on_start_hover(self, event):

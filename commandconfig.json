@@ -164,7 +164,9 @@
               "Load Graphic 3": "333",
               "Load Graphic 4": "444",
               "Load Graphic 5": "555",
-              "sfdf": "sdfs"
+              "sfdf": "sdfs",
+              "test7": "etgsegf",
+              "test8": ""
             },
             "command_list": [
               "Load Graphic 1",
@@ -172,7 +174,15 @@
               "Load Graphic 3",
               "Load Graphic 4",
               "Load Graphic 5",
-              "sfdf"
+              "sfdf",
+              "Load Graphic 1",
+              "Load Graphic 2",
+              "Load Graphic 3",
+              "Load Graphic 4",
+              "Load Graphic 5",
+              "sfdf",
+              "test7",
+              "test8"
             ]
           },
           "4": {

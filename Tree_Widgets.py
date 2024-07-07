@@ -73,8 +73,6 @@ class CommandListTree(ttk.Treeview):
 class TabBarTree(ttk.Treeview):
     def __init__(self, parent, client_name, tab_command_dict, command_list):
         super().__init__(master=parent, columns=client_name, show='headings', bootstyle='primary')
-        # if command_list is None:
-        #     command_list = list()
         self.client_name = client_name
         self.heading(client_name, text=str(client_name))
         # self.get_tree_headings()
@@ -82,20 +80,16 @@ class TabBarTree(ttk.Treeview):
         self.command_list = command_list
         self.tab_command_dict = tab_command_dict
         self.bind('<Delete>', self.delete_row_keyboard_button)
+        self.tree_select = self.bindtags() + ("tree_select",)
+        self.bindtags(self.tree_select)
 
         self.no_scroll_tags = self.bindtags()
         # Adding new tag for frame to allow scroll on TabTree and background.
         self.scroll_tags = self.bindtags() + ("scroll_frame_widgets",)
         self.bindtags(self.scroll_tags)
-        self.bind('<ButtonPress-1>', self.enable_scroll)
-        self.bind('<<TreeviewSelect>>', self.disable_scroll)
         self.scroll_state = True
-
-        self.tree_select = self.bindtags() + ("tree_select",)
-        self.bindtags(self.tree_select)
         self.populate_tree()
         self.update_dict()
-        # print(id(command_list))
 
     def populate_tree(self):
         if self.command_list:
@@ -116,20 +110,14 @@ class TabBarTree(ttk.Treeview):
                 tab_tree_list.append(cls(parent_frame, client_name, commands_dictionary, command_list))
         return tab_tree_list
 
-    def enable_scroll(self, event):
-        if not self.scroll_state:
-            self.bindtags(self.scroll_tags)
-            self.selection_clear()
-            self.scroll_state = True
+    def enable_scroll(self):
+        self.bindtags(self.scroll_tags)
+        for item in self.selection():
+            self.selection_remove(item)
 
-    def disable_scroll(self, event):
-        if self.scroll_state:
-            self.bindtags(self.no_scroll_tags)
-            self.scroll_state = False
+    def disable_scroll(self):
+        self.bindtags(self.no_scroll_tags)
 
-    # def get_tree_headings(self):
-    #     for h in self.client_name:
-    #         self.heading(h, text=str(h))
 
     def delete_row_keyboard_button(self, event):
         self.delete_row()
