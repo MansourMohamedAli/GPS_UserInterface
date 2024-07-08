@@ -447,7 +447,8 @@ class Configuration(ttk.Frame):
     def insert_tab(self, window_instance, new_tab):
         if new_tab:
             tab = ScrollFrame(self.tabs_nb,
-                              self.clients_dictionary)
+                              new_tab,
+                              self.delete_client)
             self.tabs_list.append(tab)
             self.tabs_nb.add(tab, text=f'{new_tab}')
             # TODO Create proper structure
@@ -457,7 +458,8 @@ class Configuration(ttk.Frame):
     def insert_another_tab(self, new_tab):
         if new_tab:
             tab = ScrollFrame(self.tabs_nb,
-                              self.clients_tree)
+                              new_tab,
+                              self.delete_client)
             self.tabs_list.append(tab)
             self.tabs_nb.add(tab, text=f'{new_tab}')
 

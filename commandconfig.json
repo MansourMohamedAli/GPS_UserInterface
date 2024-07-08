@@ -123,101 +123,18 @@
       "commands": {
         "Load Graphic 1": "111",
         "Load Graphic 2": "222",
-        "Load Graphic 3": "333",
-        "Load Graphic 4": "444",
-        "Load Graphic 5": "555",
-        "sfdf": "sdfs",
         "test7": "etgsegf",
         "test8": ""
       },
       "tabs_info": {
-        "tab 1": {
+        "reerere": {
           "1": {
-            "client": "VB2",
-            "tree_commands": {
-              "Load Graphic 1": "111",
-              "Load Graphic 2": "222"
-            },
-            "command_list": [
-              "Load Graphic 1",
-              "Load Graphic 2"
-            ]
-          },
-          "2": {
             "client": "VB3",
-            "tree_commands": {
-              "Load Graphic 1": "111",
-              "Load Graphic 2": "222",
-              "Load Graphic 3": "333"
-            },
-            "command_list": [
-              "Load Graphic 1",
-              "Load Graphic 2",
-              "Load Graphic 3"
-            ]
-          },
-          "3": {
-            "client": "VB6",
-            "tree_commands": {
-              "Load Graphic 1": "111",
-              "Load Graphic 2": "222",
-              "Load Graphic 3": "333",
-              "Load Graphic 4": "444",
-              "Load Graphic 5": "555",
-              "sfdf": "sdfs",
-              "test7": "etgsegf",
-              "test8": ""
-            },
-            "command_list": [
-              "Load Graphic 1",
-              "Load Graphic 2",
-              "Load Graphic 3",
-              "Load Graphic 4",
-              "Load Graphic 5",
-              "sfdf",
-              "Load Graphic 1",
-              "Load Graphic 2",
-              "Load Graphic 3",
-              "Load Graphic 4",
-              "Load Graphic 5",
-              "sfdf",
-              "test7",
-              "test8"
-            ]
-          },
-          "4": {
-            "client": "VB7",
-            "tree_commands": {
-              "test7": "etgsegf"
-            },
-            "command_list": [
-              "test7"
-            ]
-          },
-          "5": {
-            "client": "VB8",
-            "tree_commands": {
-              "test8": "",
-              "sfdf": "sdfs",
-              "Load Graphic 1": "111",
-              "Load Graphic 2": "222",
-              "Load Graphic 3": "333",
-              "Load Graphic 4": "444",
-              "Load Graphic 5": "555",
-              "test7": "etgsegf"
-            },
-            "command_list": [
-              "test8",
-              "sfdf",
-              "Load Graphic 1",
-              "Load Graphic 2",
-              "Load Graphic 3",
-              "Load Graphic 4",
-              "Load Graphic 5",
-              "test7"
-            ]
+            "tree_commands": {},
+            "command_list": []
           }
-        }
+        },
+        "yee": {}
       }
     },
     "config 2": {
