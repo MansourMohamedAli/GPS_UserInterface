@@ -118,7 +118,6 @@ class TabBarTree(ttk.Treeview):
     def disable_scroll(self):
         self.bindtags(self.no_scroll_tags)
 
-
     def delete_row_keyboard_button(self, event):
         self.delete_row()
 
@@ -127,9 +126,9 @@ class TabBarTree(ttk.Treeview):
         for command in selected_items:
             command_full_tree_info = self.item(command)
             command_name = command_full_tree_info['values'][0]
-            del self.tab_command_dict[command_name]
             self.delete(command)
         self.update_command_list()
+        self.clean_dict()
 
     def update_command_list(self):
         """
@@ -168,7 +167,7 @@ class ClientTabFrame(ttk.Frame):
     def __init__(self, parent, index):
         super().__init__(master=parent)
         self.index = int(index)
-        self.rowconfigure(0, weight=6, uniform='a')
+        self.rowconfigure(0, weight=5, uniform='a')
         self.rowconfigure(1, weight=1, uniform='a')
         self.columnconfigure(0, weight=1, uniform='a')
         self.scroll_tags = self.bindtags() + ("scroll_frame_widgets",)
@@ -197,6 +196,7 @@ class TabTreeMouseOver(ttk.Frame):
         self.client_tab_frame.bind('<Enter>', self.mouse_over)
         self.client_tab_frame.bind('<Leave>', self.mouse_leave)
         self.buttons_frame.rowconfigure(0, weight=1, uniform='a')
+        self.buttons_frame.rowconfigure(1, weight=1, uniform='a')
         self.buttons_frame.columnconfigure(0, weight=1, uniform='a')
         self.buttons_frame.columnconfigure(1, weight=1, uniform='a')
         self.buttons_frame.columnconfigure(2, weight=1, uniform='a')
@@ -217,6 +217,7 @@ class TabTreeMouseOver(ttk.Frame):
                                              text="+",
                                              width=5,
                                              command=lambda: TabCommandDlg(self.client_tab_tree.tab_command_dict,
+                                                                           self.client_tab_tree.command_list,
                                                                            self.insert_command,
                                                                            self.insert_another_command),
                                              bootstyle='success')
@@ -226,10 +227,16 @@ class TabTreeMouseOver(ttk.Frame):
                                              command=lambda: self.m_delete_client(self.client_tab_frame),
                                              bootstyle='danger')
 
-        self.move_up_button.grid(row=0, column=0, sticky='nsew')
-        self.move_down_button.grid(row=0, column=1, sticky='nsew')
-        self.new_command_button.grid(row=0, column=2, sticky='nsew')
-        self.del_command_button.grid(row=0, column=3, sticky='nsew')
+        self.edit_command_button = ttk.Button(self.buttons_frame,
+                                             text="edit",
+                                             width=5,
+                                             bootstyle='danger')
+
+        self.move_up_button.grid(row=0, column=0, sticky='ew')
+        self.move_down_button.grid(row=1, column=0, sticky='ew')
+        self.edit_command_button.grid(row=0, column=1, rowspan=2, sticky='nsew')
+        self.new_command_button.grid(row=0, column=2, rowspan=2, sticky='nsew')
+        self.del_command_button.grid(row=0, column=3, rowspan=2,  sticky='nsew')
 
         # Binding Scroll to widgets
         scroll_tags = self.move_up_button.bindtags() + ("scroll_frame_widgets",)
@@ -261,18 +268,10 @@ class TabTreeMouseOver(ttk.Frame):
         self.client_tab_tree.update_dict()
 
     def mouse_over(self, event):
-        self.buttons_frame.pack()
-        # self.move_up_button.grid(row=0, column=0, sticky='nsew')
-        # self.move_down_button.grid(row=0, column=1, sticky='nsew')
-        # self.new_command_button.grid(row=0, column=2, sticky='nsew')
-        # self.del_command_button.grid(row=0, column=3, sticky='nsew')
+        self.buttons_frame.pack(expand=True, fill="both")
 
     def mouse_leave(self, event):
         self.buttons_frame.pack_forget()
-        # self.move_up_button.grid_forget()
-        # self.move_down_button.grid_forget()
-        # self.new_command_button.grid_forget()
-        # self.del_command_button.grid_forget()
 
     def insert_command(self, window_instance, new_command):
         if new_command:

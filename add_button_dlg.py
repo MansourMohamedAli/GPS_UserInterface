@@ -151,9 +151,10 @@ class CommandWindow(tk.Toplevel):
 
 
 class TabCommandDlg(tk.Toplevel):
-    def __init__(self, command_name_value_pair_list, m_insert_command, m_insert_another_command):
+    def __init__(self, tab_command_dict, command_list, m_insert_command, m_insert_another_command):
         super().__init__()
-        self.command_name_value_pair_list = command_name_value_pair_list
+        self.tab_command_dict = tab_command_dict
+        self.command_list = command_list
         self.m_insert_command = m_insert_command
         self.m_insert_another_command = m_insert_another_command
         self.title('Command Configuration')
@@ -210,8 +211,8 @@ class TabCommandDlg(tk.Toplevel):
         # Get Command name from entry.
         command_name = self.command_name_entry.get()
         command_text_box = self.command_text_box.get("1.0", "end-1c")
-        self.command_name_value_pair_list.append([command_name, command_text_box])
-        print(self.command_name_value_pair_list)
+        self.tab_command_dict[command_name] = command_text_box
+        self.command_list.append(command_name)
         return [command_name, command_text_box]
 
 
@@ -304,7 +305,6 @@ class RenameTabWindow(tk.Toplevel):
         self.labels_frame.grid(row=0, column=0, rowspan=1, sticky='nsew')
         self.text_frame.grid(row=0, column=1, rowspan=1, sticky='nsew')
         self.buttons_frame.grid(row=0, column=2, sticky='nsew')
-        # print(self.tabs_nb.tab(self.tab_id, 'text'))
 
     def rename_tab(self, entry):
         old_key = self.tabs_nb.tab(self.tab_id, 'text')

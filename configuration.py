@@ -274,8 +274,6 @@ class Configuration(ttk.Frame):
 
     def reorder_save(self, event):
         tab_names = [self.tabs_nb.tab(i, option="text") for i in self.tabs_nb.tabs()]
-        print(tab_names)
-        print(self.tabs_info)
         temp_dict = dict()
         for tab in tab_names:
             temp_dict[tab] = self.tabs_info[tab]
@@ -324,10 +322,6 @@ class Configuration(ttk.Frame):
             self.move_left_button.configure(state='disabled')
             self.move_right_button.configure(state='disabled')
             self.active_tab_tree_frame = None
-
-    # def on_start_hover(self, event):
-    #     if self.active_tab_tree_frame:
-    #         self.move_left_button.configure(state='enabled')
 
     def move_right(self):
         if self.active_tab_tree_frame:

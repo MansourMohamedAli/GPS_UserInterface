@@ -127,42 +127,22 @@
         "test8": ""
       },
       "tabs_info": {
-        "reerere": {
+        "yee": {
           "1": {
-            "client": "VB3",
-            "tree_commands": {},
-            "command_list": []
+            "client": "VB1",
+            "tree_commands": {
+              "Load Graphic 1": "111"
+            },
+            "command_list": [
+              "Load Graphic 1"
+            ]
           }
         },
-        "yee": {}
+        "yaa": {}
       }
     },
     "config 2": {
       "clients": {
-        "VB15": [
-          "199.199.199.15",
-          "MAC15"
-        ],
-        "VB16": [
-          "199.199.199.16",
-          "MAC16"
-        ],
-        "VB17": [
-          "199.199.199.17",
-          "MAC17"
-        ],
-        "VB18": [
-          "199.199.199.18",
-          "MAC18"
-        ],
-        "VB19": [
-          "199.199.199.19",
-          "MAC19"
-        ],
-        "VB20": [
-          "199.199.199.20",
-          "MAC20"
-        ],
         "VB21": [
           "199.199.199.21",
           "MAC21"
@@ -194,141 +174,77 @@
         "VB28": [
           "199.199.199.28",
           "MAC26"
-        ],
-        "VB29": [
-          "199.199.199.29",
-          "MAC27"
         ]
       },
       "commands": {
         "Load Graphic 6": "666",
         "Load Graphic 7": "777",
-        "Load Graphic 8": "888",
         "Load Graphic 9": "999",
         "Load Graphic 10": "1000"
       },
       "tabs_info": {
-        "tab 6": {
+        "test": {
           "1": {
-            "client": "VB15",
-            "tree_commands": {
-              "Load Graphic 6": "yee",
-              "Load Graphic 7": "77gfg7",
-              "Load Graphic 8": "g888",
-              "Load Graphic 9": "999",
-              "Load Graphic 10": "g"
-            },
-            "command_list": [
-              "Load Graphic 6",
-              "Load Graphic 6",
-              "Load Graphic 7",
-              "Load Graphic 8",
-              "Load Graphic 9",
-              "Load Graphic 10"
-            ]
+            "client": "VB24",
+            "tree_commands": {},
+            "command_list": []
           },
           "2": {
-            "client": "VB16",
+            "client": "VB25",
             "tree_commands": {
-              "Load Graphic 11": "6",
-              "Load Graphic 7": "7",
-              "Load Graphic 8": "8",
-              "Load Graphic 9": "9",
-              "Load Graphic 10": "10"
+              "Load Graphic 7": "777"
             },
             "command_list": [
-              "Load Graphic 11",
-              "Load Graphic 7",
-              "Load Graphic 8",
-              "Load Graphic 9",
-              "Load Graphic 10"
+              "Load Graphic 7"
             ]
           },
           "3": {
-            "client": "VB30",
-            "tree_commands": {
-              "Load Graphic 6": "0",
-              "Load Graphic 7": "00",
-              "Load Graphic 8": "000",
-              "Load Graphic 9": "0000",
-              "Load Graphic 10": "00000"
-            },
-            "command_list": [
-              "Load Graphic 6",
-              "Load Graphic 7",
-              "Load Graphic 8",
-              "Load Graphic 9",
-              "Load Graphic 10"
-            ]
-          }
-        },
-        "tab 7": {
-          "1": {
-            "client": "VB17",
-            "tree_commands": {
-              "Load Graphic 6": "666",
-              "Load Graphic 7": "777",
-              "Load Graphic 8": "888",
-              "Load Graphic 9": "999",
-              "Load Graphic 10": "1000"
-            },
-            "command_list": [
-              "Load Graphic 6",
-              "Load Graphic 7",
-              "Load Graphic 8",
-              "Load Graphic 9",
-              "Load Graphic 10"
-            ]
+            "client": "VB21",
+            "tree_commands": {},
+            "command_list": []
           },
-          "2": {
-            "client": "VB18",
-            "tree_commands": {
-              "Load Graphic 6": "666",
-              "Load Graphic 7": "777",
-              "Load Graphic 8": "888",
-              "Load Graphic 9": "999",
-              "Load Graphic 10": "1000"
-            },
-            "command_list": [
-              "Load Graphic 6",
-              "Load Graphic 7",
-              "Load Graphic 8",
-              "Load Graphic 9",
-              "Load Graphic 10"
-            ]
-          }
-        },
-        "tab 8": {
-          "1": {
-            "client": "VB19",
-            "tree_commands": {
-              "Load Graphic 6": "666",
-              "Load Graphic 7": "777",
-              "Load Graphic 8": "888",
-              "Load Graphic 9": "999",
-              "Load Graphic 10": "1000"
-            },
-            "command_list": [
-              "Load Graphic 6",
-              "Load Graphic 7",
-              "Load Graphic 8",
-              "Load Graphic 9",
-              "Load Graphic 10"
-            ]
+          "4": {
+            "client": "VB22",
+            "tree_commands": {},
+            "command_list": []
           },
-          "2": {
-            "client": "VB20",
+          "5": {
+            "client": "VB23",
+            "tree_commands": {},
+            "command_list": []
+          },
+          "6": {
+            "client": "VB25",
+            "tree_commands": {},
+            "command_list": []
+          },
+          "7": {
+            "client": "VB26",
+            "tree_commands": {},
+            "command_list": []
+          },
+          "8": {
+            "client": "VB27",
+            "tree_commands": {},
+            "command_list": []
+          },
+          "9": {
+            "client": "VB28",
+            "tree_commands": {},
+            "command_list": []
+          },
+          "10": {
+            "client": "VB24",
             "tree_commands": {
-              "Load Graphic 6": "666",
               "Load Graphic 7": "777",
-              "Load Graphic 8": "888",
+              "Load Graphic 6": "666",
               "Load Graphic 9": "999",
               "Load Graphic 10": "1000"
             },
             "command_list": [
+              "Load Graphic 7",
               "Load Graphic 6",
               "Load Graphic 7",
-              "Load Graphic 8",
               "Load Graphic 9",
               "Load Graphic 10"
             ]
