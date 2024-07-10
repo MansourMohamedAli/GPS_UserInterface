@@ -167,7 +167,7 @@ class ClientTabFrame(ttk.Frame):
     def __init__(self, parent, index):
         super().__init__(master=parent)
         self.index = int(index)
-        self.rowconfigure(0, weight=5, uniform='a')
+        self.rowconfigure(0, weight=6, uniform='a')
         self.rowconfigure(1, weight=1, uniform='a')
         self.columnconfigure(0, weight=1, uniform='a')
         self.scroll_tags = self.bindtags() + ("scroll_frame_widgets",)
@@ -196,22 +196,31 @@ class TabTreeMouseOver(ttk.Frame):
         self.client_tab_frame.bind('<Enter>', self.mouse_over)
         self.client_tab_frame.bind('<Leave>', self.mouse_leave)
         self.buttons_frame.rowconfigure(0, weight=1, uniform='a')
-        self.buttons_frame.rowconfigure(1, weight=1, uniform='a')
         self.buttons_frame.columnconfigure(0, weight=1, uniform='a')
         self.buttons_frame.columnconfigure(1, weight=1, uniform='a')
         self.buttons_frame.columnconfigure(2, weight=1, uniform='a')
         self.buttons_frame.columnconfigure(3, weight=1, uniform='a')
+        self.buttons_frame.columnconfigure(4, weight=1, uniform='a')
         self.move_up_button = ttk.Button(self.buttons_frame,
                                          text="\u2B9D",
                                          width=5,
                                          command=self.move_up,
-                                         bootstyle='info')
+                                         bootstyle='info',
+                                         state="enabled")
 
         self.move_down_button = ttk.Button(self.buttons_frame,
                                            text="\u2B9F",
                                            width=5,
                                            command=self.move_down,
-                                           bootstyle='info')
+                                           bootstyle='info',
+                                           state="enabled")
+
+        self.edit_command_button = ttk.Button(self.buttons_frame,
+                                              text="Edit",
+                                              width=5,
+                                              command=self.edit_command,
+                                              bootstyle='info',
+                                              state="enabled")
 
         self.new_command_button = ttk.Button(self.buttons_frame,
                                              text="+",
@@ -220,23 +229,19 @@ class TabTreeMouseOver(ttk.Frame):
                                                                            self.client_tab_tree.command_list,
                                                                            self.insert_command,
                                                                            self.insert_another_command),
-                                             bootstyle='success')
+                                             bootstyle='info')
+
         self.del_command_button = ttk.Button(self.buttons_frame,
                                              text=u"\U0001F5D1",
                                              width=5,
                                              command=lambda: self.m_delete_client(self.client_tab_frame),
                                              bootstyle='danger')
 
-        self.edit_command_button = ttk.Button(self.buttons_frame,
-                                             text="edit",
-                                             width=5,
-                                             bootstyle='danger')
-
-        self.move_up_button.grid(row=0, column=0, sticky='ew')
-        self.move_down_button.grid(row=1, column=0, sticky='ew')
-        self.edit_command_button.grid(row=0, column=1, rowspan=2, sticky='nsew')
-        self.new_command_button.grid(row=0, column=2, rowspan=2, sticky='nsew')
-        self.del_command_button.grid(row=0, column=3, rowspan=2,  sticky='nsew')
+        self.move_up_button.grid(row=0, column=0, sticky='nsew')
+        self.move_down_button.grid(row=0, column=1, sticky='nsew')
+        self.edit_command_button.grid(row=0, column=2, sticky='nsew')
+        self.new_command_button.grid(row=0, column=3, sticky='nsew')
+        self.del_command_button.grid(row=0, column=4, sticky='nsew')
 
         # Binding Scroll to widgets
         scroll_tags = self.move_up_button.bindtags() + ("scroll_frame_widgets",)
@@ -244,6 +249,7 @@ class TabTreeMouseOver(ttk.Frame):
         self.new_command_button.bindtags(scroll_tags)
         self.del_command_button.bindtags(scroll_tags)
         self.move_down_button.bindtags(scroll_tags)
+        self.edit_command_button.bindtags(scroll_tags)
         self.bindtags(scroll_tags)
 
     @classmethod
@@ -267,8 +273,18 @@ class TabTreeMouseOver(ttk.Frame):
         self.client_tab_tree.update_command_list()
         self.client_tab_tree.update_dict()
 
+    def edit_command(self):
+        tree_index = self.client_tab_tree.focus()
+        if tree_index:
+            command_name = self.client_tab_tree.item(tree_index)['values'][0]
+            TabCommandDlg(self.client_tab_tree.tab_command_dict,
+                          self.client_tab_tree.command_list,
+                          self.insert_command,
+                          self.insert_another_command,
+                          command_name=command_name)
+
     def mouse_over(self, event):
-        self.buttons_frame.pack(expand=True, fill="both")
+        self.buttons_frame.pack()
 
     def mouse_leave(self, event):
         self.buttons_frame.pack_forget()

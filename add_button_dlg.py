@@ -118,7 +118,8 @@ class CommandWindow(tk.Toplevel):
         # Add Another Button
         self.add_another_button = ttk.Button(self.buttons_frame,
                                              text="Add Another",
-                                             command=lambda: self.m_insert_another_command(self.append_command_dictionary()))
+                                             command=lambda: self.m_insert_another_command(
+                                                 self.append_command_dictionary()))
         # Placing Buttons
         self.done_button.place(relx=0.125, rely=0)
         self.add_another_button.place(relx=0.45, rely=0)
@@ -151,12 +152,13 @@ class CommandWindow(tk.Toplevel):
 
 
 class TabCommandDlg(tk.Toplevel):
-    def __init__(self, tab_command_dict, command_list, m_insert_command, m_insert_another_command):
+    def __init__(self, tab_command_dict, command_list, m_insert_command, m_insert_another_command, command_name=None):
         super().__init__()
         self.tab_command_dict = tab_command_dict
         self.command_list = command_list
         self.m_insert_command = m_insert_command
         self.m_insert_another_command = m_insert_another_command
+        self.command_name = command_name
         self.title('Command Configuration')
         self.geometry("500x200")
         self.resizable(False, False)
@@ -173,9 +175,20 @@ class TabCommandDlg(tk.Toplevel):
         # Frame for text entries
         self.text_frame = ttk.Frame(self)
         # Text box for commands
-        self.command_name_entry = tk.Entry(self.text_frame, width=53)
-        # Text box for commands
         self.command_text_box = tk.Text(self.text_frame, width=40, height=5)
+        if command_name:
+            v = tk.StringVar(value=command_name)
+            self.command_name_entry = tk.Entry(self.text_frame,
+                                               width=53,
+                                               state="disabled",
+                                               textvariable=v)
+
+            self.command_name_entry.insert(tk.END, command_name)
+            self.commandText = tab_command_dict[command_name]
+            self.command_text_box.insert(1.0, self.commandText)
+        else:
+            # Text box for commands
+            self.command_name_entry = tk.Entry(self.text_frame, width=53)
         # Placing Text Boxes
         self.command_name_entry.place(relx=0, rely=0.1)
         self.command_text_box.place(relx=0, rely=0.30)
@@ -208,12 +221,15 @@ class TabCommandDlg(tk.Toplevel):
         self.buttons_frame.grid(row=1, column=1, sticky='nsew')
 
     def append_command_list(self):
-        # Get Command name from entry.
-        command_name = self.command_name_entry.get()
         command_text_box = self.command_text_box.get("1.0", "end-1c")
-        self.tab_command_dict[command_name] = command_text_box
-        self.command_list.append(command_name)
-        return [command_name, command_text_box]
+        if self.command_name:
+            self.tab_command_dict[self.command_name] = command_text_box
+        else:
+            # Get Command name from entry.
+            command_name = self.command_name_entry.get()
+            self.tab_command_dict[command_name] = command_text_box
+            self.command_list.append(command_name)
+            return [command_name, command_text_box]
 
 
 class NewTabWindow(tk.Toplevel):

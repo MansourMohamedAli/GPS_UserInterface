@@ -456,13 +456,18 @@ class Configuration(ttk.Frame):
                               self.delete_client)
             self.tabs_list.append(tab)
             self.tabs_nb.add(tab, text=f'{new_tab}')
+            self.tabs_info[new_tab] = dict()
 
     def delete_tab(self):
+        # Todo Why am I looping through tabs instead of just using select?
         for item in self.tabs_nb.winfo_children():
             if str(item) == self.tabs_nb.select():
+                name = self.tabs_nb.tab(self.tabs_nb.select(), "text")
+                print(name)
                 item.pack_forget()  # To prevent scroll errors.
                 item.destroy()
                 del self.tabs_list[self.tab_id]
+                del self.tabs_info[name]
                 return
 
     def insert_client(self, window_instance, new_client):

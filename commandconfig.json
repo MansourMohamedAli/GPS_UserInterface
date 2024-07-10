@@ -118,27 +118,173 @@
         "VB29": [
           "199.199.199.29",
           "MAC27"
+        ],
+        "MO": [
+          "10.0.0.132",
+          ""
         ]
       },
       "commands": {
         "Load Graphic 1": "111",
         "Load Graphic 2": "222",
         "test7": "etgsegf",
-        "test8": ""
+        "test8": "",
+        "navtofolder": "cd C:\\Notes\\markdown_notes\\Matrices\\Partial Pivoting",
+        "opennotepad": "notepad Partial Pivoting.md"
       },
       "tabs_info": {
-        "yee": {
+        "new": {
           "1": {
             "client": "VB1",
-            "tree_commands": {
-              "Load Graphic 1": "111"
-            },
-            "command_list": [
-              "Load Graphic 1"
-            ]
+            "tree_commands": {},
+            "command_list": []
+          },
+          "2": {
+            "client": "VB2",
+            "tree_commands": {},
+            "command_list": []
+          },
+          "3": {
+            "client": "VB3",
+            "tree_commands": {},
+            "command_list": []
+          },
+          "4": {
+            "client": "VB4",
+            "tree_commands": {},
+            "command_list": []
+          },
+          "5": {
+            "client": "VB5",
+            "tree_commands": {},
+            "command_list": []
+          },
+          "6": {
+            "client": "VB6",
+            "tree_commands": {},
+            "command_list": []
+          },
+          "7": {
+            "client": "VB7",
+            "tree_commands": {},
+            "command_list": []
+          },
+          "8": {
+            "client": "VB8",
+            "tree_commands": {},
+            "command_list": []
+          },
+          "9": {
+            "client": "VB9",
+            "tree_commands": {},
+            "command_list": []
+          },
+          "10": {
+            "client": "VB10",
+            "tree_commands": {},
+            "command_list": []
+          },
+          "11": {
+            "client": "VB11",
+            "tree_commands": {},
+            "command_list": []
+          },
+          "12": {
+            "client": "VB12",
+            "tree_commands": {},
+            "command_list": []
+          },
+          "13": {
+            "client": "VB13",
+            "tree_commands": {},
+            "command_list": []
+          },
+          "14": {
+            "client": "VB14",
+            "tree_commands": {},
+            "command_list": []
+          },
+          "15": {
+            "client": "VB15",
+            "tree_commands": {},
+            "command_list": []
+          },
+          "16": {
+            "client": "VB16",
+            "tree_commands": {},
+            "command_list": []
+          },
+          "17": {
+            "client": "VB17",
+            "tree_commands": {},
+            "command_list": []
+          },
+          "18": {
+            "client": "VB18",
+            "tree_commands": {},
+            "command_list": []
+          },
+          "19": {
+            "client": "VB19",
+            "tree_commands": {},
+            "command_list": []
+          },
+          "20": {
+            "client": "VB20",
+            "tree_commands": {},
+            "command_list": []
+          },
+          "21": {
+            "client": "VB21",
+            "tree_commands": {},
+            "command_list": []
+          },
+          "22": {
+            "client": "VB22",
+            "tree_commands": {},
+            "command_list": []
+          },
+          "23": {
+            "client": "VB23",
+            "tree_commands": {},
+            "command_list": []
+          },
+          "24": {
+            "client": "VB24",
+            "tree_commands": {},
+            "command_list": []
+          },
+          "25": {
+            "client": "VB25",
+            "tree_commands": {},
+            "command_list": []
+          },
+          "26": {
+            "client": "VB26",
+            "tree_commands": {},
+            "command_list": []
+          },
+          "27": {
+            "client": "VB27",
+            "tree_commands": {},
+            "command_list": []
+          },
+          "28": {
+            "client": "VB28",
+            "tree_commands": {},
+            "command_list": []
+          },
+          "29": {
+            "client": "VB29",
+            "tree_commands": {},
+            "command_list": []
+          },
+          "30": {
+            "client": "MO",
+            "tree_commands": {},
+            "command_list": []
           }
-        },
-        "yaa": {}
+        }
       }
     },
     "config 2": {
@@ -182,75 +328,7 @@
         "Load Graphic 9": "999",
         "Load Graphic 10": "1000"
       },
-      "tabs_info": {
-        "test": {
-          "1": {
-            "client": "VB24",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "2": {
-            "client": "VB25",
-            "tree_commands": {
-              "Load Graphic 7": "777"
-            },
-            "command_list": [
-              "Load Graphic 7"
-            ]
-          },
-          "3": {
-            "client": "VB21",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "4": {
-            "client": "VB22",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "5": {
-            "client": "VB23",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "6": {
-            "client": "VB25",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "7": {
-            "client": "VB26",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "8": {
-            "client": "VB27",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "9": {
-            "client": "VB28",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "10": {
-            "client": "VB24",
-            "tree_commands": {
-              "Load Graphic 7": "777",
-              "Load Graphic 6": "666",
-              "Load Graphic 9": "999",
-              "Load Graphic 10": "1000"
-            },
-            "command_list": [
-              "Load Graphic 7",
-              "Load Graphic 6",
-              "Load Graphic 7",
-              "Load Graphic 9",
-              "Load Graphic 10"
-            ]
-          }
-        }
-      }
+      "tabs_info": {}
     }
   }
 }
