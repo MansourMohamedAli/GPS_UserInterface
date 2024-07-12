@@ -1,6 +1,6 @@
 import tkinter as tk
 import ttkbootstrap as ttk
-from add_button_dlg import CommandWindow, ClientWindow, NewTabWindow, RenameTabWindow
+from add_button_dlg import CommandDlg, ClientWindow, NewTabWindow, RenameTabWindow
 from drag_and_drop import CommandDragManager, ClientDragManager
 from Tree_Widgets import ClientListTree, CommandListTree, TabBarTree, ClientTabFrame, TabTreeMouseOver
 from math import floor
@@ -116,6 +116,7 @@ class Configuration(ttk.Frame):
         self.client_frame = ttk.Frame(self.side_bar_frame)
         self.client_frame.columnconfigure(0, weight=1, uniform='a')
         self.client_frame.columnconfigure(1, weight=1, uniform='a')
+        self.client_frame.columnconfigure(2, weight=1, uniform='a')
         self.client_frame.grid(row=0, column=0, sticky='nsew', pady=(10, 10))
 
         self.clients_tree = ClientListTree.from_json(self.client_frame,
@@ -128,6 +129,10 @@ class Configuration(ttk.Frame):
                                             command=lambda: ClientWindow(self.clients_tree.client_dictionary,
                                                                          self.insert_client,
                                                                          self.insert_another_client))
+        # Edit Client Button
+        self.edit_client = ttk.Button(self.client_frame,
+                                      text="Edit",
+                                      command=lambda: self.delete_row(self.clients_tree))
 
         # Delete Command Button
         self.delete_client_button = ttk.Button(self.client_frame,
@@ -135,13 +140,15 @@ class Configuration(ttk.Frame):
                                                command=lambda: self.delete_row(self.clients_tree))
 
         # Adding command section to sidebar.
-        self.clients_tree.grid(row=0, columnspan=2, sticky='nsew')
+        self.clients_tree.grid(row=0, columnspan=3, sticky='nsew')
         self.new_client_button.grid(row=1, column=0, padx=5, pady=5)
-        self.delete_client_button.grid(row=1, column=1, padx=5, pady=5)
+        self.edit_client.grid(row=1, column=1, padx=5, pady=5)
+        self.delete_client_button.grid(row=1, column=2, padx=5, pady=5)
 
         self.command_frame = ttk.Frame(self.side_bar_frame)
         self.command_frame.columnconfigure(0, weight=1, uniform='a')
         self.command_frame.columnconfigure(1, weight=1, uniform='a')
+        self.command_frame.columnconfigure(2, weight=1, uniform='a')
         self.command_frame.grid(row=1, column=0, sticky='nsew', pady=(10, 10))
 
         # Command List Tree
@@ -155,9 +162,15 @@ class Configuration(ttk.Frame):
 
         self.new_command_button = ttk.Button(self.command_frame,
                                              text="New",
-                                             command=lambda: CommandWindow(self.commands_tree.command_dictionary,
-                                                                           self.insert_command,
-                                                                           self.insert_another_command))
+                                             command=lambda: CommandDlg(self.commands_tree.command_dictionary,
+                                                                        self.insert_command,
+                                                                        self.insert_another_command,
+                                                                        "command"))
+
+        # Edit Command Button
+        self.edit_command_button = ttk.Button(self.command_frame,
+                                       text="Edit",
+                                       command=self.edit_command)
 
         # Delete Command Button
         self.delete_command_button = ttk.Button(self.command_frame,
@@ -165,9 +178,10 @@ class Configuration(ttk.Frame):
                                                 command=lambda: self.delete_row(self.commands_tree))
 
         # Adding command section to sidebar.
-        self.commands_tree.grid(row=0, columnspan=2, sticky='nsew')
+        self.commands_tree.grid(row=0, columnspan=3, sticky='nsew')
         self.new_command_button.grid(row=1, column=0, padx=5, pady=5)
-        self.delete_command_button.grid(row=1, column=1, padx=5, pady=5)
+        self.edit_command_button.grid(row=1, column=1, padx=5, pady=5)
+        self.delete_command_button.grid(row=1, column=2, padx=5, pady=5)
 
         self.save_button = ttk.Button(self.side_bar_frame, text='Save', command=self.write_json)
         self.save_button.grid(row=2)
@@ -269,6 +283,16 @@ class Configuration(ttk.Frame):
         self.buttons_list = [self.move_left_button, self.move_right_button]
         self.bind_class("tree_select", '<Button-1>', self.enable_nav_buttons)
 
+    def edit_command(self):
+        tree_index = self.commands_tree.focus()
+        if tree_index:
+            command_name = self.commands_tree.item(tree_index)['values'][0]
+            CommandDlg(self.commands_tree.command_dictionary,
+                       self.insert_command,
+                       self.insert_another_command,
+                       "command",
+                       command_name=command_name)
+
     def change_tab_name(self, event):
         RenameTabWindow(self.tabs_nb, self.tab_id, self.tabs_info)
 
@@ -288,7 +312,8 @@ class Configuration(ttk.Frame):
         except tk.TclError:
             pass
 
-    def write_json(self):
+    @staticmethod
+    def write_json():
         with open('commandconfig.json', 'w') as f:
             json.dump(ConfigurationManager.configurations, f, indent=2)
 
@@ -344,10 +369,10 @@ class Configuration(ttk.Frame):
                 self.repack_client_frame(client_tab_frame, row, column)
 
     def delete_client(self, tree_frame):
-        '''
+        """
         This will be passed to TabTreeMouse Over.
         :return:None
-        '''
+        """
         self.unpack_client_frame()
         for i, client_tab_frame in enumerate(self.active_scroll_frame.client_tab_frame_list):
             if client_tab_frame.index == tree_frame.index:
@@ -387,7 +412,8 @@ class Configuration(ttk.Frame):
                     if client_tab_frame.index == (self.active_tab_tree_frame.index + 1):  # One above
                         client_tab_frame.index -= 1
                         temp = self.tabs_info[self.active_scroll_frame.tab_name][str(i)]
-                        self.tabs_info[self.active_scroll_frame.tab_name][str(i)] = self.tabs_info[self.active_scroll_frame.tab_name][str(i + 1)]
+                        self.tabs_info[self.active_scroll_frame.tab_name][str(i)] = \
+                            self.tabs_info[self.active_scroll_frame.tab_name][str(i + 1)]
                         self.tabs_info[self.active_scroll_frame.tab_name][str(i + 1)] = temp
                 self.active_tab_tree_frame.index += 1
         except IndexError or AttributeError:
@@ -398,11 +424,11 @@ class Configuration(ttk.Frame):
             if client_tab_frame.index == (self.active_tab_tree_frame.index - 1):  # One below
                 client_tab_frame.index += 1
                 temp = self.tabs_info[self.active_scroll_frame.tab_name][str(i + 1)]
-                self.tabs_info[self.active_scroll_frame.tab_name][str(i + 1)] = self.tabs_info[self.active_scroll_frame.tab_name][str(i + 2)]
+                self.tabs_info[self.active_scroll_frame.tab_name][str(i + 1)] = \
+                    self.tabs_info[self.active_scroll_frame.tab_name][str(i + 2)]
                 self.tabs_info[self.active_scroll_frame.tab_name][str(i + 2)] = temp
         self.active_tab_tree_frame.index -= 1
         self.active_tab_tree_frame.index = max(self.active_tab_tree_frame.index, 1)  # Limit to 0
-
 
     def unpack_client_frame(self):
         for frame in self.client_tab_frame_list:
@@ -517,7 +543,7 @@ class ScrollFrame(ttk.Frame):
         self.scroll_frame = ttk.Frame(self)
 
         # Adding new tag for frame to allow scroll on TabTree and background.
-        self.new_tags = self.scroll_frame.bindtags() + ("scroll_frame_widgets","tree_select",)
+        self.new_tags = self.scroll_frame.bindtags() + ("scroll_frame_widgets", "tree_select",)
         self.scroll_frame.bindtags(self.new_tags)
 
         # scrollbar
@@ -528,13 +554,13 @@ class ScrollFrame(ttk.Frame):
         # Creating tree frame:
         client_tab_frame_list = ClientTabFrame.from_tab_info(self.scroll_frame, self.tab_data)
         self.tab_tree_list = TabBarTree.from_tab_data(client_tab_frame_list, self.tab_data)
-        tt_mouse_over_list = TabTreeMouseOver.from_client_tab_frame_list(client_tab_frame_list, self.tab_tree_list, self.m_delete_client)
+        tt_mouse_over_list = TabTreeMouseOver.from_client_tab_frame_list(client_tab_frame_list, self.tab_tree_list,
+                                                                         self.m_delete_client)
 
         # packing trees and mouse_over frame to client tab_frame
         for tree, mouse_over_frame in zip(self.tab_tree_list, tt_mouse_over_list):
             tree.grid(row=0, sticky='nsew')
             mouse_over_frame.grid(row=1, sticky='nsew')
-
 
         # put client_tab_frame on the scroll frame
         for tab_frame in client_tab_frame_list:
@@ -650,4 +676,3 @@ class WindowMenu(ttk.Menu):
 
 if __name__ == "__main__":
     ConfigurationManager.from_json('commandconfig.json')
-

@@ -1,6 +1,6 @@
 import tkinter as tk
 import ttkbootstrap as ttk
-from add_button_dlg import TabCommandDlg
+from add_button_dlg import CommandDlg
 
 
 class ClientListTree(ttk.Treeview):
@@ -66,7 +66,7 @@ class CommandListTree(ttk.Treeview):
         for command in selected_items:
             command_full_tree_info = self.item(command)
             command_name = command_full_tree_info['values'][0]
-            del self.command_dictionary[command_name]
+            del self.command_dictionary[str(command_name)]
             self.delete(command)
 
 
@@ -125,7 +125,6 @@ class TabBarTree(ttk.Treeview):
         selected_items = self.selection()
         for command in selected_items:
             command_full_tree_info = self.item(command)
-            command_name = command_full_tree_info['values'][0]
             self.delete(command)
         self.update_command_list()
         self.clean_dict()
@@ -138,7 +137,7 @@ class TabBarTree(ttk.Treeview):
         for child in self.get_children():
             command_full_tree_info = self.item(child)
             command_name = command_full_tree_info['values'][0]
-            self.command_list.append(command_name)
+            self.command_list.append(str(command_name))
 
     def update_dict(self):
         """
@@ -225,10 +224,11 @@ class TabTreeMouseOver(ttk.Frame):
         self.new_command_button = ttk.Button(self.buttons_frame,
                                              text="+",
                                              width=5,
-                                             command=lambda: TabCommandDlg(self.client_tab_tree.tab_command_dict,
-                                                                           self.client_tab_tree.command_list,
-                                                                           self.insert_command,
-                                                                           self.insert_another_command),
+                                             command=lambda: CommandDlg(self.client_tab_tree.tab_command_dict,
+                                                                        self.insert_command,
+                                                                        self.insert_another_command,
+                                                                        "tab",
+                                                                        command_list=self.client_tab_tree.command_list),
                                              bootstyle='info')
 
         self.del_command_button = ttk.Button(self.buttons_frame,
@@ -277,11 +277,12 @@ class TabTreeMouseOver(ttk.Frame):
         tree_index = self.client_tab_tree.focus()
         if tree_index:
             command_name = self.client_tab_tree.item(tree_index)['values'][0]
-            TabCommandDlg(self.client_tab_tree.tab_command_dict,
-                          self.client_tab_tree.command_list,
-                          self.insert_command,
-                          self.insert_another_command,
-                          command_name=command_name)
+            CommandDlg(self.client_tab_tree.tab_command_dict,
+                       self.insert_command,
+                       self.insert_another_command,
+                       "tab",
+                       command_list=self.client_tab_tree.command_list,
+                       command_name=command_name)
 
     def mouse_over(self, event):
         self.buttons_frame.pack()
@@ -291,9 +292,9 @@ class TabTreeMouseOver(ttk.Frame):
 
     def insert_command(self, window_instance, new_command):
         if new_command:
-            self.client_tab_tree.insert(parent='', index=tk.END, values=new_command[0])
+            self.client_tab_tree.insert(parent='', index=tk.END, values=[new_command])
         window_instance.destroy()
 
     def insert_another_command(self, new_command):
         if new_command:
-            self.client_tab_tree.insert(parent='', index=tk.END, values=new_command[0])
+            self.client_tab_tree.insert(parent='', index=tk.END, values=[new_command])

@@ -79,13 +79,18 @@ class ClientWindow(tk.Toplevel):
 
 
 class CommandDlg(tk.Toplevel):
-    def __init__(self, command_dict, m_insert_command, m_insert_another_command, command_list=None, command_name=None):
+    def __init__(self, command_dict, m_insert_command, m_insert_another_command, tree_type,
+                 command_list=None, command_name=None):
         super().__init__()
         self.command_dict = command_dict
         self.command_list = command_list
         self.m_insert_command = m_insert_command
         self.m_insert_another_command = m_insert_another_command
-        self.command_name = command_name
+        self.tree_type = tree_type
+        if command_name:
+            self.command_name = str(command_name)
+        else:
+            self.command_name = command_name
         self.title('Command Configuration')
         self.geometry("500x200")
         self.resizable(False, False)
@@ -103,15 +108,15 @@ class CommandDlg(tk.Toplevel):
         self.text_frame = ttk.Frame(self)
         # Text box for commands
         self.command_text_box = tk.Text(self.text_frame, width=40, height=5)
-        if command_name:
-            v = tk.StringVar(value=command_name)
+        if self.command_name:
+            v = tk.StringVar(value=self.command_name)
             self.command_name_entry = tk.Entry(self.text_frame,
                                                width=53,
                                                state="disabled",
                                                textvariable=v)
 
-            self.command_name_entry.insert(tk.END, command_name)
-            self.commandText = command_dict[command_name]
+            self.command_name_entry.insert(tk.END, self.command_name)
+            self.commandText = self.command_dict[self.command_name]
             self.command_text_box.insert(1.0, self.commandText)
         else:
             # Text box for commands
@@ -122,33 +127,20 @@ class CommandDlg(tk.Toplevel):
 
         # Button Frame
         self.buttons_frame = ttk.Frame(self)
-        # Done button
 
         # Tab Command
-        if self.command_list:
-            self.done_button = ttk.Button(self.buttons_frame,
-                                          text="Done",
-                                          command=lambda: self.m_insert_command(self, self.append_tab_command_dictionary()))
+        self.done_button = ttk.Button(self.buttons_frame,
+                                      text="Done",
+                                      command=lambda: self.m_insert_command(self, self.update_dictionary()))
+        # Add Another Button
+        if self.command_name:
+            self.add_another_button = ttk.Button(self.buttons_frame,
+                                                 text="Add Another",
+                                                 command=lambda: self.m_insert_another_command(
+                                                     self.update_dictionary()))
 
-            if not command_name:
-                # Add Another Button
-                self.add_another_button = ttk.Button(self.buttons_frame,
-                                                     text="Add Another",
-                                                     command=lambda: self.m_insert_another_command(self.append_tab_command_dictionary()))
-                self.add_another_button.place(relx=0.45, rely=0)
-        else:
-            #
-            self.done_button = ttk.Button(self.buttons_frame,
-                                          text="Done",
-                                          command=lambda: self.m_insert_command(self, self.append_command_dictionary()))
-            if not command_name:
-                # Add Another Button
-                self.add_another_button = ttk.Button(self.buttons_frame,
-                                                     text="Add Another",
-                                                     command=lambda: self.m_insert_another_command(
-                                                         self.append_command_dictionary()))
-                self.add_another_button.place(relx=0.45, rely=0)
-        # Placing Buttons
+            self.add_another_button.place(relx=0.45, rely=0)
+
         self.done_button.place(relx=0.125, rely=0)
 
         # Configuring Grid
@@ -162,31 +154,22 @@ class CommandDlg(tk.Toplevel):
         self.text_frame.grid(row=0, column=1, rowspan=2, sticky='nsew')
         self.buttons_frame.grid(row=1, column=1, sticky='nsew')
 
-    def append_tab_command_dictionary(self):
+    def update_dictionary(self):
         command_text_box = self.command_text_box.get("1.0", "end-1c")
-        if self.command_name:
+        if self.command_name:  # edit command
             self.command_dict[self.command_name] = command_text_box
-        else:
-            # Get Command name from entry.
-            command_name = self.command_name_entry.get()
-            self.command_dict[command_name] = command_text_box
-            self.command_list.append(command_name)
-            return [command_name, command_text_box]
-
-    def append_command_dictionary(self):
-        # Get Command name from entry.
-        command_name = self.command_name_entry.get()
-        if command_name and command_name not in self.command_dict:
-            # Get Command from text box.
-            command_text_box = self.command_text_box.get("1.0", "end-1c")
+            # if self.tree_type == "tab":  # Tab Command Tree
+            #     self.command_list.append(self.command_name)
+        else:  # NEW
+            self.command_name = str(self.command_name_entry.get())
             # Add command to dictionary.
-            self.command_dict[command_name] = command_text_box
-            print(self.command_dict)
-            print("Command Added")
-            return command_name
-        else:
-            print("Command Already Exists")
-            return None
+            if self.command_name not in self.command_dict:
+                self.command_dict[self.command_name] = command_text_box
+                if self.tree_type == "tab":  # Tab Command Tree
+                    self.command_list.append(self.command_name)
+                return self.command_name
+            else:
+                print('Already in dict')
 
 
 class NewTabWindow(tk.Toplevel):
