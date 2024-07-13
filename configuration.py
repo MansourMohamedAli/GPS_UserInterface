@@ -39,7 +39,6 @@ class ConfigurationManager(ttk.Toplevel):
         menu = WindowMenu()
         self.configure(menu=menu)
 
-        self.get_dimensions()
 
         if __name__ == "__main__":
             self.main_loop()

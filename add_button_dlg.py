@@ -25,9 +25,9 @@ class ClientDlg(tk.Toplevel):
         if self.client_name:
             v = tk.StringVar(value=self.client_name)
             self.client_name_entry = tk.Entry(self.client_frame,
-                                               width=53,
-                                               state="disabled",
-                                               textvariable=v)
+                                              width=53,
+                                              state="disabled",
+                                              textvariable=v)
 
             self.client_name_entry.insert(tk.END, self.client_name)
 
@@ -42,7 +42,10 @@ class ClientDlg(tk.Toplevel):
             self.mac_entry = tk.Entry(self.mac_frame, width=53)
 
         self.title('Client Configuration')
-        self.geometry("500x200")
+        x, y = self.get_dimensions()
+        self.geometry(f'{int(x * 0.30)}x{int(y * 0.15)}')
+        self.minsize(int(x * 0.25), int(y * 0.10))
+        self.maxsize(int(x * 0.35), int(y * 0.25))
         self.resizable(False, False)
 
         self.client_name_label = ttk.Label(self.client_frame, text="Client Name:")
@@ -106,6 +109,11 @@ class ClientDlg(tk.Toplevel):
                 print("Client Already Exists")
                 return None
 
+    def get_dimensions(self):
+        x = self.winfo_screenwidth()
+        y = self.winfo_screenheight()
+        return x, y
+
 
 class CommandDlg(tk.Toplevel):
     def __init__(self, command_dict, m_insert_command, m_insert_another_command, tree_type,
@@ -121,7 +129,10 @@ class CommandDlg(tk.Toplevel):
         else:
             self.command_name = command_name
         self.title('Command Configuration')
-        self.geometry("500x200")
+        x, y = self.get_dimensions()
+        self.geometry(f'{int(x * 0.30)}x{int(y * 0.15)}')
+        self.minsize(int(x * 0.25), int(y * 0.10))
+        self.maxsize(int(x * 0.35), int(y * 0.25))
         self.resizable(False, False)
 
         # Frame for left text
@@ -200,12 +211,18 @@ class CommandDlg(tk.Toplevel):
             else:
                 print('Already in dict')
 
+    def get_dimensions(self):
+        x = self.winfo_screenwidth()
+        y = self.winfo_screenheight()
+        return x, y
+
 
 class NewTabWindow(tk.Toplevel):
     def __init__(self, m_insert_tab, m_insert_another_tab):
         super().__init__()
         self.title('New Tab Creation')
-        self.geometry("500x75")
+        x, y = self.get_dimensions()
+        self.geometry(f'{int(x * 0.30)}x{int(y * 0.05)}')
         self.resizable(False, False)
 
         # Frame for left text
@@ -248,12 +265,19 @@ class NewTabWindow(tk.Toplevel):
         self.text_frame.grid(row=0, column=1, rowspan=2, sticky='nsew')
         self.buttons_frame.grid(row=1, column=1, sticky='nsew')
 
+    def get_dimensions(self):
+        x = self.winfo_screenwidth()
+        y = self.winfo_screenheight()
+        return x, y
+
 
 class RenameTabWindow(tk.Toplevel):
     def __init__(self, tabs_nb, tab_id, tabs_info):
         super().__init__()
         self.title('Rename Tab')
-        self.geometry("600x100")
+        x, y = self.get_dimensions()
+        self.geometry(f'{int(x * 0.30)}x{int(y * 0.05)}')
+        self.resizable(False, False)
         self.tabs_nb = tabs_nb
         self.tab_id = tab_id
         self.tabs_info = tabs_info
@@ -303,3 +327,8 @@ class RenameTabWindow(tk.Toplevel):
             self.tabs_info.clear()
             for tab in tab_names:
                 self.tabs_info[tab] = temp_dict[tab]
+
+    def get_dimensions(self):
+        x = self.winfo_screenwidth()
+        y = self.winfo_screenheight()
+        return x, y

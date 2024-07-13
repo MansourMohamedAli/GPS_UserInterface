@@ -1,5 +1,5 @@
 {
-  "active_config": "config 1",
+  "active_config": "config 2",
   "configurations": {
     "config 1": {
       "clients": {
@@ -147,11 +147,6 @@
             ]
           },
           "4": {
-            "client": "VB4",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "5": {
             "client": "VB1",
             "tree_commands": {
               "1-1": "1-1 Text"
@@ -160,10 +155,32 @@
               "1-1"
             ]
           },
-          "6": {
+          "5": {
             "client": "localhost",
             "tree_commands": {
               "localcommand": "start notepad"
+            },
+            "command_list": [
+              "localcommand"
+            ]
+          }
+        },
+        "tab2": {
+          "1": {
+            "client": "VB8",
+            "tree_commands": {
+              "Command 2": "Command Text 2",
+              "localcommand": "local text"
+            },
+            "command_list": [
+              "Command 2",
+              "localcommand"
+            ]
+          },
+          "2": {
+            "client": "localhost",
+            "tree_commands": {
+              "localcommand": "dir"
             },
             "command_list": [
               "localcommand"
@@ -213,7 +230,19 @@
         "Load Graphic 9": "999",
         "Load Graphic 10": "1000"
       },
-      "tabs_info": {}
+      "tabs_info": {
+        "test": {
+          "1": {
+            "client": "VB27",
+            "tree_commands": {
+              "Load Graphic 7": "777"
+            },
+            "command_list": [
+              "Load Graphic 7"
+            ]
+          }
+        }
+      }
     }
   }
 }

@@ -58,7 +58,7 @@ class App(ttk.Window):
             # Destroying old config window
             self.menu.destroy()
             # Loading Configuration with new configuration data
-            self.menu = Menu(self, buttons_info, self.config_selected)
+            self.menu = Menu.from_active_config_data(self, selected_config_data, self.config_selected)
 
     def write_active_config(self):
         self.configurations['active_config'] = self.active_config_name
