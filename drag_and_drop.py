@@ -96,6 +96,7 @@ class CommandDragManager:
         try:
             if target.tree_name == "tab_tree":
                 for command_name in self.tree_selection:
+                    command_name = str(command_name)
                     target.insert(parent='', index=tk.END, values=[command_name])
                     # Commands Dictionary for matching command name
                     command_value = self.commands_tree.command_dictionary[command_name]

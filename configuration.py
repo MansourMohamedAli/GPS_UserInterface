@@ -1,6 +1,6 @@
 import tkinter as tk
 import ttkbootstrap as ttk
-from add_button_dlg import CommandDlg, ClientDlg, NewTabWindow, RenameTabWindow
+from add_button_dlg import CommandDlg, ClientDlg, NewTabWindow, RenameTabWindow, NewConfigDlg
 from drag_and_drop import CommandDragManager, ClientDragManager
 from Tree_Widgets import ClientListTree, CommandListTree, TabBarTree, ClientTabFrame, TabTreeMouseOver
 from math import floor
@@ -38,7 +38,6 @@ class ConfigurationManager(ttk.Toplevel):
         # Menu
         menu = WindowMenu()
         self.configure(menu=menu)
-
 
         if __name__ == "__main__":
             self.main_loop()
@@ -83,23 +82,34 @@ class ConfigurationManager(ttk.Toplevel):
 class Configuration(ttk.Frame):
     def __init__(self,
                  parent,
-                 clients_dictionary,
-                 commands_dictionary,
-                 tabs_info,
-                 m_config_selected):
+                 m_config_selected,
+                 clients_dictionary=None,
+                 commands_dictionary=None,
+                 tabs_info=None):
         super().__init__(master=parent)
         self.tab_id = None
 
-        # self.minsize(400, 300)
-        self.clients_dictionary = clients_dictionary
-        self.commands_dictionary = commands_dictionary
-        self.tabs_info = tabs_info
+        self.m_config_selected = m_config_selected
+
+        if clients_dictionary is None:
+            self.clients_dictionary = dict()
+        else:
+            self.clients_dictionary = clients_dictionary
+
+        if commands_dictionary is None:
+            self.commands_dictionary = dict()
+        else:
+            self.commands_dictionary = commands_dictionary
+
+        if tabs_info is None:
+            self.tabs_info = dict()
+        else:
+            self.tabs_info = tabs_info
+
         self.tabs_list = list()
         self.active_scroll_frame = None
         self.active_tab_tree_frame = None
         self.client_tab_frame_list = None
-        self.m_config_selected = m_config_selected
-
         self.tab_frame = ttk.Frame(self)
         self.side_bar_frame = ttk.Frame(self)
 
@@ -126,12 +136,12 @@ class Configuration(ttk.Frame):
         self.new_client_button = ttk.Button(self.client_frame,
                                             text="New",
                                             command=lambda: ClientDlg(self.clients_tree.client_dictionary,
-                                                                         self.insert_client,
-                                                                         self.insert_another_client))
+                                                                      self.insert_client,
+                                                                      self.insert_another_client))
         # Edit Client Button
         self.edit_client_button = ttk.Button(self.client_frame,
-                                      text="Edit",
-                                      command=self.edit_client)
+                                             text="Edit",
+                                             command=self.edit_client)
 
         # Delete Command Button
         self.delete_client_button = ttk.Button(self.client_frame,
@@ -168,8 +178,8 @@ class Configuration(ttk.Frame):
 
         # Edit Command Button
         self.edit_command_button = ttk.Button(self.command_frame,
-                                       text="Edit",
-                                       command=self.edit_command)
+                                              text="Edit",
+                                              command=self.edit_command)
 
         # Delete Command Button
         self.delete_command_button = ttk.Button(self.command_frame,
@@ -255,16 +265,16 @@ class Configuration(ttk.Frame):
         # Configuration Combobox.
         config_names = ConfigurationManager.config_names
         c = ttk.StringVar(value=ConfigurationManager.active_config_name)
-        combo = ttk.Combobox(drop_down_frame, textvariable=c)
-        combo['values'] = config_names
-        combo['state'] = 'readonly'
-        combo.pack(expand=True, fill='x', side='right')
-        combo.bind('<<ComboboxSelected>>', lambda event: self.m_config_selected(c))
+        self.combo = ttk.Combobox(drop_down_frame, textvariable=c)
+        self.combo['values'] = config_names
+        self.combo['state'] = 'readonly'
+        self.combo.pack(expand=True, fill='x', side='right')
+        self.combo.bind('<<ComboboxSelected>>', lambda event: self.m_config_selected(c))
 
-        new_config = ttk.Button(drop_down_frame, text="+")
+        new_config_button = ttk.Button(drop_down_frame, text="+", command=lambda: NewConfigDlg(self.insert_config))
         delete_config = ttk.Button(drop_down_frame, text=u"\U0001F5D1")
         delete_config.pack(side='left')
-        new_config.pack(side='left')
+        new_config_button.pack(side='left')
 
         # pack combo frame:
         drop_down_frame.grid(row=0, column=0, columnspan=2, sticky='nsew')
@@ -287,9 +297,9 @@ class Configuration(ttk.Frame):
         if tree_index:
             client_name = self.clients_tree.item(tree_index)['values'][0]
             ClientDlg(self.clients_tree.client_dictionary,
-                       self.insert_client,
-                       self.insert_another_client,
-                       client_name=client_name)
+                      self.insert_client,
+                      self.insert_another_client,
+                      client_name=client_name)
 
     def edit_command(self):
         tree_index = self.commands_tree.focus()
@@ -329,10 +339,10 @@ class Configuration(ttk.Frame):
     def from_active_config(cls, parent, active_config_data, m_config_selected):
         try:
             return cls(parent,
+                       m_config_selected,
                        active_config_data['clients'],
                        active_config_data['commands'],
-                       active_config_data['tabs_info'],
-                       m_config_selected)
+                       active_config_data['tabs_info'])
         except KeyError as e:
             print(f'Key {e} is incorrect.')
 
@@ -504,6 +514,16 @@ class Configuration(ttk.Frame):
                 del self.tabs_info[name]
                 return
 
+    def insert_config(self, window_instance, new_config):
+        if new_config:
+            self.combo['values'] = (*self.combo['values'], new_config)
+            empty_config = dict()
+            empty_config['clients'] = dict()
+            empty_config['commands'] = dict()
+            empty_config['tabs_info'] = dict()
+            ConfigurationManager.configurations['configurations'][new_config] = empty_config
+        window_instance.destroy()
+
     def insert_client(self, window_instance, new_client):
         if new_client:
             self.clients_tree.insert(parent='', index=tk.END, values=[new_client])
@@ -641,6 +661,7 @@ class ScrollFrame(ttk.Frame):
                        tabs_nb,
                        tabs_info):
         tabs_data_list = list()
+        print(type(tabs_info))
         for tab_name, tab_data in tabs_info.items():
             tabs_data_list.append(cls(tabs_nb, tab_name, m_delete_client, tab_data))
         return tabs_data_list

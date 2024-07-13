@@ -6,6 +6,9 @@
 * File Open to select another JSON.
 * Allow only one of each window to open.
 * Have "local" option to run commands on local machine without sendcmdserver active.
+* Error Handling for sendcmdclient
+* Updating client info should change all trees with same name in configuration.
+* delete config
 
 ### Lower Priority:
 - Implement WOL option.
