@@ -1,5 +1,5 @@
 {
-  "active_config": "config 3",
+  "active_config": "config 1",
   "configurations": {
     "config 1": {
       "clients": {
@@ -243,24 +243,6 @@
           }
         }
       }
-    },
-    "config 3": {
-      "clients": {
-        "testcom": [
-          "fasdfasdf",
-          "edfd"
-        ],
-        "yolo": [
-          "fds",
-          "efdse"
-        ]
-      },
-      "commands": {
-        "new config test command 1": "text 1",
-        "123": "12423",
-        "234": "5324"
-      },
-      "tabs_info": {}
     }
   }
 }
