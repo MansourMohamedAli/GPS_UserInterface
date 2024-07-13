@@ -4,8 +4,8 @@
     "config 1": {
       "clients": {
         "VB1": [
-          "199.199.199.01",
-          "MAC1"
+          "199.199.199.232",
+          "mactest"
         ],
         "VB2": [
           "199.199.199.02",
@@ -98,11 +98,16 @@
         "VB25": [
           "local",
           ""
+        ],
+        "localhost": [
+          "local",
+          ""
         ]
       },
       "commands": {
         "Command 1": "Command Text 1",
-        "Command 2": "Command Text 2"
+        "Command 2": "Command Text 2",
+        "localcommand": "local text"
       },
       "tabs_info": {
         "Tab 1": {
@@ -156,94 +161,13 @@
             ]
           },
           "6": {
-            "client": "VB7",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "7": {
-            "client": "VB8",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "8": {
-            "client": "VB9",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "9": {
-            "client": "VB10",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "10": {
-            "client": "VB11",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "11": {
-            "client": "VB12",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "12": {
-            "client": "VB13",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "13": {
-            "client": "VB14",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "14": {
-            "client": "VB15",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "15": {
-            "client": "VB16",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "16": {
-            "client": "VB17",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "17": {
-            "client": "VB18",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "18": {
-            "client": "VB19",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "19": {
-            "client": "VB20",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "20": {
-            "client": "VB21",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "21": {
-            "client": "VB22",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "22": {
-            "client": "VB23",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "23": {
-            "client": "VB24",
-            "tree_commands": {},
-            "command_list": []
+            "client": "localhost",
+            "tree_commands": {
+              "localcommand": "start notepad"
+            },
+            "command_list": [
+              "localcommand"
+            ]
           }
         }
       }

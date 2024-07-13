@@ -1,6 +1,6 @@
 import tkinter as tk
 import ttkbootstrap as ttk
-from add_button_dlg import CommandDlg, ClientWindow, NewTabWindow, RenameTabWindow
+from add_button_dlg import CommandDlg, ClientDlg, NewTabWindow, RenameTabWindow
 from drag_and_drop import CommandDragManager, ClientDragManager
 from Tree_Widgets import ClientListTree, CommandListTree, TabBarTree, ClientTabFrame, TabTreeMouseOver
 from math import floor
@@ -126,13 +126,13 @@ class Configuration(ttk.Frame):
         # New Client Button
         self.new_client_button = ttk.Button(self.client_frame,
                                             text="New",
-                                            command=lambda: ClientWindow(self.clients_tree.client_dictionary,
+                                            command=lambda: ClientDlg(self.clients_tree.client_dictionary,
                                                                          self.insert_client,
                                                                          self.insert_another_client))
         # Edit Client Button
-        self.edit_client = ttk.Button(self.client_frame,
+        self.edit_client_button = ttk.Button(self.client_frame,
                                       text="Edit",
-                                      command=lambda: self.delete_row(self.clients_tree))
+                                      command=self.edit_client)
 
         # Delete Command Button
         self.delete_client_button = ttk.Button(self.client_frame,
@@ -142,7 +142,7 @@ class Configuration(ttk.Frame):
         # Adding command section to sidebar.
         self.clients_tree.grid(row=0, columnspan=3, sticky='nsew')
         self.new_client_button.grid(row=1, column=0, padx=5, pady=5)
-        self.edit_client.grid(row=1, column=1, padx=5, pady=5)
+        self.edit_client_button.grid(row=1, column=1, padx=5, pady=5)
         self.delete_client_button.grid(row=1, column=2, padx=5, pady=5)
 
         self.command_frame = ttk.Frame(self.side_bar_frame)
@@ -282,6 +282,15 @@ class Configuration(ttk.Frame):
 
         self.buttons_list = [self.move_left_button, self.move_right_button]
         self.bind_class("tree_select", '<Button-1>', self.enable_nav_buttons)
+
+    def edit_client(self):
+        tree_index = self.clients_tree.focus()
+        if tree_index:
+            client_name = self.clients_tree.item(tree_index)['values'][0]
+            ClientDlg(self.clients_tree.client_dictionary,
+                       self.insert_client,
+                       self.insert_another_client,
+                       client_name=client_name)
 
     def edit_command(self):
         tree_index = self.commands_tree.focus()

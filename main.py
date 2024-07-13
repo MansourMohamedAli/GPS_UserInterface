@@ -1,6 +1,7 @@
 import tkinter as tk
 from configuration import ConfigurationManager
 from send_command import send_cmd_client
+from send_local_command import send_local_cmd
 import socket
 import json
 import ttkbootstrap as ttk
@@ -228,8 +229,12 @@ class CommandButtons(ttk.Button):
 
     def send_cmd(self, event):
         for ip, command in zip(self.client_list, self.command_list):
-            send_cmd_client(ip, command)
-            print(ip, command)
+            if ip == "local":
+                send_local_cmd(command)
+                print("sending local command:", command)
+            else:
+                send_cmd_client(ip, command)
+                print("sending Remote command to: ", ip, command)
 
     def create_commands_list(self):
         for index, (client, command_name_list) in enumerate(zip(self.client_ip_list, self.command_name_lists)):
