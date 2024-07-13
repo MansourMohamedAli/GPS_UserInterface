@@ -3,14 +3,9 @@
 ## To Do:
 
 ### Higher Priority
-* Create save button/option
-* Write to JSON file.
-* changed order of commands using buttons on TabTreeMouseOver buttons
-* Rename Tabs
 * File Open to select another JSON.
 * Allow only one of each window to open.
-* Configuration class should instantiate with only configuration passed in. not with clients,commands,tab_clients,tab_commands.
-* TabFrame should store dictionary of commands rather than a lost of lists
+* Have "local" option to run commands on local machine without sendcmdserver active.
 
 ### Lower Priority:
 - Implement WOL option.

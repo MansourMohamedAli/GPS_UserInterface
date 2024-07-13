@@ -8,19 +8,15 @@
           "MAC1"
         ],
         "VB2": [
-          "199.199.199.01",
+          "199.199.199.02",
           "MAC1"
         ],
         "VB3": [
-          "199.199.199.01",
+          "199.199.199.03",
           "MAC1"
         ],
         "VB4": [
-          "199.199.199.01",
-          "MAC1"
-        ],
-        "VB5": [
-          "199.199.199.01",
+          "199.199.199.04",
           "MAC1"
         ],
         "VB6": [
@@ -98,112 +94,153 @@
         "VB24": [
           "199.199.199.01",
           "MAC1"
+        ],
+        "VB25": [
+          "local",
+          ""
         ]
       },
-      "commands": {},
+      "commands": {
+        "Command 1": "Command Text 1",
+        "Command 2": "Command Text 2"
+      },
       "tabs_info": {
         "Tab 1": {
           "1": {
+            "client": "VB2",
+            "tree_commands": {
+              "2-1": "2-1 Text",
+              "2-2": "2-2 Text",
+              "2-3": "2-3 Text",
+              "2-4": "2-4 Text"
+            },
+            "command_list": [
+              "2-1",
+              "2-2",
+              "2-3",
+              "2-4"
+            ]
+          },
+          "2": {
+            "client": "VB3",
+            "tree_commands": {
+              "3-1": "3-1 Text",
+              "3-2": "3-2 Text"
+            },
+            "command_list": [
+              "3-1",
+              "3-2"
+            ]
+          },
+          "3": {
+            "client": "VB1",
+            "tree_commands": {
+              "1-1": "1-1 Text"
+            },
+            "command_list": [
+              "1-1"
+            ]
+          },
+          "4": {
             "client": "VB4",
             "tree_commands": {},
             "command_list": []
           },
-          "2": {
-            "client": "VB5",
-            "tree_commands": {},
-            "command_list": []
+          "5": {
+            "client": "VB1",
+            "tree_commands": {
+              "1-1": "1-1 Text"
+            },
+            "command_list": [
+              "1-1"
+            ]
           },
-          "3": {
-            "client": "VB6",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "4": {
+          "6": {
             "client": "VB7",
             "tree_commands": {},
             "command_list": []
           },
-          "5": {
+          "7": {
             "client": "VB8",
             "tree_commands": {},
             "command_list": []
           },
-          "6": {
+          "8": {
             "client": "VB9",
             "tree_commands": {},
             "command_list": []
           },
-          "7": {
+          "9": {
             "client": "VB10",
             "tree_commands": {},
             "command_list": []
           },
-          "8": {
+          "10": {
             "client": "VB11",
             "tree_commands": {},
             "command_list": []
           },
-          "9": {
+          "11": {
             "client": "VB12",
             "tree_commands": {},
             "command_list": []
           },
-          "10": {
+          "12": {
             "client": "VB13",
             "tree_commands": {},
             "command_list": []
           },
-          "11": {
+          "13": {
             "client": "VB14",
             "tree_commands": {},
             "command_list": []
           },
-          "12": {
+          "14": {
             "client": "VB15",
             "tree_commands": {},
             "command_list": []
           },
-          "13": {
+          "15": {
             "client": "VB16",
             "tree_commands": {},
             "command_list": []
           },
-          "14": {
+          "16": {
             "client": "VB17",
             "tree_commands": {},
             "command_list": []
           },
-          "15": {
+          "17": {
             "client": "VB18",
             "tree_commands": {},
             "command_list": []
           },
-          "16": {
+          "18": {
             "client": "VB19",
             "tree_commands": {},
             "command_list": []
           },
-          "17": {
+          "19": {
             "client": "VB20",
             "tree_commands": {},
             "command_list": []
           },
-          "18": {
+          "20": {
             "client": "VB21",
             "tree_commands": {},
             "command_list": []
           },
-          "19": {
+          "21": {
             "client": "VB22",
             "tree_commands": {},
             "command_list": []
           },
-          "20": {
+          "22": {
             "client": "VB23",
             "tree_commands": {},
             "command_list": []
           },
-          "21": {
+          "23": {
             "client": "VB24",
             "tree_commands": {},
             "command_list": []

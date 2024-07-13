@@ -105,13 +105,14 @@ class WindowMenu(ttk.Menu):
 
 
 class Menu(ttk.Frame):
-    def __init__(self, parent, buttons_info, m_config_selected):
+    def __init__(self, parent, buttons_info, client_dict, m_config_selected):
         super().__init__(parent)
         # widget data
         # self.tab_dict = tab_dict
         # item_number = len(tab_dict) + 2  # Plus two for configuration button and dropdown menu
         item_number = len(buttons_info) + 2  # Plus two for configuration button and dropdown menu
         self.buttons_info = buttons_info
+        self.client_dict = client_dict
         self.list_height = item_number * 39
         self.m_config_selected = m_config_selected
         self.place(x=0, y=0, relwidth=1, relheight=1)
@@ -137,7 +138,8 @@ class Menu(ttk.Frame):
     @classmethod
     def from_active_config_data(cls, parent, active_config_data, m_config_selected):
         buttons_info = active_config_data['tabs_info']
-        return cls(parent, buttons_info, m_config_selected)
+        client_dict = active_config_data["clients"]
+        return cls(parent, buttons_info, client_dict, m_config_selected)
 
     def update_size(self, event):
         if self.list_height >= self.winfo_height():
@@ -161,7 +163,7 @@ class Menu(ttk.Frame):
         frame = ttk.Frame(self.frame)
         # grid layout
         frame.columnconfigure(0, weight=1)
-        button_frames_list = CommandButtons.from_buttons_info(self.buttons_info, frame)
+        button_frames_list = CommandButtons.from_buttons_info(self.buttons_info, self.client_dict, frame)
         self.drop_down_menu(frame)
         self.grid_button_frames(button_frames_list)
 
@@ -213,9 +215,10 @@ class CommandButtons(ttk.Button):
     Buttons will be instantiated with client, and command info built in.
     """
 
-    def __init__(self, parent, button_name, clients, command_name_lists, commands_dict):
+    def __init__(self, parent, button_name, client_ip_list, client_mac_list, command_name_lists, commands_dict):
         super().__init__(master=parent, text=button_name)
-        self.clients = clients
+        self.client_ip_list = client_ip_list
+        self.client_mac_list = client_mac_list
         self.commands_dict = commands_dict
         self.command_name_lists = command_name_lists
         self.command_list = list()
@@ -224,32 +227,35 @@ class CommandButtons(ttk.Button):
         self.bind('<ButtonPress-1>', self.send_cmd)
 
     def send_cmd(self, event):
-        for client, command in zip(self.client_list, self.command_list):
-            print(client, command)
-            send_cmd_client(ip_address, command)
+        for ip, command in zip(self.client_list, self.command_list):
+            send_cmd_client(ip, command)
+            print(ip, command)
 
     def create_commands_list(self):
-        for index, (client, command_name_list) in enumerate(zip(self.clients, self.command_name_lists)):
+        for index, (client, command_name_list) in enumerate(zip(self.client_ip_list, self.command_name_lists)):
             for command_name in command_name_list:
                 self.client_list.append(client)
                 self.command_list.append(self.commands_dict[index][command_name])
 
     @classmethod
-    def from_buttons_info(cls, buttons_info, menu_frame):
+    def from_buttons_info(cls, buttons_info, client_dict, menu_frame):
         button_frames_list = list()
         for button_name, tree_indices in buttons_info.items():
             button_frame = ttk.Frame(menu_frame)
-            clients = list()
+            client_ip_list = list()
+            client_mac_list = list()
             command_name_lists = list()
             commands_dict = list()
             for tree_index in tree_indices:
                 tree_info = tree_indices[tree_index]
-                clients.append(tree_info['client'])
+                client_ip_list.append(client_dict[tree_info['client']][0])
+                client_mac_list.append(client_dict[tree_info['client']][1])
                 command_name_lists.append(tree_info['command_list'])
                 commands_dict.append(tree_info['tree_commands'])
-            cls(button_frame, button_name, clients, command_name_lists, commands_dict).pack(expand=True, fill="both")
+            cls(button_frame, button_name, client_ip_list, client_mac_list, command_name_lists, commands_dict).pack(expand=True, fill="both")
             button_frames_list.append(button_frame)
         return button_frames_list
+
 
 if __name__ == "__main__":
     App('Glass Panel Control', 'darkly')
