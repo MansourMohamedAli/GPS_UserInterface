@@ -8,7 +8,7 @@ import json
 
 
 class ConfigurationManager(ttk.Toplevel):
-    def __init__(self, configurations, m_reload_menu):
+    def __init__(self, configurations, active_config_name, m_reload_menu):
         super().__init__()
 
         self.title('Configuration')
@@ -19,8 +19,9 @@ class ConfigurationManager(ttk.Toplevel):
         self.maxsize(int(x * 0.85), int(y * 0.75))
         self.resizable(True, True)
         self.configurations = configurations
+        self.active_config_name = active_config_name
         self.m_reload_menu = m_reload_menu
-        self.active_config_name = self.configurations['active_config']
+        # self.active_config_name = self.configurations['active_config']
         self.active_config_data = self.configurations['configurations'][
             self.active_config_name]
         self.config_names = list(self.configurations['configurations'].keys())
@@ -125,10 +126,10 @@ class ConfigurationManager(ttk.Toplevel):
             self.config_frame.pack(expand=True, fill='both')
 
     @classmethod
-    def from_json(cls, json_name, m_reload_menu):
+    def from_json(cls, json_name, active_config_name, m_reload_menu):
         try:
             with open(json_name) as f:
-                cls(json.load(f), m_reload_menu)
+                cls(json.load(f), active_config_name, m_reload_menu)
         except FileNotFoundError as e:
             print(e)
         except json.decoder.JSONDecodeError as e:
