@@ -8,29 +8,25 @@ import json
 
 
 class ConfigurationManager(ttk.Toplevel):
-    config_names = list()
-    active_config_name = None
-    configurations = None
-
     def __init__(self, configurations):
         super().__init__()
+
         self.title('Configuration')
-        # self.geometry("1340x600")
-        # self.geometry("1080x700-1910-670") #LEGION VERTICAL MONITOR
+        self.deleted_config = None
         x, y = self.get_dimensions()
         self.geometry(f'{int(x * 0.75)}x{int(y * 0.65)}')
         self.minsize(int(x * 0.65), int(y * 0.55))
         self.maxsize(int(x * 0.85), int(y * 0.75))
         self.resizable(True, True)
-        ConfigurationManager.configurations = configurations
-        ConfigurationManager.active_config_name = ConfigurationManager.configurations['active_config']
-        active_config_data = ConfigurationManager.configurations['configurations'][
-            ConfigurationManager.active_config_name]
-        ConfigurationManager.config_names = list(ConfigurationManager.configurations['configurations'].keys())
+        self.configurations = configurations
+        self.active_config_name = self.configurations['active_config']
+        self.active_config_data = self.configurations['configurations'][
+            self.active_config_name]
+        self.config_names = list(self.configurations['configurations'].keys())
 
         self.config_frame = Configuration.from_active_config(self,
-                                                             active_config_data,
-                                                             self.config_selected)
+                                                             self.active_config_data,
+                                                             self.write_json)
 
         # pack
         self.config_frame.pack(expand=True, fill='both', side="bottom")
@@ -39,22 +35,27 @@ class ConfigurationManager(ttk.Toplevel):
         self.combo_frame = ttk.Frame(self)
 
         # Configuration Dropdown
-        drop_down_frame = ttk.Frame(self.combo_frame)
+        self.drop_down_frame = ttk.Frame(self.combo_frame)
         # Configuration Combobox.
-        config_names = ConfigurationManager.config_names
-        c = ttk.StringVar(value=ConfigurationManager.active_config_name)
-        self.combo = ttk.Combobox(drop_down_frame, textvariable=c)
-        self.combo['values'] = config_names
+        c = ttk.StringVar(value=self.active_config_name)
+        self.combo = ttk.Combobox(self.drop_down_frame, textvariable=c)
+        self.combo['values'] = self.config_names
         self.combo['state'] = 'readonly'
         self.combo.pack(expand=True, fill='x', side='right')
         self.combo.bind('<<ComboboxSelected>>', lambda event: self.config_selected(c))
 
-        new_config_button = ttk.Button(drop_down_frame, text="+", command=lambda: NewConfigDlg(self.insert_config))
-        delete_config = ttk.Button(drop_down_frame, text=u"\U0001F5D1", command=self.delete_config)
-        delete_config.pack(side='left')
-        new_config_button.pack(side='left')
+        self.new_config_button = ttk.Button(self.drop_down_frame,
+                                            text="+",
+                                            command=lambda: NewConfigDlg(self.insert_config))
+
+        self.delete_config = ttk.Button(self.drop_down_frame,
+                                        text=u"\U0001F5D1",
+                                        command=self.delete_config)
+
+        self.delete_config.pack(side='left')
+        self.new_config_button.pack(side='left')
         # drop_down_frame.pack(expand=True, fill='both')
-        drop_down_frame.pack(fill='x')
+        self.drop_down_frame.pack(fill='x')
 
         # self.combo_frame.pack(expand=True, fill='both', side="top")
         self.combo_frame.pack(fill='x', side="top")
@@ -69,9 +70,15 @@ class ConfigurationManager(ttk.Toplevel):
     def main_loop(self):
         self.mainloop()
 
-    def write_active_config(self):
+    def write_json(self):
+        """
+        Reset Active Config to first in list when saving in case Active Config is deleted.
+        TODO: Handle this more elegantly with try/except in main.
+        """
+        if self.deleted_config == self.configurations['active_config']:
+            self.configurations['active_config'] = self.combo['values'][0]
         with open('commandconfig.json', 'w') as f:
-            json.dump(ConfigurationManager.configurations, f, indent=2)
+            json.dump(self.configurations, f, indent=2)
 
     def insert_config(self, window_instance, new_config):
         if new_config:
@@ -80,37 +87,38 @@ class ConfigurationManager(ttk.Toplevel):
             empty_config['clients'] = dict()
             empty_config['commands'] = dict()
             empty_config['tabs_info'] = dict()
-            ConfigurationManager.configurations['configurations'][new_config] = empty_config
+            self.configurations['configurations'][new_config] = empty_config
         window_instance.destroy()
 
     def delete_config(self):
         temp_list = list(self.combo['values'])
         if len(temp_list) > 1:
-            temp_list.remove(ConfigurationManager.active_config_name)
+            temp_list.remove(self.active_config_name)
             self.combo['values'] = tuple(temp_list)
-            del ConfigurationManager.configurations['configurations'][ConfigurationManager.active_config_name]
+            del self.configurations['configurations'][self.active_config_name]
+            self.deleted_config = self.active_config_name
             c = ttk.StringVar(value=self.combo['values'][0])
             self.combo.set(self.combo['values'][0])
             self.config_selected(c)
-            self.write_active_config()
+            self.write_json()
         else:
             print('Last Config Frame')
 
     def config_selected(self, config):
         selected_config = config.get()
-        if selected_config == ConfigurationManager.active_config_name:
+        if selected_config == self.active_config_name:
             return
         else:
             # Setting new active config
-            ConfigurationManager.active_config_name = selected_config
+            self.active_config_name = selected_config
             # Getting Config Data
-            selected_config_data = ConfigurationManager.configurations['configurations'][selected_config]
+            selected_config_data = self.configurations['configurations'][selected_config]
             # Destroying old config window
             self.config_frame.destroy()
             # Loading Configuration with new configuration data
             self.config_frame = Configuration.from_active_config(self,
                                                                  selected_config_data,
-                                                                 self.config_selected)
+                                                                 self.write_json)
             # Repacking Configuration
             self.config_frame.pack(expand=True, fill='both')
 
@@ -133,14 +141,14 @@ class ConfigurationManager(ttk.Toplevel):
 class Configuration(ttk.Frame):
     def __init__(self,
                  parent,
-                 m_config_selected,
+                 m_write_json,
                  clients_dictionary=None,
                  commands_dictionary=None,
                  tabs_info=None):
         super().__init__(master=parent)
         self.tab_id = None
 
-        self.m_config_selected = m_config_selected
+        self.m_write_json = m_write_json
 
         if clients_dictionary is None:
             self.clients_dictionary = dict()
@@ -243,7 +251,7 @@ class Configuration(ttk.Frame):
         self.edit_command_button.grid(row=1, column=1, padx=5, pady=5)
         self.delete_command_button.grid(row=1, column=2, padx=5, pady=5)
 
-        self.save_button = ttk.Button(self.side_bar_frame, text='Save', command=self.write_json)
+        self.save_button = ttk.Button(self.side_bar_frame, text='Save', command=self.m_write_json)
         self.save_button.grid(row=2)
 
         # Tab Frame configuration
@@ -362,16 +370,16 @@ class Configuration(ttk.Frame):
         except tk.TclError:
             pass
 
-    @staticmethod
-    def write_json():
-        with open('commandconfig.json', 'w') as f:
-            json.dump(ConfigurationManager.configurations, f, indent=2)
+    # @staticmethod
+    # def write_json():
+    #     with open('commandconfig.json', 'w') as f:
+    #         json.dump(ConfigurationManager.configurations, f, indent=2)
 
     @classmethod
-    def from_active_config(cls, parent, active_config_data, m_config_selected):
+    def from_active_config(cls, parent, active_config_data, m_write_json):
         try:
             return cls(parent,
-                       m_config_selected,
+                       m_write_json,
                        active_config_data['clients'],
                        active_config_data['commands'],
                        active_config_data['tabs_info'])

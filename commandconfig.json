@@ -1,12 +1,12 @@
 {
-  "active_config": "config 1",
+  "active_config": "config2",
   "configurations": {
-    "config 1": {
+    "config2": {
       "clients": {},
       "commands": {},
       "tabs_info": {}
     },
-    "Config 3": {
+    "config3": {
       "clients": {},
       "commands": {},
       "tabs_info": {}
