@@ -11,54 +11,109 @@ ip_address = socket.gethostbyname(host)
 
 
 class App(ttk.Window):
-    config_names = list()
-    active_config_name = None
-
     def __init__(self, title, theme):
         # main setup
         super().__init__(themename=theme)
+        self.combo = None
+        self.active_config_data = None
         self.title(title)
         x, y = self.get_dimensions()
-        self.geometry(f'{int(x * 0.25)}x{int(y * 0.35)}')
         self.minsize(int(x * 0.10), int(y * 0.15))
         self.maxsize(int(x * 0.35), int(y * 0.45))
-        # self.resizable(False, False)
         self.configurations = self.load_data()
-        App.config_names = list(self.configurations['configurations'].keys())
-        App.active_config_name = self.configurations['active_config']
-        active_config_data = self.configurations['configurations'][App.active_config_name]
+        self.config_names = list(self.configurations['configurations'].keys())
+        self.active_config_name = self.configurations['active_config']
 
         # Widgets
-        self.menu = Menu.from_active_config_data(self, active_config_data, self.config_selected)
+        self.main_frame = ttk.Frame(self)
+        self.combo_frame = ttk.Frame(self.main_frame)
+        self.create_combo(self.combo_frame)
+        self.menu_frame = ttk.Frame(self.main_frame)
+
+        try:
+            self.active_config_data = self.configurations['configurations'][self.active_config_name]
+        except KeyError:
+            self.active_config_name = self.config_names[0]
+            self.active_config_data = self.configurations['configurations'][self.active_config_name]
+            self.combo.set(self.active_config_name)
+
+        self.menu = Menu.from_active_config_data(self.menu_frame,
+                                                 self.active_config_data,
+                                                 self.config_selected,
+                                                 self.reload_menu)
+
+        self.pack_widget_frames()
 
         window_menu = WindowMenu()
+
         self.configure(menu=window_menu)
         # Run
         self.mainloop()
+
+    def reload_menu(self):
+        self.combo_frame.destroy()
+        self.combo_frame = ttk.Frame(self.main_frame)
+        self.configurations = self.load_data()
+        self.config_names = list(self.configurations['configurations'].keys())
+        self.active_config_name = self.configurations['active_config']
+        try:
+            self.active_config_data = self.configurations['configurations'][self.active_config_name]
+        except KeyError:
+            self.active_config_name = self.config_names[0]
+            self.active_config_data = self.configurations['configurations'][self.active_config_name]
+        self.create_combo(self.combo_frame)
+        self.combo.set(self.active_config_name)
+        self.menu_frame.destroy()
+        self.menu_frame = ttk.Frame(self.main_frame)
+        self.menu = Menu.from_active_config_data(self.menu_frame,
+                                                 self.active_config_data,
+                                                 self.config_selected,
+                                                 self.reload_menu)
+        self.pack_widget_frames()
+
+    def re_load_dropdown(self):
+        self.combo_frame.destroy()
+        self.combo_frame = ttk.Frame(self.main_frame)
+        self.create_combo(self.combo_frame)
+        self.pack_widget_frames()
+
+    def pack_widget_frames(self):
+        self.combo_frame.pack(expand=False, fill='both', side="top")
+        self.menu_frame.pack(expand=False, fill='both', side="bottom")
+        self.main_frame.pack(expand=False, fill='x', side='top')
+
+    def create_combo(self, combo_frame):
+        config_names = self.config_names
+        c = ttk.StringVar(value=self.active_config_name)
+        self.combo = ttk.Combobox(combo_frame, textvariable=c)
+        self.combo['values'] = config_names
+        self.combo['state'] = 'readonly'
+        self.combo.pack(expand=False, fill='x', padx=5, side="top")
+        self.combo.bind('<<ComboboxSelected>>', lambda event: self.config_selected(c))
 
     def get_dimensions(self):
         x = self.winfo_screenwidth()
         y = self.winfo_screenheight()
         return x, y
 
-    def get_tab_name(self):
-        pass
-
     def config_selected(self, config):
         selected_config = config.get()
-        if selected_config == App.active_config_name:
+        if selected_config == self.active_config_name:
             return
         else:
             # Setting new active config
-            App.active_config_name = selected_config
+            self.active_config_name = selected_config
             self.write_active_config()
             # Getting Config Data
             selected_config_data = self.configurations['configurations'][selected_config]
-            buttons_info = selected_config_data['tabs_info']
             # Destroying old config window
             self.menu.destroy()
             # Loading Configuration with new configuration data
-            self.menu = Menu.from_active_config_data(self, selected_config_data, self.config_selected)
+            self.menu = Menu.from_active_config_data(self.menu_frame,
+                                                     selected_config_data,
+                                                     self.config_selected,
+                                                     self.reload_menu)
+            self.re_load_dropdown()
 
     def write_active_config(self):
         self.configurations['active_config'] = self.active_config_name
@@ -106,7 +161,7 @@ class WindowMenu(ttk.Menu):
 
 
 class Menu(ttk.Frame):
-    def __init__(self, parent, buttons_info, client_dict, m_config_selected):
+    def __init__(self, parent, buttons_info, client_dict, m_config_selected, m_reload_menu):
         super().__init__(parent)
         # widget data
         # self.tab_dict = tab_dict
@@ -116,7 +171,9 @@ class Menu(ttk.Frame):
         self.client_dict = client_dict
         self.list_height = item_number * 39
         self.m_config_selected = m_config_selected
-        self.place(x=0, y=0, relwidth=1, relheight=1)
+        self.m_reload_menu = m_reload_menu
+        # self.place(x=0, y=0, relwidth=1, relheight=1)
+        self.pack(expand=True, fill="both")
         self.config_button = ttk.Button(self, text='Configuration')
         self.columnconfigure(0, weight=1, uniform='a')
 
@@ -137,10 +194,10 @@ class Menu(ttk.Frame):
         self.bind('<Configure>', self.update_size)
 
     @classmethod
-    def from_active_config_data(cls, parent, active_config_data, m_config_selected):
+    def from_active_config_data(cls, parent, active_config_data, m_config_selected, m_reload_menu):
         buttons_info = active_config_data['tabs_info']
         client_dict = active_config_data["clients"]
-        return cls(parent, buttons_info, client_dict, m_config_selected)
+        return cls(parent, buttons_info, client_dict, m_config_selected, m_reload_menu)
 
     def update_size(self, event):
         if self.list_height >= self.winfo_height():
@@ -165,27 +222,27 @@ class Menu(ttk.Frame):
         # grid layout
         frame.columnconfigure(0, weight=1)
         button_frames_list = CommandButtons.from_buttons_info(self.buttons_info, self.client_dict, frame)
-        self.drop_down_menu(frame)
+        # self.drop_down_menu(frame)
         self.grid_button_frames(button_frames_list)
 
         # Creating configuration button and putting at bottom.
         self.configuration_button(frame)
         return frame
 
-    def drop_down_menu(self, frame):
-        # Configuration Dropdown
-        drop_down_frame = ttk.Frame(frame)
-        # Configuration Combobox.
-        config_names = App.config_names
-        c = ttk.StringVar(value=App.active_config_name)
-        combo = ttk.Combobox(drop_down_frame, textvariable=c)
-        combo['values'] = config_names
-        combo['state'] = 'readonly'
-        combo.pack(expand=True, fill='x', padx=5)
-        combo.bind('<<ComboboxSelected>>', lambda event: self.m_config_selected(c))
-        # pack combo frame:
-        # drop_down_frame.pack(expand=True, fill='x')
-        drop_down_frame.grid(sticky='nsew', pady=5)
+    # def drop_down_menu(self, frame):
+    #     # Configuration Dropdown
+    #     drop_down_frame = ttk.Frame(frame)
+    #     # Configuration Combobox.
+    #     config_names = self.config_names
+    #     c = ttk.StringVar(value=self.active_config_name)
+    #     combo = ttk.Combobox(drop_down_frame, textvariable=c)
+    #     combo['values'] = config_names
+    #     combo['state'] = 'readonly'
+    #     combo.pack(expand=True, fill='x', padx=5)
+    #     combo.bind('<<ComboboxSelected>>', lambda event: self.m_config_selected(c))
+    #     # pack combo frame:
+    #     # drop_down_frame.pack(expand=True, fill='x')
+    #     drop_down_frame.grid(sticky='nsew', pady=5)
 
     def configuration_button(self, frame):
         config_button_frame = ttk.Frame(frame)
@@ -194,11 +251,8 @@ class Menu(ttk.Frame):
         config_button.pack(expand=True, fill='both')
         config_button_frame.grid(sticky='nsew', pady=5)
 
-
-    @staticmethod
-    def read_configuration(configuration_filename):
-        ConfigurationManager.from_json(configuration_filename)
-
+    def read_configuration(self, configuration_filename):
+        ConfigurationManager.from_json(configuration_filename, self.m_reload_menu)
 
     @staticmethod
     def grid_button_frames(button_frames_list):
@@ -257,7 +311,8 @@ class CommandButtons(ttk.Button):
                 client_mac_list.append(client_dict[tree_info['client']][1])
                 command_name_lists.append(tree_info['command_list'])
                 commands_dict.append(tree_info['tree_commands'])
-            cls(button_frame, button_name, client_ip_list, client_mac_list, command_name_lists, commands_dict).pack(expand=True, fill="both")
+            cls(button_frame, button_name, client_ip_list, client_mac_list, command_name_lists, commands_dict).pack(
+                expand=True, fill="both")
             button_frames_list.append(button_frame)
         return button_frames_list
 

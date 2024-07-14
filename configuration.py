@@ -8,7 +8,7 @@ import json
 
 
 class ConfigurationManager(ttk.Toplevel):
-    def __init__(self, configurations):
+    def __init__(self, configurations, m_reload_menu):
         super().__init__()
 
         self.title('Configuration')
@@ -19,6 +19,7 @@ class ConfigurationManager(ttk.Toplevel):
         self.maxsize(int(x * 0.85), int(y * 0.75))
         self.resizable(True, True)
         self.configurations = configurations
+        self.m_reload_menu = m_reload_menu
         self.active_config_name = self.configurations['active_config']
         self.active_config_data = self.configurations['configurations'][
             self.active_config_name]
@@ -75,10 +76,11 @@ class ConfigurationManager(ttk.Toplevel):
         Reset Active Config to first in list when saving in case Active Config is deleted.
         TODO: Handle this more elegantly with try/except in main.
         """
-        if self.deleted_config == self.configurations['active_config']:
-            self.configurations['active_config'] = self.combo['values'][0]
+        # if self.deleted_config == self.configurations['active_config']:
+        #     self.configurations['active_config'] = self.combo['values'][0]
         with open('commandconfig.json', 'w') as f:
             json.dump(self.configurations, f, indent=2)
+        self.m_reload_menu()
 
     def insert_config(self, window_instance, new_config):
         if new_config:
@@ -100,7 +102,7 @@ class ConfigurationManager(ttk.Toplevel):
             c = ttk.StringVar(value=self.combo['values'][0])
             self.combo.set(self.combo['values'][0])
             self.config_selected(c)
-            self.write_json()
+            # self.write_json()
         else:
             print('Last Config Frame')
 
@@ -123,10 +125,10 @@ class ConfigurationManager(ttk.Toplevel):
             self.config_frame.pack(expand=True, fill='both')
 
     @classmethod
-    def from_json(cls, json_name):
+    def from_json(cls, json_name, m_reload_menu):
         try:
             with open(json_name) as f:
-                cls(json.load(f))
+                cls(json.load(f), m_reload_menu)
         except FileNotFoundError as e:
             print(e)
         except json.decoder.JSONDecodeError as e:
@@ -691,7 +693,6 @@ class ScrollFrame(ttk.Frame):
                        tabs_nb,
                        tabs_info):
         tabs_data_list = list()
-        print(type(tabs_info))
         for tab_name, tab_data in tabs_info.items():
             tabs_data_list.append(cls(tabs_nb, tab_name, m_delete_client, tab_data))
         return tabs_data_list

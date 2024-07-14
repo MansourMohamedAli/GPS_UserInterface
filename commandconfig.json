@@ -1,12 +1,50 @@
 {
-  "active_config": "config2",
+  "active_config": "fdgvd",
   "configurations": {
-    "config2": {
-      "clients": {},
-      "commands": {},
-      "tabs_info": {}
+    "Config2": {
+      "clients": {
+        "fvasdf": [
+          "sdf",
+          ""
+        ]
+      },
+      "commands": {
+        "test2": "sdf"
+      },
+      "tabs_info": {
+        "est": {
+          "1": {
+            "client": "fvasdf",
+            "tree_commands": {
+              "test2": "sdf"
+            },
+            "command_list": [
+              "test2"
+            ]
+          }
+        },
+        "new": {}
+      }
     },
-    "config3": {
+    "zxcv": {
+      "clients": {
+        "tesgtf": [
+          "svxdcv",
+          "xcv"
+        ]
+      },
+      "commands": {},
+      "tabs_info": {
+        "est1": {
+          "1": {
+            "client": "tesgtf",
+            "tree_commands": {},
+            "command_list": []
+          }
+        }
+      }
+    },
+    "qwe": {
       "clients": {},
       "commands": {},
       "tabs_info": {}
