@@ -33,7 +33,31 @@ class ConfigurationManager(ttk.Toplevel):
                                                              self.config_selected)
 
         # pack
-        self.config_frame.pack(expand=True, fill='both')
+        self.config_frame.pack(expand=True, fill='both', side="bottom")
+
+        # combo frame
+        self.combo_frame = ttk.Frame(self)
+
+        # Configuration Dropdown
+        drop_down_frame = ttk.Frame(self.combo_frame)
+        # Configuration Combobox.
+        config_names = ConfigurationManager.config_names
+        c = ttk.StringVar(value=ConfigurationManager.active_config_name)
+        self.combo = ttk.Combobox(drop_down_frame, textvariable=c)
+        self.combo['values'] = config_names
+        self.combo['state'] = 'readonly'
+        self.combo.pack(expand=True, fill='x', side='right')
+        self.combo.bind('<<ComboboxSelected>>', lambda event: self.config_selected(c))
+
+        new_config_button = ttk.Button(drop_down_frame, text="+", command=lambda: NewConfigDlg(self.insert_config))
+        delete_config = ttk.Button(drop_down_frame, text=u"\U0001F5D1", command=self.delete_config)
+        delete_config.pack(side='left')
+        new_config_button.pack(side='left')
+        # drop_down_frame.pack(expand=True, fill='both')
+        drop_down_frame.pack(fill='x')
+
+        # self.combo_frame.pack(expand=True, fill='both', side="top")
+        self.combo_frame.pack(fill='x', side="top")
 
         # Menu
         menu = WindowMenu()
@@ -44,6 +68,33 @@ class ConfigurationManager(ttk.Toplevel):
 
     def main_loop(self):
         self.mainloop()
+
+    def write_active_config(self):
+        with open('commandconfig.json', 'w') as f:
+            json.dump(ConfigurationManager.configurations, f, indent=2)
+
+    def insert_config(self, window_instance, new_config):
+        if new_config:
+            self.combo['values'] = (*self.combo['values'], new_config)
+            empty_config = dict()
+            empty_config['clients'] = dict()
+            empty_config['commands'] = dict()
+            empty_config['tabs_info'] = dict()
+            ConfigurationManager.configurations['configurations'][new_config] = empty_config
+        window_instance.destroy()
+
+    def delete_config(self):
+        temp_list = list(self.combo['values'])
+        if len(temp_list) > 1:
+            temp_list.remove(ConfigurationManager.active_config_name)
+            self.combo['values'] = tuple(temp_list)
+            del ConfigurationManager.configurations['configurations'][ConfigurationManager.active_config_name]
+            c = ttk.StringVar(value=self.combo['values'][0])
+            self.combo.set(self.combo['values'][0])
+            self.config_selected(c)
+            self.write_active_config()
+        else:
+            print('Last Config Frame')
 
     def config_selected(self, config):
         selected_config = config.get()
@@ -259,25 +310,6 @@ class Configuration(ttk.Frame):
         self.delete_tab_button.pack(expand=True, fill='both', side='right')
 
         self.button_frame.grid(row=0, column=3, sticky='se')
-
-        # Configuration Dropdown
-        drop_down_frame = ttk.Frame(self.tab_frame)
-        # Configuration Combobox.
-        config_names = ConfigurationManager.config_names
-        c = ttk.StringVar(value=ConfigurationManager.active_config_name)
-        self.combo = ttk.Combobox(drop_down_frame, textvariable=c)
-        self.combo['values'] = config_names
-        self.combo['state'] = 'readonly'
-        self.combo.pack(expand=True, fill='x', side='right')
-        self.combo.bind('<<ComboboxSelected>>', lambda event: self.m_config_selected(c))
-
-        new_config_button = ttk.Button(drop_down_frame, text="+", command=lambda: NewConfigDlg(self.insert_config))
-        delete_config = ttk.Button(drop_down_frame, text=u"\U0001F5D1")
-        delete_config.pack(side='left')
-        new_config_button.pack(side='left')
-
-        # pack combo frame:
-        drop_down_frame.grid(row=0, column=0, columnspan=2, sticky='nsew')
 
         # inserting frames on to configuration frame.
         self.tab_frame.grid(row=1, column=1, sticky='nsew', padx=(5, 5))
@@ -513,16 +545,6 @@ class Configuration(ttk.Frame):
                 del self.tabs_list[self.tab_id]
                 del self.tabs_info[name]
                 return
-
-    def insert_config(self, window_instance, new_config):
-        if new_config:
-            self.combo['values'] = (*self.combo['values'], new_config)
-            empty_config = dict()
-            empty_config['clients'] = dict()
-            empty_config['commands'] = dict()
-            empty_config['tabs_info'] = dict()
-            ConfigurationManager.configurations['configurations'][new_config] = empty_config
-        window_instance.destroy()
 
     def insert_client(self, window_instance, new_client):
         if new_client:
