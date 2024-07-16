@@ -1,17 +1,7 @@
 {
-  "active_config": "4",
+  "active_config": "3",
   "configurations": {
-    "2": {
-      "clients": {},
-      "commands": {},
-      "tabs_info": {}
-    },
     "3": {
-      "clients": {},
-      "commands": {},
-      "tabs_info": {}
-    },
-    "4": {
       "clients": {},
       "commands": {},
       "tabs_info": {}

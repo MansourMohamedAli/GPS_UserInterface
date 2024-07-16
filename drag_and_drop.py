@@ -42,7 +42,7 @@ class ClientDragManager:
         target_frame = str(self.target_frame) + ".!frame"
         if target_str == target_frame:
             for client in self.tree_selection:
-                self.create_new(client)
+                self.create_new(str(client))
         self.tree_selection.clear()
 
     def create_new(self, client):

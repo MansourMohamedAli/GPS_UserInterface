@@ -11,6 +11,8 @@ ip_address = socket.gethostbyname(host)
 
 
 class App(ttk.Window):
+    output_text = 'Output....'
+
     def __init__(self, title, theme):
         # main setup
         super().__init__(themename=theme)
@@ -18,7 +20,7 @@ class App(ttk.Window):
         self.active_config_data = None
         self.title(title)
         x, y = self.get_dimensions()
-        self.minsize(int(x * 0.10), int(y * 0.15))
+        self.minsize(int(x * 0.10), int(y * 0.30))
         self.maxsize(int(x * 0.35), int(y * 0.45))
         self.configurations = self.load_data()
         self.config_names = list(self.configurations['configurations'].keys())
@@ -30,7 +32,7 @@ class App(ttk.Window):
         self.combo = self.create_combo(self.combo_frame)
         self.combo.pack(expand=False, fill='x', padx=5, side="top")
         self.menu_frame = ttk.Frame(self.main_frame)
-
+        self.output_window = OutputWindow(self.main_frame)
         try:
             self.active_config_data = self.configurations['configurations'][self.active_config_name]
         except KeyError:
@@ -42,7 +44,8 @@ class App(ttk.Window):
                                                  self.active_config_name,
                                                  self.active_config_data,
                                                  self.config_selected,
-                                                 self.reload_menu)
+                                                 self.reload_menu,
+                                                 self.output_window)
 
         self.pack_widget_frames()
 
@@ -72,7 +75,8 @@ class App(ttk.Window):
                                                  self.active_config_name,
                                                  self.active_config_data,
                                                  self.config_selected,
-                                                 self.reload_menu)
+                                                 self.reload_menu,
+                                                 self.output_window)
         self.pack_widget_frames()
         # Write Json again to capture active Config.
         self.write_active_config()
@@ -122,7 +126,8 @@ class App(ttk.Window):
                                                      self.active_config_name,
                                                      selected_config_data,
                                                      self.config_selected,
-                                                     self.reload_menu)
+                                                     self.reload_menu,
+                                                     self.output_window)
             self.re_load_dropdown()
 
     def write_active_config(self):
@@ -155,6 +160,15 @@ class App(ttk.Window):
         return active_config['tab_clients']
 
 
+class OutputWindow(ttk.Text):
+    def __init__(self, parent):
+        super().__init__(master=parent, height=10, width=50, state='disabled')
+        self.output_frame = ttk.Frame(parent)
+        self.pack(expand=False, fill='x', padx=5, side="bottom")
+        self.output_frame.pack(expand=False, fill='x', padx=5, pady=(20, 10), side="bottom")
+        # self.output_text_box.insert(tk.END, self.output)
+
+
 class WindowMenu(ttk.Menu):
     def __init__(self):
         super().__init__()
@@ -171,7 +185,13 @@ class WindowMenu(ttk.Menu):
 
 
 class Menu(ttk.Frame):
-    def __init__(self, parent, buttons_info, client_dict, active_config_name, m_config_selected, m_reload_menu):
+    def __init__(self, parent,
+                 buttons_info,
+                 client_dict,
+                 active_config_name,
+                 m_config_selected,
+                 m_reload_menu,
+                 output_window):
         super().__init__(parent)
         item_number = len(buttons_info) + 2  # Plus two for configuration button and dropdown menu
         self.buttons_info = buttons_info
@@ -180,6 +200,7 @@ class Menu(ttk.Frame):
         self.list_height = item_number * 39
         self.m_config_selected = m_config_selected
         self.m_reload_menu = m_reload_menu
+        self.output_window = output_window
         self.pack(expand=True, fill="both")
         self.config_button = ttk.Button(self, text='Configuration')
         self.columnconfigure(0, weight=1, uniform='a')
@@ -201,10 +222,10 @@ class Menu(ttk.Frame):
         self.bind('<Configure>', self.update_size)
 
     @classmethod
-    def from_active_config_data(cls, parent,active_config_name, active_config_data, m_config_selected, m_reload_menu):
+    def from_active_config_data(cls, parent,active_config_name, active_config_data, m_config_selected, m_reload_menu, output_window):
         buttons_info = active_config_data['tabs_info']
         client_dict = active_config_data["clients"]
-        return cls(parent, buttons_info, client_dict, active_config_name, m_config_selected, m_reload_menu)
+        return cls(parent, buttons_info, client_dict, active_config_name, m_config_selected, m_reload_menu, output_window)
 
     def update_size(self, event):
         if self.list_height >= self.winfo_height():
@@ -228,7 +249,7 @@ class Menu(ttk.Frame):
         frame = ttk.Frame(self.frame)
         # grid layout
         frame.columnconfigure(0, weight=1)
-        button_frames_list = CommandButtons.from_buttons_info(self.buttons_info, self.client_dict, frame)
+        button_frames_list = CommandButtons.from_buttons_info(self.buttons_info, self.client_dict, frame, self.output_window)
         # self.drop_down_menu(frame)
         self.grid_button_frames(button_frames_list)
 
@@ -262,11 +283,12 @@ class CommandButtons(ttk.Button):
     Buttons will be instantiated with client, and command info built in.
     """
 
-    def __init__(self, parent, button_name, client_ip_list, client_mac_list, command_name_lists, commands_dict):
+    def __init__(self, parent, button_name, client_ip_list, client_mac_list, command_name_lists, commands_dict, output_window):
         super().__init__(master=parent, text=button_name)
         self.client_ip_list = client_ip_list
         self.client_mac_list = client_mac_list
         self.commands_dict = commands_dict
+        self.output_window = output_window
         self.command_name_lists = command_name_lists
         self.command_list = list()
         self.client_list = list()
@@ -280,7 +302,10 @@ class CommandButtons(ttk.Button):
                 print("sending local command:", command)
             else:
                 send_cmd_client(ip, command)
-                print("sending Remote command to: ", ip, command)
+            output = f'{ip}: {command}\n'
+            self.output_window.configure(state='normal')
+            self.output_window.insert(tk.END, output)
+            self.output_window.configure(state='disabled')
 
     def create_commands_list(self):
         for index, (client, command_name_list) in enumerate(zip(self.client_ip_list, self.command_name_lists)):
@@ -289,7 +314,7 @@ class CommandButtons(ttk.Button):
                 self.command_list.append(self.commands_dict[index][command_name])
 
     @classmethod
-    def from_buttons_info(cls, buttons_info, client_dict, menu_frame):
+    def from_buttons_info(cls, buttons_info, client_dict, menu_frame, output_window):
         button_frames_list = list()
         for button_name, tree_indices in buttons_info.items():
             button_frame = ttk.Frame(menu_frame)
@@ -303,7 +328,7 @@ class CommandButtons(ttk.Button):
                 client_mac_list.append(client_dict[tree_info['client']][1])
                 command_name_lists.append(tree_info['command_list'])
                 commands_dict.append(tree_info['tree_commands'])
-            cls(button_frame, button_name, client_ip_list, client_mac_list, command_name_lists, commands_dict).pack(
+            cls(button_frame, button_name, client_ip_list, client_mac_list, command_name_lists, commands_dict, output_window).pack(
                 expand=True, fill="both")
             button_frames_list.append(button_frame)
         return button_frames_list

@@ -30,7 +30,7 @@ class ClientListTree(ttk.Treeview):
         for client in selected_items:
             client_full_tree_info = self.item(client)
             client_name = client_full_tree_info['values'][0]
-            del self.client_dictionary[client_name]
+            del self.client_dictionary[str(client_name)]
             self.delete(client)
 
     def insert_clients(self):
