@@ -1,6 +1,7 @@
 import tkinter as tk
 import ttkbootstrap as ttk
 from add_button_dlg import CommandDlg
+from logger import logger
 
 
 class ClientListTree(ttk.Treeview):

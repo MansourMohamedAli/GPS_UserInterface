@@ -1,6 +1,7 @@
 import tkinter as tk
 import ttkbootstrap as ttk
 from Tree_Widgets import ClientTabFrame, TabBarTree, TabTreeMouseOver, ApplyToAllFrame
+from logger import logger
 
 
 class ClientDragManager:
@@ -112,21 +113,22 @@ class CommandDragManager:
         # find the widget under the cursor
         x, y = event.widget.winfo_pointerxy()
         target = event.widget.winfo_containing(x, y)
-        print(target)
         if isinstance(target, TabBarTree):
             for command_name in self.tree_selection:
-                command_name = str(command_name)
-                target.insert(parent='', index=tk.END, values=[command_name])
-                # Commands Dictionary for matching command name
-                command_value = self.commands_tree.command_dictionary[command_name]
-                # Add command names and commands to two separate lists.
-                target.tab_command_dict[command_name] = command_value
-                target.command_list.append(command_name)
+                self.add_command(command_name, target)
         elif isinstance(target, ApplyToAllFrame):
             for command_name in self.tree_selection:
                 for tree in self.client_tab_frame_list:
-                    tree.insert(parent='', index=tk.END, values=[command_name])
-                    print(f'Appending to {tree}')
-
+                    self.add_command(command_name, tree)
         self.apply_to_all_frame.place_forget()
         self.tree_selection.clear()
+
+    def add_command(self, command_name, tree):
+        command_name = str(command_name)
+        tree.insert(parent='', index=tk.END, values=[command_name])
+        # Commands Dictionary for matching command name
+        command_value = self.commands_tree.command_dictionary[command_name]
+        # Add command names and commands to two separate lists.
+        tree.tab_command_dict[command_name] = command_value
+        tree.command_list.append(command_name)
+        logger.info(f'Adding {command_name} to {tree.client_name} tree.')
