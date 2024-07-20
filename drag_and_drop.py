@@ -65,11 +65,6 @@ class ClientDragManager:
         self.target_frame.tab_tree_list.append(tree)
 
 
-# class ApplyToAllFrame(ttk.Frame):
-#     def __init__(self, master, style):
-#         super().__init__(master=master, style=style)
-
-
 class CommandDragManager:
     def __init__(self, commands_tree, apply_to_all_frame, client_tab_frame_list):
         self.widget = None
@@ -77,12 +72,6 @@ class CommandDragManager:
         self.commands_tree = commands_tree
         self.apply_to_all_frame = apply_to_all_frame
         self.client_tab_frame_list = client_tab_frame_list
-        # Create a style object
-        style = ttk.Style()
-        # Configure the TFrame style (background color)
-        style.configure("MyFrame.TFrame", background="#FFDDC1")
-        # self.apply_to_all_frame = ttk.Frame(self.tab_frame, style="MyFrame.TFrame")
-        # self.apply_to_all_frame = ApplyToAllFrame(self.tab_frame, style="MyFrame.TFrame")
 
     def add_dragable(self, widget):
         self.widget = widget
@@ -96,10 +85,10 @@ class CommandDragManager:
             self.tree_selection.append(self.widget.item(i)['values'][0])
         # you could use this method to create a floating window
         # that represents what is being dragged.
-        print("drag")
-        # self.apply_to_all_frame.grid(row=0, columnspan=4, sticky='ew')
-        # self.apply_to_all_frame.grid(row=0, rowspan=3, column=1, sticky='nsew')
+
+        # Placing frame that allows commands to be appended to all trees.
         self.apply_to_all_frame.place(relx=0.4, rely=0.9, relwidth=0.2, relheight=0.1)
+        self.apply_to_all_frame.lift()
 
         # Todo
 
@@ -124,6 +113,11 @@ class CommandDragManager:
         self.tree_selection.clear()
 
     def add_command(self, command_name, tree):
+        """
+        :param command_name: ClientTree name selected on mouse down.
+        :param tree: Tree or frame mouse released on.
+        :return: None
+        """
         command_name = str(command_name)
         tree.insert(parent='', index=tk.END, values=[command_name])
         # Commands Dictionary for matching command name
@@ -131,4 +125,5 @@ class CommandDragManager:
         # Add command names and commands to two separate lists.
         tree.tab_command_dict[command_name] = command_value
         tree.command_list.append(command_name)
+        # Logging
         logger.info(f'Adding {command_name} to {tree.client_name} tree.')

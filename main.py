@@ -4,6 +4,7 @@ from send_command import send_cmd_client
 from send_local_command import send_local_cmd
 import json
 import ttkbootstrap as ttk
+from logger import logger
 
 
 class App(ttk.Window):
@@ -161,9 +162,9 @@ class App(ttk.Window):
                 return json.load(f)
 
         except FileNotFoundError as e:
-            print(e)
+            logger.error(f'{e}')
         except json.decoder.JSONDecodeError as e:
-            print(e)
+            logger.error(f'{e}')
 
     @staticmethod
     def get_active_config(data):

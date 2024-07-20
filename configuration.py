@@ -5,6 +5,7 @@ from drag_and_drop import CommandDragManager, ClientDragManager
 from Tree_Widgets import ClientListTree, CommandListTree, TabBarTree, ClientTabFrame, TabTreeMouseOver, ApplyToAllFrame
 from math import floor
 import json
+from logger import logger
 
 
 class ConfigurationManager(ttk.Toplevel):
@@ -56,10 +57,7 @@ class ConfigurationManager(ttk.Toplevel):
 
         self.delete_config.pack(side='left')
         self.new_config_button.pack(side='left')
-        # drop_down_frame.pack(expand=True, fill='both')
         self.drop_down_frame.pack(fill='x')
-
-        # self.combo_frame.pack(expand=True, fill='both', side="top")
         self.combo_frame.pack(fill='x', side="top")
 
         # Menu
@@ -105,7 +103,7 @@ class ConfigurationManager(ttk.Toplevel):
             self.config_selected(c)
             # self.write_json()
         else:
-            print('Last Config Frame')
+            logger.debug('Last Config Frame')
 
     def config_selected(self, config):
         selected_config = config.get()
@@ -131,9 +129,9 @@ class ConfigurationManager(ttk.Toplevel):
             with open(json_name) as f:
                 cls(json.load(f), active_config_name, m_reload_menu)
         except FileNotFoundError as e:
-            print(e)
+            logger.error(f'{e}')
         except json.decoder.JSONDecodeError as e:
-            print(e)
+            logger.error(f'{e}')
 
     def get_dimensions(self):
         x = self.winfo_screenwidth()
@@ -175,15 +173,14 @@ class Configuration(ttk.Frame):
         self.tab_frame = ttk.Frame(self)
         self.side_bar_frame = ttk.Frame(self)
 
-        self.rowconfigure(1, weight=10)
+        self.rowconfigure(1, weight=1)
         self.columnconfigure(0, weight=1)
-        self.columnconfigure(1, weight=3)
+        self.columnconfigure(1, weight=6)
 
         # Side Bar Configuration
         self.side_bar_frame.rowconfigure(0, weight=1)
         self.side_bar_frame.rowconfigure(1, weight=1)
-        self.side_bar_frame.columnconfigure(0, weight=10, uniform='a')
-        self.side_bar_frame.columnconfigure(1, weight=1, uniform='a')
+        self.side_bar_frame.columnconfigure(0, weight=1, uniform='a')
 
         self.client_frame = ttk.Frame(self.side_bar_frame)
         self.client_frame.columnconfigure(0, weight=1, uniform='a')
@@ -324,9 +321,10 @@ class Configuration(ttk.Frame):
         self.button_frame.grid(row=0, column=3, sticky='se')
 
         # inserting frames on to configuration frame.
-        self.tab_frame.grid(row=1, column=1, sticky='nsew', padx=(0, 5))
-        # self.side_bar_frame.grid(row=0, column=0, sticky='nsew', rowspan=3, padx=(5, 5))
-        self.side_bar_frame.grid(row=0, column=0, sticky='nsew', rowspan=3, padx=(5, 0))
+        self.tab_frame.grid(row=1, column=1, sticky='nsew', padx=(5, 5))
+        self.side_bar_frame.grid(row=0, column=0, sticky='nsew', rowspan=3, padx=(5, 5))
+        self.tab_frame.grid_propagate(False)
+        self.side_bar_frame.grid_propagate(False)
 
         # Creating Tabs. Class method appends to tabs to list and returns list of tab objects
         self.tabs_list = ScrollFrame.from_tabs_info(self.delete_client, self.tabs_nb, self.tabs_info)
@@ -344,13 +342,12 @@ class Configuration(ttk.Frame):
             scroll_frame = self.tabs_list[self.tab_id]
             self.active_scroll_frame = scroll_frame
             self.client_tab_frame_list = scroll_frame.client_tab_frame_list
-            print(self.client_tab_frame_list)
 
         # Making command tree items draggable.
-        command_dnd = CommandDragManager(self.commands_tree,
-                                         self.active_scroll_frame.apply_to_all_frame,
-                                         self.active_scroll_frame.tab_tree_list)
-        command_dnd.add_dragable(self.commands_tree)
+        # command_dnd = CommandDragManager(self.commands_tree,
+        #                                  self.active_scroll_frame.apply_to_all_frame,
+        #                                  self.active_scroll_frame.tab_tree_list)
+        # command_dnd.add_dragable(self.commands_tree)
 
     def edit_client(self):
         tree_index = self.clients_tree.focus()
@@ -390,11 +387,6 @@ class Configuration(ttk.Frame):
         except tk.TclError:
             pass
 
-    # @staticmethod
-    # def write_json():
-    #     with open('commandconfig.json', 'w') as f:
-    #         json.dump(ConfigurationManager.configurations, f, indent=2)
-
     @classmethod
     def from_active_config(cls, parent, active_config_data, m_write_json):
         try:
@@ -404,7 +396,7 @@ class Configuration(ttk.Frame):
                        active_config_data['commands'],
                        active_config_data['tabs_info'])
         except KeyError as e:
-            print(f'Key {e} is incorrect.')
+            logger.error(f'Key {e} is incorrect.')
 
     def enable_nav_buttons(self, event):
         x, y = event.widget.winfo_pointerxy()
@@ -542,6 +534,12 @@ class Configuration(ttk.Frame):
             self.active_scroll_frame = scroll_frame
             self.client_tab_frame_list = scroll_frame.client_tab_frame_list
 
+            # Making command tree items draggable.
+            command_dnd = CommandDragManager(self.commands_tree,
+                                             self.active_scroll_frame.apply_to_all_frame,
+                                             self.active_scroll_frame.tab_tree_list)
+            command_dnd.add_dragable(self.commands_tree)
+
     def insert_tab(self, window_instance, new_tab):
         if new_tab:
             tab = ScrollFrame(self.tabs_nb,
@@ -567,11 +565,11 @@ class Configuration(ttk.Frame):
         for item in self.tabs_nb.winfo_children():
             if str(item) == self.tabs_nb.select():
                 name = self.tabs_nb.tab(self.tabs_nb.select(), "text")
-                print(name)
                 item.pack_forget()  # To prevent scroll errors.
                 item.destroy()
                 del self.tabs_list[self.tab_id]
                 del self.tabs_info[name]
+                logger.info(f'{name} tab deleted.')
                 return
 
     def insert_client(self, window_instance, new_client):
@@ -623,10 +621,7 @@ class ScrollFrame(ttk.Frame):
         style = ttk.Style()
         # Configure the TFrame style (background color)
         style.configure("MyFrame.TFrame", background="#FFDDC1")
-        # self.apply_to_all_frame = ttk.Frame(self.tab_frame, style="MyFrame.TFrame")
         self.apply_to_all_frame = ApplyToAllFrame(self, style="MyFrame.TFrame")
-        # self.apply_to_all_frame.place(relx=0.4, rely=0.9, relwidth=0.2, relheight=0.1)
-        print(self.scroll_frame.winfo_width())
 
         # Adding new tag for frame to allow scroll on TabTree and background.
         self.new_tags = self.scroll_frame.bindtags() + ("scroll_frame_widgets", "tree_select",)
@@ -658,7 +653,7 @@ class ScrollFrame(ttk.Frame):
                                lambda event: self.canvas.yview_scroll(-int(event.delta / 60), "units"))
         self.bind('<Configure>', self.update_scroll_area_resize_event)
 
-        self.apply_to_all_frame.lift()
+        # self.apply_to_all_frame.lift()
 
     def update_scroll_height(self):
         self.update_idletasks()
