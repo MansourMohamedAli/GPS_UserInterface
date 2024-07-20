@@ -298,3 +298,8 @@ class TabTreeMouseOver(ttk.Frame):
     def insert_another_command(self, new_command):
         if new_command:
             self.client_tab_tree.insert(parent='', index=tk.END, values=[new_command])
+
+
+class ApplyToAllFrame(ttk.Frame):
+    def __init__(self, master, style):
+        super().__init__(master=master, style=style)

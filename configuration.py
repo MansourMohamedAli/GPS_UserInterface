@@ -2,7 +2,7 @@ import tkinter as tk
 import ttkbootstrap as ttk
 from add_button_dlg import CommandDlg, ClientDlg, NewTabWindow, RenameTabWindow, NewConfigDlg
 from drag_and_drop import CommandDragManager, ClientDragManager
-from Tree_Widgets import ClientListTree, CommandListTree, TabBarTree, ClientTabFrame, TabTreeMouseOver
+from Tree_Widgets import ClientListTree, CommandListTree, TabBarTree, ClientTabFrame, TabTreeMouseOver, ApplyToAllFrame
 from math import floor
 import json
 
@@ -64,7 +64,7 @@ class ConfigurationManager(ttk.Toplevel):
 
         # Menu
         menu = WindowMenu()
-        self.configure(menu=menu)
+        # self.configure(menu=menu)
 
         if __name__ == "__main__":
             self.main_loop()
@@ -182,7 +182,8 @@ class Configuration(ttk.Frame):
         # Side Bar Configuration
         self.side_bar_frame.rowconfigure(0, weight=1)
         self.side_bar_frame.rowconfigure(1, weight=1)
-        self.side_bar_frame.columnconfigure(0, weight=1, uniform='a')
+        self.side_bar_frame.columnconfigure(0, weight=10, uniform='a')
+        self.side_bar_frame.columnconfigure(1, weight=1, uniform='a')
 
         self.client_frame = ttk.Frame(self.side_bar_frame)
         self.client_frame.columnconfigure(0, weight=1, uniform='a')
@@ -227,9 +228,9 @@ class Configuration(ttk.Frame):
                                                        self.commands_dictionary,
                                                        ["Commands"])
 
-        # Making command tree items draggable.
-        command_dnd = CommandDragManager(self.commands_tree)
-        command_dnd.add_dragable(self.commands_tree)
+        # # Making command tree items draggable.
+        # command_dnd = CommandDragManager(self.commands_tree, self.tab_frame, self.client_tab_frame_list)
+        # command_dnd.add_dragable(self.commands_tree)
 
         self.new_command_button = ttk.Button(self.command_frame,
                                              text="New",
@@ -271,8 +272,8 @@ class Configuration(ttk.Frame):
         self.tabs_nb.bind("<ButtonRelease-1>", self.reorder_save)
         self.tabs_nb.bind("<Double-Button-1>", self.change_tab_name)
         tab_style = ttk.Style()
-        tab_style.configure('TNotebook', tabposition='new')
-        # tab_style.configure('TNotebook', tabposition='en')
+        # tab_style.configure('TNotebook', tabposition='new')
+        tab_style.configure('TNotebook', tabposition='nw')
 
         self.tabs_nb.bind("<<NotebookTabChanged>>", self.on_tab_selected)
 
@@ -323,8 +324,9 @@ class Configuration(ttk.Frame):
         self.button_frame.grid(row=0, column=3, sticky='se')
 
         # inserting frames on to configuration frame.
-        self.tab_frame.grid(row=1, column=1, sticky='nsew', padx=(5, 5))
-        self.side_bar_frame.grid(row=0, column=0, sticky='new', rowspan=3, padx=(5, 5))
+        self.tab_frame.grid(row=1, column=1, sticky='nsew', padx=(0, 5))
+        # self.side_bar_frame.grid(row=0, column=0, sticky='nsew', rowspan=3, padx=(5, 5))
+        self.side_bar_frame.grid(row=0, column=0, sticky='nsew', rowspan=3, padx=(5, 0))
 
         # Creating Tabs. Class method appends to tabs to list and returns list of tab objects
         self.tabs_list = ScrollFrame.from_tabs_info(self.delete_client, self.tabs_nb, self.tabs_info)
@@ -334,6 +336,21 @@ class Configuration(ttk.Frame):
 
         self.buttons_list = [self.move_left_button, self.move_right_button]
         self.bind_class("tree_select", '<Button-1>', self.enable_nav_buttons)
+
+        if self.tabs_list:
+            # todo refactor redundant code
+            selected_tab_id = self.tabs_nb.select()
+            self.tab_id = self.tabs_nb.index(selected_tab_id)
+            scroll_frame = self.tabs_list[self.tab_id]
+            self.active_scroll_frame = scroll_frame
+            self.client_tab_frame_list = scroll_frame.client_tab_frame_list
+            print(self.client_tab_frame_list)
+
+        # Making command tree items draggable.
+        command_dnd = CommandDragManager(self.commands_tree,
+                                         self.active_scroll_frame.apply_to_all_frame,
+                                         self.active_scroll_frame.tab_tree_list)
+        command_dnd.add_dragable(self.commands_tree)
 
     def edit_client(self):
         tree_index = self.clients_tree.focus()
@@ -603,6 +620,14 @@ class ScrollFrame(ttk.Frame):
         # display frame
         self.scroll_frame = ttk.Frame(self)
 
+        style = ttk.Style()
+        # Configure the TFrame style (background color)
+        style.configure("MyFrame.TFrame", background="#FFDDC1")
+        # self.apply_to_all_frame = ttk.Frame(self.tab_frame, style="MyFrame.TFrame")
+        self.apply_to_all_frame = ApplyToAllFrame(self, style="MyFrame.TFrame")
+        # self.apply_to_all_frame.place(relx=0.4, rely=0.9, relwidth=0.2, relheight=0.1)
+        print(self.scroll_frame.winfo_width())
+
         # Adding new tag for frame to allow scroll on TabTree and background.
         self.new_tags = self.scroll_frame.bindtags() + ("scroll_frame_widgets", "tree_select",)
         self.scroll_frame.bindtags(self.new_tags)
@@ -632,6 +657,8 @@ class ScrollFrame(ttk.Frame):
         self.canvas.bind_class('scroll_frame_widgets', '<MouseWheel>',
                                lambda event: self.canvas.yview_scroll(-int(event.delta / 60), "units"))
         self.bind('<Configure>', self.update_scroll_area_resize_event)
+
+        self.apply_to_all_frame.lift()
 
     def update_scroll_height(self):
         self.update_idletasks()

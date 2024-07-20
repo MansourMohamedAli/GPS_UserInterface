@@ -9,6 +9,7 @@
 * Error Handling for sendcmdclient
 * Updating client info should change all trees with same name in configuration.
 * delete config
+* dialogue box asking if you want to modify clients in tab when changing command or tab tree.
 
 ### Lower Priority:
 - Implement WOL option.

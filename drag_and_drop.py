@@ -1,5 +1,6 @@
 import tkinter as tk
-from Tree_Widgets import ClientTabFrame, TabBarTree, TabTreeMouseOver
+import ttkbootstrap as ttk
+from Tree_Widgets import ClientTabFrame, TabBarTree, TabTreeMouseOver, ApplyToAllFrame
 
 
 class ClientDragManager:
@@ -63,16 +64,29 @@ class ClientDragManager:
         self.target_frame.tab_tree_list.append(tree)
 
 
+# class ApplyToAllFrame(ttk.Frame):
+#     def __init__(self, master, style):
+#         super().__init__(master=master, style=style)
+
+
 class CommandDragManager:
-    def __init__(self, commands_tree):
+    def __init__(self, commands_tree, apply_to_all_frame, client_tab_frame_list):
         self.widget = None
         self.tree_selection = list()
         self.commands_tree = commands_tree
+        self.apply_to_all_frame = apply_to_all_frame
+        self.client_tab_frame_list = client_tab_frame_list
+        # Create a style object
+        style = ttk.Style()
+        # Configure the TFrame style (background color)
+        style.configure("MyFrame.TFrame", background="#FFDDC1")
+        # self.apply_to_all_frame = ttk.Frame(self.tab_frame, style="MyFrame.TFrame")
+        # self.apply_to_all_frame = ApplyToAllFrame(self.tab_frame, style="MyFrame.TFrame")
 
     def add_dragable(self, widget):
         self.widget = widget
         widget.bind('<<TreeviewSelect>>', self.on_start)
-        # widget.bind("<B1-Motion>", self.on_drag)  # Todo
+        widget.bind("<B1-Motion>", self.on_drag)  # Todo
         widget.bind("<ButtonRelease-1>", self.on_drop)
         widget.configure(cursor="hand1")
 
@@ -81,6 +95,11 @@ class CommandDragManager:
             self.tree_selection.append(self.widget.item(i)['values'][0])
         # you could use this method to create a floating window
         # that represents what is being dragged.
+        print("drag")
+        # self.apply_to_all_frame.grid(row=0, columnspan=4, sticky='ew')
+        # self.apply_to_all_frame.grid(row=0, rowspan=3, column=1, sticky='nsew')
+        self.apply_to_all_frame.place(relx=0.4, rely=0.9, relwidth=0.2, relheight=0.1)
+
         # Todo
 
     def on_drag(self, event):
@@ -93,16 +112,21 @@ class CommandDragManager:
         # find the widget under the cursor
         x, y = event.widget.winfo_pointerxy()
         target = event.widget.winfo_containing(x, y)
-        try:
-            if target.tree_name == "tab_tree":
-                for command_name in self.tree_selection:
-                    command_name = str(command_name)
-                    target.insert(parent='', index=tk.END, values=[command_name])
-                    # Commands Dictionary for matching command name
-                    command_value = self.commands_tree.command_dictionary[command_name]
-                    # Add command names and commands to two separate lists.
-                    target.tab_command_dict[command_name] = command_value
-                    target.command_list.append(command_name)
-        except AttributeError:
-            pass
+        print(target)
+        if isinstance(target, TabBarTree):
+            for command_name in self.tree_selection:
+                command_name = str(command_name)
+                target.insert(parent='', index=tk.END, values=[command_name])
+                # Commands Dictionary for matching command name
+                command_value = self.commands_tree.command_dictionary[command_name]
+                # Add command names and commands to two separate lists.
+                target.tab_command_dict[command_name] = command_value
+                target.command_list.append(command_name)
+        elif isinstance(target, ApplyToAllFrame):
+            for command_name in self.tree_selection:
+                for tree in self.client_tab_frame_list:
+                    tree.insert(parent='', index=tk.END, values=[command_name])
+                    print(f'Appending to {tree}')
+
+        self.apply_to_all_frame.place_forget()
         self.tree_selection.clear()

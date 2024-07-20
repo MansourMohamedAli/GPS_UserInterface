@@ -2,18 +2,14 @@ import tkinter as tk
 from configuration import ConfigurationManager
 from send_command import send_cmd_client
 from send_local_command import send_local_cmd
-import socket
 import json
 import ttkbootstrap as ttk
 
-host = socket.gethostname()
-ip_address = socket.gethostbyname(host)
-
 
 class App(ttk.Window):
-    output_text = 'Output....'
-
-    def __init__(self, title, theme):
+    def __init__(self,
+                 title,
+                 theme):
         # main setup
         super().__init__(themename=theme)
         self.combo = None
@@ -32,7 +28,26 @@ class App(ttk.Window):
         self.combo = self.create_combo(self.combo_frame)
         self.combo.pack(expand=False, fill='x', padx=5, side="top")
         self.menu_frame = ttk.Frame(self.main_frame)
-        self.output_window = OutputWindow(self.main_frame)
+
+        self.output_frame = ttk.Frame(self.main_frame)
+
+        # Create a style object
+        style = ttk.Style()
+        # Configure the style for TLabel
+        style.configure("Custom.TLabel", background="#FFDDC1", foreground="black", anchor="center")
+        self.output_label = ttk.Label(self.output_frame, text="Output Window", style="Custom.TLabel")
+        self.output_label.pack(side="top", fill='x', padx=5)
+        self.output_window = ttk.Text(master=self.output_frame, height=6, state='disabled')
+        self.output_window.pack(expand=False, fill='x', padx=5, side="top")
+        self.output_frame.pack(expand=False, fill='x', padx=5, pady=(20, 10), side="bottom")
+
+        self.clear_output_button = ttk.Button(self.output_frame, text="Clear Output", command=self.clear_output)
+        self.clear_output_button.pack(expand=True, side='bottom', fill='x', padx=5)
+
+        # self.clear_button_frame = ttk.Frame(self.output_frame)
+        # self.clear_output_button = ttk.Button(self.clear_button_frame, width=self.output_frame.winfo_width())
+        # self.clear_output_button.pack(expand=True, fill='both')
+        # self.clear_button_frame.pack(side="bottom", fill='x', padx=5)
         try:
             self.active_config_data = self.configurations['configurations'][self.active_config_name]
         except KeyError:
@@ -54,6 +69,11 @@ class App(ttk.Window):
         self.configure(menu=window_menu)
         # Run
         self.mainloop()
+
+    def clear_output(self):
+        self.output_window.configure(state='normal')
+        self.output_window.delete("1.0", tk.END)
+        self.output_window.configure(state='disabled')
 
     def reload_menu(self):
         self.combo_frame.destroy()
@@ -78,6 +98,7 @@ class App(ttk.Window):
                                                  self.reload_menu,
                                                  self.output_window)
         self.pack_widget_frames()
+
         # Write Json again to capture active Config.
         self.write_active_config()
 
@@ -101,8 +122,6 @@ class App(ttk.Window):
         combo['state'] = 'readonly'
         combo.bind('<<ComboboxSelected>>', lambda event: self.config_selected(c))
         return combo
-
-        # self.combo.pack(expand=False, fill='x', padx=5, side="top")
 
     def get_dimensions(self):
         x = self.winfo_screenwidth()
@@ -160,15 +179,6 @@ class App(ttk.Window):
         return active_config['tab_clients']
 
 
-class OutputWindow(ttk.Text):
-    def __init__(self, parent):
-        super().__init__(master=parent, height=10, width=50, state='disabled')
-        self.output_frame = ttk.Frame(parent)
-        self.pack(expand=False, fill='x', padx=5, side="bottom")
-        self.output_frame.pack(expand=False, fill='x', padx=5, pady=(20, 10), side="bottom")
-        # self.output_text_box.insert(tk.END, self.output)
-
-
 class WindowMenu(ttk.Menu):
     def __init__(self):
         super().__init__()
@@ -222,7 +232,7 @@ class Menu(ttk.Frame):
         self.bind('<Configure>', self.update_size)
 
     @classmethod
-    def from_active_config_data(cls, parent,active_config_name, active_config_data, m_config_selected, m_reload_menu, output_window):
+    def from_active_config_data(cls, parent, active_config_name, active_config_data, m_config_selected, m_reload_menu, output_window):
         buttons_info = active_config_data['tabs_info']
         client_dict = active_config_data["clients"]
         return cls(parent, buttons_info, client_dict, active_config_name, m_config_selected, m_reload_menu, output_window)
@@ -283,7 +293,14 @@ class CommandButtons(ttk.Button):
     Buttons will be instantiated with client, and command info built in.
     """
 
-    def __init__(self, parent, button_name, client_ip_list, client_mac_list, command_name_lists, commands_dict, output_window):
+    def __init__(self, parent,
+                 button_name,
+                 client_ip_list,
+                 client_mac_list,
+                 command_name_lists,
+                 commands_dict,
+                 output_window):
+
         super().__init__(master=parent, text=button_name)
         self.client_ip_list = client_ip_list
         self.client_mac_list = client_mac_list
