@@ -321,6 +321,7 @@ class CommandButtons(ttk.Button):
             else:
                 send_cmd_client(ip, command)
             output = f'{ip}: {command}\n'
+            logger.info(f'{ip}: {command}')
             self.output_window.configure(state='normal')
             self.output_window.insert(tk.END, output)
             self.output_window.configure(state='disabled')
@@ -346,8 +347,13 @@ class CommandButtons(ttk.Button):
                 client_mac_list.append(client_dict[tree_info['client']][1])
                 command_name_lists.append(tree_info['command_list'])
                 commands_dict.append(tree_info['tree_commands'])
-            cls(button_frame, button_name, client_ip_list, client_mac_list, command_name_lists, commands_dict, output_window).pack(
-                expand=True, fill="both")
+            cls(button_frame,
+                button_name,
+                client_ip_list,
+                client_mac_list,
+                command_name_lists,
+                commands_dict,
+                output_window).pack(expand=True, fill="both")
             button_frames_list.append(button_frame)
         return button_frames_list
 

@@ -1,5 +1,6 @@
 import tkinter as tk
 import ttkbootstrap as ttk
+from logger import logger
 
 
 class ClientDlg(tk.Toplevel):
@@ -22,6 +23,17 @@ class ClientDlg(tk.Toplevel):
         # MAC
         self.mac_frame = ttk.Frame(self)
 
+        # Buttons
+        self.buttons_frame = ttk.Frame(self)
+        self.done_button = ttk.Button(self.buttons_frame,
+                                      text="Done",
+                                      command=lambda: self.m_insert_client(self, self.append_client_dictionary()))
+        # Add Another Button
+        self.add_another_button = ttk.Button(self.buttons_frame,
+                                             text="Add Another",
+                                             command=lambda: self.m_insert_another_client(
+                                                 self.append_client_dictionary()))
+
         if self.client_name:
             v = tk.StringVar(value=self.client_name)
             self.client_name_entry = tk.Entry(self.client_frame,
@@ -35,11 +47,14 @@ class ClientDlg(tk.Toplevel):
 
             self.ip_entry = tk.Entry(self.ip_frame, width=53, textvariable=tk.StringVar(value=ip))
             self.mac_entry = tk.Entry(self.mac_frame, width=53, textvariable=tk.StringVar(value=mac))
+            self.done_button.place(relx=0.5, rely=0.25)
         else:
             # Text box for commands
             self.client_name_entry = tk.Entry(self.client_frame, width=53)
             self.ip_entry = tk.Entry(self.ip_frame, width=53)
             self.mac_entry = tk.Entry(self.mac_frame, width=53)
+            self.done_button.place(relx=0.32, rely=0.25)
+            self.add_another_button.place(relx=0.58, rely=0.25)
 
         self.title('Client Configuration')
         x, y = self.get_dimensions()
@@ -64,19 +79,6 @@ class ClientDlg(tk.Toplevel):
         self.mac_label.place(relx=0.1, rely=0.5)
         self.mac_entry.place(relx=0.30, rely=0.5)
 
-        # Buttons
-        self.buttons_frame = ttk.Frame(self)
-        self.done_button = ttk.Button(self.buttons_frame,
-                                      text="Done",
-                                      command=lambda: self.m_insert_client(self, self.append_client_dictionary()))
-        # Add Another Button
-        self.add_another_button = ttk.Button(self.buttons_frame,
-                                             text="Add Another",
-                                             command=lambda: self.m_insert_another_client(
-                                                 self.append_client_dictionary()))
-        self.done_button.place(relx=0.32, rely=0.25)
-        self.add_another_button.place(relx=0.58, rely=0.25)
-
         # Configuring Grid
         self.rowconfigure(0, weight=1)
         self.rowconfigure(1, weight=1)
@@ -95,6 +97,7 @@ class ClientDlg(tk.Toplevel):
             ip_address = self.ip_entry.get()
             mac_address = self.mac_entry.get()
             self.client_dictionary[self.client_name] = ip_address, mac_address
+            logger.info(self.tab_tree_list)
         else:
             new_client = self.client_name_entry.get()
             if new_client and new_client not in self.client_dictionary:
@@ -242,7 +245,7 @@ class NewTabWindow(tk.Toplevel):
         self.buttons_frame = ttk.Frame(self)
         # Done button
 
-        #
+        # done button
         self.done_button = ttk.Button(self.buttons_frame,
                                       text="Done",
                                       command=lambda: m_insert_tab(self, self.tab_name_entry.get()))

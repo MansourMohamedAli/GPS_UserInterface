@@ -343,12 +343,6 @@ class Configuration(ttk.Frame):
             self.active_scroll_frame = scroll_frame
             self.client_tab_frame_list = scroll_frame.client_tab_frame_list
 
-        # Making command tree items draggable.
-        # command_dnd = CommandDragManager(self.commands_tree,
-        #                                  self.active_scroll_frame.apply_to_all_frame,
-        #                                  self.active_scroll_frame.tab_tree_list)
-        # command_dnd.add_dragable(self.commands_tree)
-
     def edit_client(self):
         tree_index = self.clients_tree.focus()
         if tree_index:
