@@ -6,25 +6,48 @@
         "local": [
           "199.199.199.2",
           ""
+        ],
+        "te34tgf": [
+          "gsdfgv",
+          "sdfgv"
+        ],
+        "3432": [
+          "fvdsx",
+          "cvb"
+        ],
+        "3254r": [
+          "fsd",
+          "gvsdf"
+        ],
+        "3254rcvbdxcv": [
+          "fsd",
+          "gvsdf"
         ]
       },
       "commands": {
         "Open Notepad": "dir",
-        "ipconfig": "dir"
+        "ipconfig": "cvcxcfsdfc"
       },
       "tabs_info": {
         "tab1": {
           "1": {
             "client": "local",
             "tree_commands": {
-              "ipconfig": "ipconfig"
+              "Open Notepad": "dir",
+              "ipconfig": "cvcxcfsdfc"
             },
             "command_list": [
+              "Open Notepad",
               "ipconfig"
             ]
           }
         }
       }
+    },
+    "config2": {
+      "clients": {},
+      "commands": {},
+      "tabs_info": {}
     }
   }
 }

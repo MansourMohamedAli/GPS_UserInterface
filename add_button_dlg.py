@@ -97,7 +97,6 @@ class ClientDlg(tk.Toplevel):
             ip_address = self.ip_entry.get()
             mac_address = self.mac_entry.get()
             self.client_dictionary[self.client_name] = ip_address, mac_address
-            logger.info(self.tab_tree_list)
         else:
             new_client = self.client_name_entry.get()
             if new_client and new_client not in self.client_dictionary:
@@ -119,10 +118,11 @@ class ClientDlg(tk.Toplevel):
 
 
 class CommandDlg(tk.Toplevel):
-    def __init__(self, command_dict, m_insert_command, m_insert_another_command, tree_type,
+    def __init__(self, command_dict, tab_tree_list, m_insert_command, m_insert_another_command, tree_type,
                  command_list=None, command_name=None):
         super().__init__()
         self.command_dict = command_dict
+        self.tab_tree_list = tab_tree_list
         self.command_list = command_list
         self.m_insert_command = m_insert_command
         self.m_insert_another_command = m_insert_another_command
@@ -133,7 +133,7 @@ class CommandDlg(tk.Toplevel):
             self.command_name = command_name
         self.title('Command Configuration')
         x, y = self.get_dimensions()
-        self.geometry(f'{int(x * 0.30)}x{int(y * 0.15)}')
+        self.geometry(f'{int(x * 0.30)}x{int(y * 0.20)}')
         self.minsize(int(x * 0.25), int(y * 0.10))
         self.maxsize(int(x * 0.35), int(y * 0.25))
         self.resizable(False, False)
@@ -151,6 +151,13 @@ class CommandDlg(tk.Toplevel):
         self.text_frame = ttk.Frame(self)
         # Text box for commands
         self.command_text_box = tk.Text(self.text_frame, width=40, height=5)
+        # Button Frame
+        self.buttons_frame = ttk.Frame(self)
+        # Tab Command
+        self.done_button = ttk.Button(self.buttons_frame,
+                                      text="Done",
+                                      command=lambda: self.m_insert_command(self, self.update_dictionary()))
+
         if self.command_name:
             v = tk.StringVar(value=self.command_name)
             self.command_name_entry = tk.Entry(self.text_frame,
@@ -161,30 +168,30 @@ class CommandDlg(tk.Toplevel):
             self.command_name_entry.insert(tk.END, self.command_name)
             self.commandText = self.command_dict[self.command_name]
             self.command_text_box.insert(1.0, self.commandText)
+
+            self.var1 = tk.IntVar()
+            self.propagate_option = ttk.Checkbutton(self.buttons_frame, text='Apply to All',
+                                                    variable=self.var1,
+                                                    onvalue=1,
+                                                    offvalue=0)
+            self.propagate_option.state(["!selected"])
+            self.done_button.place(relx=0.2, rely=0)
+            self.propagate_option.place(relx=0.5, rely=0)
+            self.done_button.place(relx=0.2, rely=0)
+            self.propagate_option.place(relx=0.5, rely=0)
         else:
-            # Text box for commands
-            self.command_name_entry = tk.Entry(self.text_frame, width=53)
-        # Placing Text Boxes
-        self.command_name_entry.place(relx=0, rely=0.1)
-        self.command_text_box.place(relx=0, rely=0.30)
-
-        # Button Frame
-        self.buttons_frame = ttk.Frame(self)
-
-        # Tab Command
-        self.done_button = ttk.Button(self.buttons_frame,
-                                      text="Done",
-                                      command=lambda: self.m_insert_command(self, self.update_dictionary()))
-        # Add Another Button
-        if self.command_name:
             self.add_another_button = ttk.Button(self.buttons_frame,
                                                  text="Add Another",
                                                  command=lambda: self.m_insert_another_command(
                                                      self.update_dictionary()))
 
+            self.command_name_entry = tk.Entry(self.text_frame, width=53)
+            self.done_button.place(relx=0.125, rely=0)
             self.add_another_button.place(relx=0.45, rely=0)
 
-        self.done_button.place(relx=0.125, rely=0)
+        # Placing Text Boxes
+        self.command_name_entry.place(relx=0, rely=0.1)
+        self.command_text_box.place(relx=0, rely=0.30)
 
         # Configuring Grid
         self.rowconfigure(0, weight=5)
@@ -201,14 +208,19 @@ class CommandDlg(tk.Toplevel):
         command_text_box = self.command_text_box.get("1.0", "end-1c")
         if self.command_name:  # edit command
             self.command_dict[self.command_name] = command_text_box
-            # if self.tree_type == "tab":  # Tab Command Tree
-            #     self.command_list.append(self.command_name)
+            if 'selected' in self.propagate_option.state():
+                print("check!")
+                if self.tree_type == "command":
+                    for tree in self.tab_tree_list:
+                        if self.command_name in tree.tab_command_dict:
+                            logger.info(f'{self.command_name} is in the {tree.client_name} tab tree.')
+                            tree.tab_command_dict[self.command_name] = command_text_box
         else:  # NEW
             self.command_name = str(self.command_name_entry.get())
             # Add command to dictionary.
             if self.command_name not in self.command_dict:
                 self.command_dict[self.command_name] = command_text_box
-                if self.tree_type == "tab":  # Tab Command Tree
+                if self.tree_type == "tab":  # Tab Command Tree #todo use IsInstance function
                     self.command_list.append(self.command_name)
                 return self.command_name
             else:

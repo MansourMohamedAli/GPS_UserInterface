@@ -186,11 +186,13 @@ class TabTreeMouseOver(ttk.Frame):
     def __init__(self,
                  client_tab_frame,
                  client_tab_tree,
-                 m_delete_client):
+                 m_delete_client,
+                 tab_tree_list=None):
         super().__init__(master=client_tab_frame)
 
         self.client_tab_frame = client_tab_frame
         self.client_tab_tree = client_tab_tree
+        self.tab_tree_list = tab_tree_list
         self.m_delete_client = m_delete_client
         self.buttons_frame = ttk.Frame(self)
         self.client_tab_frame.bind('<Enter>', self.mouse_over)
@@ -257,7 +259,7 @@ class TabTreeMouseOver(ttk.Frame):
     def from_client_tab_frame_list(cls, client_tab_frame_list, tab_tree_list, m_delete_client):
         tt_mouse_over_list = list()
         for frame, tree in zip(client_tab_frame_list, tab_tree_list):
-            tt_mouse_over_list.append(cls(frame, tree, m_delete_client))
+            tt_mouse_over_list.append(cls(frame, tree, m_delete_client, tab_tree_list))
         return tt_mouse_over_list
 
     def move_up(self):
@@ -279,6 +281,7 @@ class TabTreeMouseOver(ttk.Frame):
         if tree_index:
             command_name = self.client_tab_tree.item(tree_index)['values'][0]
             CommandDlg(self.client_tab_tree.tab_command_dict,
+                       self.tab_tree_list,
                        self.insert_command,
                        self.insert_another_command,
                        "tab",

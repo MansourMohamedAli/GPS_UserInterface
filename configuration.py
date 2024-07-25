@@ -30,7 +30,6 @@ class ConfigurationManager(ttk.Toplevel):
         self.config_frame = Configuration.from_active_config(self,
                                                              self.active_config_data,
                                                              self.write_json)
-
         # pack
         self.config_frame.pack(expand=True, fill='both', side="bottom")
 
@@ -51,17 +50,17 @@ class ConfigurationManager(ttk.Toplevel):
                                             text="+",
                                             command=lambda: NewConfigDlg(self.insert_config))
 
-        self.delete_config = ttk.Button(self.drop_down_frame,
-                                        text=u"\U0001F5D1",
-                                        command=self.delete_config)
+        self.delete_config_button = ttk.Button(self.drop_down_frame,
+                                               text=u"\U0001F5D1",
+                                               command=self.delete_config)
 
-        self.delete_config.pack(side='left')
+        self.delete_config_button.pack(side='left')
         self.new_config_button.pack(side='left')
         self.drop_down_frame.pack(fill='x')
         self.combo_frame.pack(fill='x', side="top")
 
         # Menu
-        menu = WindowMenu()
+        # menu = WindowMenu()
         # self.configure(menu=menu)
 
         if __name__ == "__main__":
@@ -121,7 +120,7 @@ class ConfigurationManager(ttk.Toplevel):
                                                                  selected_config_data,
                                                                  self.write_json)
             # Repacking Configuration
-            self.config_frame.pack(expand=True, fill='both')
+            self.config_frame.pack(expand=True, fill='both', side="bottom")
 
     @classmethod
     def from_json(cls, json_name, active_config_name, m_reload_menu):
@@ -232,6 +231,7 @@ class Configuration(ttk.Frame):
         self.new_command_button = ttk.Button(self.command_frame,
                                              text="New",
                                              command=lambda: CommandDlg(self.commands_tree.command_dictionary,
+                                                                        self.active_scroll_frame.tab_tree_list,
                                                                         self.insert_command,
                                                                         self.insert_another_command,
                                                                         "command"))
@@ -357,6 +357,7 @@ class Configuration(ttk.Frame):
         if tree_index:
             command_name = self.commands_tree.item(tree_index)['values'][0]
             CommandDlg(self.commands_tree.command_dictionary,
+                       self.active_scroll_frame.tab_tree_list,
                        self.insert_command,
                        self.insert_another_command,
                        "command",
