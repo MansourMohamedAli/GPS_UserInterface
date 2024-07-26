@@ -30,8 +30,13 @@ class ConfigurationManager(ttk.Toplevel):
         self.config_frame = Configuration.from_active_config(self,
                                                              self.active_config_data,
                                                              self.write_json)
+
+        self.rowconfigure(0, weight=1)
+        self.rowconfigure(1, weight=100)
+        self.columnconfigure(0, weight=1)
         # pack
-        self.config_frame.pack(expand=True, fill='both', side="bottom")
+        # self.config_frame.pack(expand=True, fill='both', side="bottom")
+        self.config_frame.grid(row=1, sticky='nsew')
 
         # combo frame
         self.combo_frame = ttk.Frame(self)
@@ -57,7 +62,8 @@ class ConfigurationManager(ttk.Toplevel):
         self.delete_config_button.pack(side='left')
         self.new_config_button.pack(side='left')
         self.drop_down_frame.pack(fill='x')
-        self.combo_frame.pack(fill='x', side="top")
+        # self.combo_frame.pack(fill='x', side="top")
+        self.combo_frame.grid(row=0, sticky='new')
 
         # Menu
         # menu = WindowMenu()
@@ -116,11 +122,13 @@ class ConfigurationManager(ttk.Toplevel):
             # Destroying old config window
             self.config_frame.destroy()
             # Loading Configuration with new configuration data
+
             self.config_frame = Configuration.from_active_config(self,
                                                                  selected_config_data,
                                                                  self.write_json)
             # Repacking Configuration
-            self.config_frame.pack(expand=True, fill='both', side="bottom")
+            # self.config_frame.pack(expand=True, fill='both', side="bottom")
+            self.config_frame.grid(row=1, sticky='nsew')
 
     @classmethod
     def from_json(cls, json_name, active_config_name, m_reload_menu):
@@ -263,7 +271,6 @@ class Configuration(ttk.Frame):
         self.tab_frame.columnconfigure(1, weight=5, uniform='a')
         self.tab_frame.columnconfigure(2, weight=5, uniform='a')
         self.tab_frame.columnconfigure(3, weight=5, uniform='a')
-
         self.tabs_nb = ttk.Notebook(self.tab_frame, width=1080)
         self.tabs_nb.bind("<B1-Motion>", self.reorder)
         self.tabs_nb.bind("<ButtonRelease-1>", self.reorder_save)
@@ -315,16 +322,24 @@ class Configuration(ttk.Frame):
                                             text="Delete Tab",
                                             command=self.delete_tab)
 
-        self.new_tab_button.pack(expand=True, fill='both', side='right')
+        self.new_tab_button.pack(expand=True, fill='both', side='right',anchor='ne')
         self.delete_tab_button.pack(expand=True, fill='both', side='right')
 
         self.button_frame.grid(row=0, column=3, sticky='se')
 
         # inserting frames on to configuration frame.
-        self.tab_frame.grid(row=1, column=1, sticky='nsew', padx=(5, 5))
-        self.side_bar_frame.grid(row=0, column=0, sticky='nsew', rowspan=3, padx=(5, 5))
-        self.tab_frame.grid_propagate(False)
-        self.side_bar_frame.grid_propagate(False)
+        # self.tab_frame.grid(row=1, column=1, sticky='nsew', padx=(5, 5))
+        # self.side_bar_frame.grid(row=0, column=0, sticky='nsew', rowspan=3, padx=(5, 5))
+
+        self.tab_frame.pack(side='right', expand=True, fill='both')
+        self.side_bar_frame.pack(side="left", expand=False, fill='both', padx=(5, 5))
+
+        # self.tab_frame.pack_propagate(False)
+        # self.side_bar_frame.pack_propagate(False)
+
+
+        # self.tab_frame.grid_propagate(False)
+        # self.side_bar_frame.grid_propagate(False)
 
         # Creating Tabs. Class method appends to tabs to list and returns list of tab objects
         self.tabs_list = ScrollFrame.from_tabs_info(self.delete_client, self.tabs_nb, self.tabs_info)

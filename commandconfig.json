@@ -4,7 +4,7 @@
     "local": {
       "clients": {
         "local": [
-          "199.199.199.2",
+          "local",
           ""
         ],
         "te34tgf": [
@@ -26,28 +26,41 @@
       },
       "commands": {
         "Open Notepad": "dir",
-        "ipconfig": "cvcxcfsdfc"
+        "ipconfig": "notepad.exe"
       },
       "tabs_info": {
         "tab1": {
           "1": {
+            "client": "te34tgf",
+            "tree_commands": {},
+            "command_list": []
+          },
+          "2": {
+            "client": "3432",
+            "tree_commands": {},
+            "command_list": []
+          },
+          "3": {
+            "client": "3254r",
+            "tree_commands": {},
+            "command_list": []
+          },
+          "4": {
             "client": "local",
             "tree_commands": {
-              "Open Notepad": "dir",
-              "ipconfig": "cvcxcfsdfc"
+              "ipconfig": "notepad.exe"
             },
             "command_list": [
-              "Open Notepad",
               "ipconfig"
             ]
+          },
+          "5": {
+            "client": "3254rcvbdxcv",
+            "tree_commands": {},
+            "command_list": []
           }
         }
       }
-    },
-    "config2": {
-      "clients": {},
-      "commands": {},
-      "tabs_info": {}
     }
   }
 }
