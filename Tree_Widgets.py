@@ -73,7 +73,7 @@ class CommandListTree(ttk.Treeview):
 
 class TabBarTree(ttk.Treeview):
     def __init__(self, parent, client_name, tab_command_dict, command_list):
-        super().__init__(master=parent, columns=client_name, show='headings', bootstyle='primary')
+        super().__init__(master=parent, columns=[client_name], show='headings', bootstyle='primary')
         self.client_name = client_name
         self.heading(client_name, text=str(client_name))
         # self.get_tree_headings()
