@@ -190,41 +190,43 @@ class Configuration(ttk.Frame):
         self.side_bar_frame.columnconfigure(0, weight=1, uniform='a')
 
         self.client_frame = ttk.Frame(self.side_bar_frame)
-        self.client_frame.columnconfigure(0, weight=1, uniform='a')
-        self.client_frame.columnconfigure(1, weight=1, uniform='a')
-        self.client_frame.columnconfigure(2, weight=1, uniform='a')
         self.client_frame.grid(row=0, column=0, sticky='nsew', pady=(10, 10))
 
         self.clients_tree = ClientListTree.from_json(self.client_frame,
                                                      self.clients_dictionary,
                                                      ["Clients"])
 
+        self.client_buttons_frame = ttk.Frame(self.client_frame)
+        self.client_buttons_frame.rowconfigure(0, weight=1, uniform='a')
+        self.client_buttons_frame.columnconfigure(0, weight=1, uniform='a')
+        self.client_buttons_frame.columnconfigure(1, weight=1, uniform='a')
+        self.client_buttons_frame.columnconfigure(2, weight=1, uniform='a')
         # New Client Button
-        self.new_client_button = ttk.Button(self.client_frame,
+        self.new_client_button = ttk.Button(self.client_buttons_frame,
                                             text="New",
                                             command=lambda: ClientDlg(self.clients_tree.client_dictionary,
                                                                       self.insert_client,
                                                                       self.insert_another_client))
         # Edit Client Button
-        self.edit_client_button = ttk.Button(self.client_frame,
+        self.edit_client_button = ttk.Button(self.client_buttons_frame,
                                              text="Edit",
                                              command=self.edit_client)
 
         # Delete Command Button
-        self.delete_client_button = ttk.Button(self.client_frame,
+        self.delete_client_button = ttk.Button(self.client_buttons_frame,
                                                text="Delete",
                                                command=lambda: self.delete_row(self.clients_tree))
 
+        self.new_client_button.grid(row=0, column=0, sticky='nsew')
+        self.edit_client_button.grid(row=0, column=1, sticky='nsew')
+        self.delete_client_button.grid(row=0, column=2, sticky='nsew')
+
+        self.clients_tree.pack(side='top', expand=True, fill='both')
+        self.client_buttons_frame.pack(side='top', fill='x')
+
         # Adding command section to sidebar.
-        self.clients_tree.grid(row=0, columnspan=3, sticky='nsew')
-        self.new_client_button.grid(row=1, column=0, padx=5, pady=5)
-        self.edit_client_button.grid(row=1, column=1, padx=5, pady=5)
-        self.delete_client_button.grid(row=1, column=2, padx=5, pady=5)
 
         self.command_frame = ttk.Frame(self.side_bar_frame)
-        self.command_frame.columnconfigure(0, weight=1, uniform='a')
-        self.command_frame.columnconfigure(1, weight=1, uniform='a')
-        self.command_frame.columnconfigure(2, weight=1, uniform='a')
         self.command_frame.grid(row=1, column=0, sticky='nsew', pady=(10, 10))
 
         # Command List Tree
@@ -235,8 +237,12 @@ class Configuration(ttk.Frame):
         # # Making command tree items draggable.
         # command_dnd = CommandDragManager(self.commands_tree, self.tab_frame, self.client_tab_frame_list)
         # command_dnd.add_dragable(self.commands_tree)
-
-        self.new_command_button = ttk.Button(self.command_frame,
+        self.command_buttons_frame = ttk.Frame(self.command_frame)
+        self.command_buttons_frame.rowconfigure(0, weight=1, uniform='a')
+        self.command_buttons_frame.columnconfigure(0, weight=1, uniform='a')
+        self.command_buttons_frame.columnconfigure(1, weight=1, uniform='a')
+        self.command_buttons_frame.columnconfigure(2, weight=1, uniform='a')
+        self.new_command_button = ttk.Button(self.command_buttons_frame,
                                              text="New",
                                              command=lambda: CommandDlg(self.commands_tree.command_dictionary,
                                                                         self.active_scroll_frame.tab_tree_list,
@@ -245,20 +251,21 @@ class Configuration(ttk.Frame):
                                                                         "command"))
 
         # Edit Command Button
-        self.edit_command_button = ttk.Button(self.command_frame,
+        self.edit_command_button = ttk.Button(self.command_buttons_frame,
                                               text="Edit",
                                               command=self.edit_command)
 
         # Delete Command Button
-        self.delete_command_button = ttk.Button(self.command_frame,
+        self.delete_command_button = ttk.Button(self.command_buttons_frame,
                                                 text="Delete",
                                                 command=lambda: self.delete_row(self.commands_tree))
+        self.new_command_button.grid(row=0, column=0, sticky='nsew')
+        self.edit_command_button.grid(row=0, column=1, sticky='nsew')
+        self.delete_command_button.grid(row=0, column=2, sticky='nsew')
 
         # Adding command section to sidebar.
-        self.commands_tree.grid(row=0, columnspan=3, sticky='nsew')
-        self.new_command_button.grid(row=1, column=0, padx=5, pady=5)
-        self.edit_command_button.grid(row=1, column=1, padx=5, pady=5)
-        self.delete_command_button.grid(row=1, column=2, padx=5, pady=5)
+        self.commands_tree.pack(side='top', expand=True, fill='both')
+        self.command_buttons_frame.pack(side='top', fill='x')
 
         self.save_button = ttk.Button(self.side_bar_frame, text='Save', command=self.m_write_json)
         self.save_button.grid(row=2)
