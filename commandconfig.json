@@ -31,33 +31,13 @@
       "tabs_info": {
         "tab1": {
           "1": {
-            "client": "te34tgf",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "2": {
-            "client": "3432",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "3": {
-            "client": "3254r",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "4": {
             "client": "local",
             "tree_commands": {
-              "ipconfig": "notepad.exe"
+              "Open Notepad": "dir"
             },
             "command_list": [
-              "ipconfig"
+              "Open Notepad"
             ]
-          },
-          "5": {
-            "client": "3254rcvbdxcv",
-            "tree_commands": {},
-            "command_list": []
           }
         }
       }

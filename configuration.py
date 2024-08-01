@@ -195,6 +195,7 @@ class Configuration(ttk.Frame):
         self.clients_tree = ClientListTree.from_json(self.client_frame,
                                                      self.clients_dictionary,
                                                      ["Clients"])
+        self.clients_tree.bind("<Double-Button-1>", self.edit_client_doubleclick)
 
         self.client_buttons_frame = ttk.Frame(self.client_frame)
         self.client_buttons_frame.rowconfigure(0, weight=1, uniform='a')
@@ -234,6 +235,8 @@ class Configuration(ttk.Frame):
                                                        self.commands_dictionary,
                                                        ["Commands"])
 
+        self.commands_tree.bind("<Double-Button-1>", self.edit_command_doubleclick)
+
         # # Making command tree items draggable.
         # command_dnd = CommandDragManager(self.commands_tree, self.tab_frame, self.client_tab_frame_list)
         # command_dnd.add_dragable(self.commands_tree)
@@ -271,9 +274,9 @@ class Configuration(ttk.Frame):
         self.save_button.grid(row=2)
 
         # Tab Frame configuration
-        self.tab_frame.rowconfigure(0, weight=1)
-        self.tab_frame.rowconfigure(1, weight=10)
-        self.tab_frame.rowconfigure(2, weight=1)
+        self.tab_frame.rowconfigure(0, weight=10)
+        self.tab_frame.rowconfigure(1, weight=1)
+        # self.tab_frame.rowconfigure(2, weight=1)
         self.tab_frame.columnconfigure(0, weight=5, uniform='a')
         self.tab_frame.columnconfigure(1, weight=5, uniform='a')
         self.tab_frame.columnconfigure(2, weight=5, uniform='a')
@@ -302,9 +305,9 @@ class Configuration(ttk.Frame):
                                             state="disabled")
 
         # New and Delete Buttons for tabs.
-        self.tabs_nb.grid(row=1, column=0, columnspan=4, sticky='nsew')
-        self.move_left_button.grid(row=2, column=0, columnspan=2, sticky='new')
-        self.move_right_button.grid(row=2, column=2, columnspan=2, sticky='new')
+        self.tabs_nb.grid(row=0, column=0, columnspan=4, sticky='nsew')
+        self.move_left_button.grid(row=1, column=0, columnspan=2, sticky='new')
+        self.move_right_button.grid(row=1, column=2, columnspan=2, sticky='new')
 
         # Packing Tab Frame Widgets
         self.button_frame = ttk.Frame(self.tab_frame)
@@ -329,24 +332,13 @@ class Configuration(ttk.Frame):
                                             text="Delete Tab",
                                             command=self.delete_tab)
 
-        self.new_tab_button.pack(expand=True, fill='both', side='right',anchor='ne')
+        self.new_tab_button.pack(expand=True, fill='both', side='right', anchor='ne')
         self.delete_tab_button.pack(expand=True, fill='both', side='right')
 
-        self.button_frame.grid(row=0, column=3, sticky='se')
+        self.button_frame.grid(row=0, column=3, sticky='ne', padx=(0, 5))
 
-        # inserting frames on to configuration frame.
-        # self.tab_frame.grid(row=1, column=1, sticky='nsew', padx=(5, 5))
-        # self.side_bar_frame.grid(row=0, column=0, sticky='nsew', rowspan=3, padx=(5, 5))
-
-        self.tab_frame.pack(side='right', expand=True, fill='both')
+        self.tab_frame.pack(side='right', expand=True, fill='both', pady=(10, 10))
         self.side_bar_frame.pack(side="left", expand=False, fill='both', padx=(5, 5))
-
-        # self.tab_frame.pack_propagate(False)
-        # self.side_bar_frame.pack_propagate(False)
-
-
-        # self.tab_frame.grid_propagate(False)
-        # self.side_bar_frame.grid_propagate(False)
 
         # Creating Tabs. Class method appends to tabs to list and returns list of tab objects
         self.tabs_list = ScrollFrame.from_tabs_info(self.delete_client, self.tabs_nb, self.tabs_info)
@@ -365,6 +357,9 @@ class Configuration(ttk.Frame):
             self.active_scroll_frame = scroll_frame
             self.client_tab_frame_list = scroll_frame.client_tab_frame_list
 
+    def edit_client_doubleclick(self, event):
+        self.edit_client()
+
     def edit_client(self):
         tree_index = self.clients_tree.focus()
         if tree_index:
@@ -373,6 +368,9 @@ class Configuration(ttk.Frame):
                       self.insert_client,
                       self.insert_another_client,
                       client_name=client_name)
+
+    def edit_command_doubleclick(self, event):
+        self.edit_command()
 
     def edit_command(self):
         tree_index = self.commands_tree.focus()

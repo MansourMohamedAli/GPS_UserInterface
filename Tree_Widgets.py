@@ -192,6 +192,7 @@ class TabTreeMouseOver(ttk.Frame):
 
         self.client_tab_frame = client_tab_frame
         self.client_tab_tree = client_tab_tree
+        self.client_tab_tree.bind("<Double-Button-1>", self.edit_command_doubleclick)
         self.tab_tree_list = tab_tree_list
         self.m_delete_client = m_delete_client
         self.buttons_frame = ttk.Frame(self)
@@ -275,6 +276,9 @@ class TabTreeMouseOver(ttk.Frame):
             self.client_tab_tree.move(row, "", self.client_tab_tree.index(row) + 1)
         self.client_tab_tree.update_command_list()
         self.client_tab_tree.update_dict()
+
+    def edit_command_doubleclick(self, event):
+        self.edit_command()
 
     def edit_command(self):
         tree_index = self.client_tab_tree.focus()
