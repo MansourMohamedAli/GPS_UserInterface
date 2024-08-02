@@ -1,8 +1,9 @@
 import socket
 import time
 import sys
+from logger import logger
 
-SERVER_HOST = 'localhost'
+SERVER_HOST = '172.23.104.178'
 SERVER_PORT = 9999
 
 def connect_to_server():
@@ -12,6 +13,7 @@ def connect_to_server():
             client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             client_socket.connect((SERVER_HOST, SERVER_PORT))
             print("Connected to server")
+            logger.info(f'Port: {SERVER_PORT}')
             return client_socket
         except socket.error as e:
             print(f"Connection error: {e}. Retrying in 5 seconds...")
