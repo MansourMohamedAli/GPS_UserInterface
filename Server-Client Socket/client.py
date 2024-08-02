@@ -12,16 +12,15 @@ def connect_to_server():
         try:
             client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             client_socket.connect((SERVER_HOST, SERVER_PORT))
-            print("Connected to server")
-            logger.info(f'Port: {SERVER_PORT}')
+            logger.info("Connected to server")
             return client_socket
         except socket.error as e:
-            print(f"Connection error: {e}. Retrying in 5 seconds...")
+            logger.info(f"Connection error: {e}. Retrying in 5 seconds...")
             time.sleep(5)
 
 def main():
     if len(sys.argv) < 2:
-        print("Usage: python client.py <command>")
+        logger.info("Usage: python client.py <command>")
         return
 
     command = ' '.join(sys.argv[1:])
@@ -31,15 +30,15 @@ def main():
     while True:
         try:
             client_socket.send(command.encode())
-            print(f"Command '{command}' sent to the server.")
+            logger.info(f"Command '{command}' sent to the server.")
             break
         except socket.error as e:
-            print(f"Error sending command: {e}. Reconnecting...")
+            logger.info(f"Error sending command: {e}. Reconnecting...")
             client_socket = connect_to_server()
     
     # Receive the output from the server
     # output = client_socket.recv(4096).decode()
-    # print(output)
+    # logger.info(output)
     
     client_socket.close()
 
