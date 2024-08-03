@@ -3,19 +3,18 @@ import time
 import sys
 from logger import logger
 
-SERVER_HOST = '172.23.104.178'
-SERVER_PORT = 9999
+DEFAULT_SERVER_PORT = 52000
 
-def connect_to_server():
+def connect_to_server(SERVER_HOST_IP, SERVER_PORT=DEFAULT_SERVER_PORT):
     """Attempt to connect to the server and return the socket object."""
     while True:
         try:
             client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            client_socket.connect((SERVER_HOST, SERVER_PORT))
+            client_socket.connect((SERVER_HOST_IP, SERVER_PORT))
             logger.info("Connected to server")
             return client_socket
         except socket.error as e:
-            logger.info(f"Connection error: {e}. Retrying in 5 seconds...")
+            logger.error(f"Connection error: {e}. Retrying in 5 seconds...")
             time.sleep(5)
 
 def main():
@@ -23,9 +22,10 @@ def main():
         logger.info("Usage: python client.py <command>")
         return
 
-    command = ' '.join(sys.argv[1:])
+    SERVER_HOST_IP, command = sys.argv[1], ' '.join(sys.argv[2:])
+    logger.info(f'Attempting to send command: {command} to server IP: {SERVER_HOST_IP}')
 
-    client_socket = connect_to_server()
+    client_socket = connect_to_server(SERVER_HOST_IP)
 
     while True:
         try:

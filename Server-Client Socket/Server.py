@@ -4,10 +4,9 @@ from logger import logger
 
 # Define the server address and port
 
-# SERVER_HOST = '0.0.0.0'
 SERVER_HOST_NAME = socket.gethostname()
 IP_ADDRESS = socket.gethostbyname(SERVER_HOST_NAME)
-SERVER_PORT = 9999
+SERVER_PORT = 52000
 
 # Create a socket object
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
