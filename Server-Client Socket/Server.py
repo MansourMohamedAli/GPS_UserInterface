@@ -18,7 +18,7 @@ logger.info(f"Listening on {IP_ADDRESS}:{SERVER_PORT}...")
 try:
     while True:
         client_socket, client_address = server_socket.accept()
-        logger.info(f"Accepted connection from {client_address}")
+        logger.debug(f"Accepted connection from {client_address}")
 
         try:
             # Receive the command from the client
@@ -35,22 +35,31 @@ try:
                 try:
                     output = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
                     output = output.decode().replace('\r\n', '\n')
-                    logger.info(f'SUCCESS:{output}')
+                    # logger.info(f'output:{output}\n' + '-'*50)
+                    
+                    if output:
+                        logger.info('Command successfully executed\n' + '-'*25 + ' Output ' + '-'*25 + f'\n\n{output}\n' + '-'*58)
+                    else:
+                        logger.info(f'Command successfully executed')
                     # continue
                 except subprocess.CalledProcessError as e:
                     output = e.output.decode().replace('\r\n', '\n')
-                    logger.info(f'EXCEPTION:{output}')
+                    logger.exception(f'EXCEPTION:{output}')
 
                 # Send the output back to the client
                 client_socket.send(output.encode())
-                logger.info(f"Sent output to client: {client_address}")
-                
+                logger.debug(f"Sent output to client: {client_address}")
+
+        except KeyboardInterrupt:
+            logger.info("Interrupted by user. Exiting...")
+            break
+
         except socket.error as e:
-            logger.info(f"Socket error: {e}")
+            logger.error(f"Socket error: {e}")
 
         finally:
             client_socket.close()
-            logger.info(f"Closed connection with {client_address}")
+            logger.debug(f"Closed connection with {client_address}")
 
 finally:
     server_socket.close()

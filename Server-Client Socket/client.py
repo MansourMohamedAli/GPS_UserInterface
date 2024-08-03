@@ -28,22 +28,22 @@ def main():
         logger.info("Usage: python client.py <command>")
         return
 
-    SERVER_HOST_IP = sys.argv[1], ' '.join(sys.argv[2:])
+    # SERVER_HOST_IP = sys.argv[1], ' '.join(sys.argv[2:])
     # logger.info(f'Attempting to send command:{command} to server IP:{SERVER_HOST_IP}')
 
     parser = argparse.ArgumentParser(description='Client for sending commands to the server.')
-    parser.add_argument('--host', type=str, help='Server IP.')
+    parser.add_argument('--host', type=str, help='Server IP address.')
     parser.add_argument('--port', type=int, default=DEFAULT_SERVER_PORT, help=f'The port to connect to the server. Default is {DEFAULT_SERVER_PORT}.')
-    parser.add_argument('--command', type=str, help='Command to send.')
+    parser.add_argument('--command', type=str, help='Command to send. If command is multiple words, enclose in \"\".')
     parser.add_argument('--retries', type=int, default=DEFAULT_MAX_RETRIES, help=f'The maximum number of connection attempts. Default is {DEFAULT_MAX_RETRIES}.')
     parser.add_argument('--feedback', type=int, default=0, help=f'Flag to allow Server to send back command. set 1 to allow feedback.')
     args = parser.parse_args()
 
-    server_host_ip = args.host 
+    server_host_ip   = args.host 
     server_host_port = args.port
-    command = args.command
-    max_retries = args.retries
-    feedback = args.feedback
+    command          = args.command
+    max_retries      = args.retries
+    feedback         = args.feedback
 
 
     client_socket = connect_to_server(server_host_ip, server_host_port, max_retries)
