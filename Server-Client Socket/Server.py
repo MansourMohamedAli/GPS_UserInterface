@@ -36,7 +36,7 @@ try:
                     output = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
                     output = output.decode().replace('\r\n', '\n')
                     logger.info(f'SUCCESS:{output}')
-                    continue
+                    # continue
                 except subprocess.CalledProcessError as e:
                     output = e.output.decode().replace('\r\n', '\n')
                     logger.info(f'EXCEPTION:{output}')
