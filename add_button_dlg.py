@@ -119,11 +119,12 @@ class ClientDlg(tk.Toplevel):
 
 class CommandDlg(tk.Toplevel):
     def __init__(self, command_dict, tab_tree_list, m_insert_command, m_insert_another_command, tree_type,
-                 command_list=None, command_name=None):
+                 tabs_list=None, command_list=None, command_name=None):
         super().__init__()
         self.command_dict = command_dict
         self.tab_tree_list = tab_tree_list
         self.command_list = command_list
+        self.tabs_list = tabs_list
         self.m_insert_command = m_insert_command
         self.m_insert_another_command = m_insert_another_command
         self.tree_type = tree_type
@@ -168,23 +169,23 @@ class CommandDlg(tk.Toplevel):
             self.command_name_entry.insert(tk.END, self.command_name)
             self.commandText = self.command_dict[self.command_name]
             self.command_text_box.insert(1.0, self.commandText)
-
-            self.var1 = tk.IntVar()
-            self.propagate_to_tab_option = ttk.Checkbutton(self.buttons_frame, text='Apply to All in Current Tab with Same Name.',
-                                                    variable=self.var1,
-                                                    onvalue=1,
-                                                    offvalue=0)
-            self.propagate_to_tab_option.state(["!selected"])
             self.done_button.place(relx=0.2, rely=0)
-            self.propagate_to_tab_option.place(relx=0.4, rely=0)
+            if self.tree_type == "command":
+                self.var1 = tk.IntVar()
+                self.propagate_to_tab_option = ttk.Checkbutton(self.buttons_frame, text='Apply to All in Current Tab with Same Name.',
+                                                        variable=self.var1,
+                                                        onvalue=1,
+                                                        offvalue=0)
+                self.propagate_to_tab_option.state(["!selected"])
+                self.propagate_to_tab_option.place(relx=0.4, rely=0)
 
-            self.var2 = tk.IntVar()
-            self.propagate_to_all_option = ttk.Checkbutton(self.buttons_frame, text='Apply to All with Same Name.',
-                                                    variable=self.var2,
-                                                    onvalue=1,
-                                                    offvalue=0)
-            self.propagate_to_all_option.state(["!selected"])
-            self.propagate_to_all_option.place(relx=0.4, rely=0.5)
+                self.var2 = tk.IntVar()
+                self.propagate_to_all_option = ttk.Checkbutton(self.buttons_frame, text='Apply to All with Same Name.',
+                                                        variable=self.var2,
+                                                        onvalue=1,
+                                                        offvalue=0)
+                self.propagate_to_all_option.state(["!selected"])
+                self.propagate_to_all_option.place(relx=0.4, rely=0.5)
         else:
             self.add_another_button = ttk.Button(self.buttons_frame,
                                                  text="Add Another",
@@ -214,7 +215,15 @@ class CommandDlg(tk.Toplevel):
         command_text_box = self.command_text_box.get("1.0", "end-1c")
         if self.command_name:  # edit command
             self.command_dict[self.command_name] = command_text_box
-            if 'selected' in self.propagate_to_tab_option.state():
+            if 'selected' in self.propagate_to_all_option.state():
+                print("check!")
+                if self.tree_type == "command":
+                    for tab in self.tabs_list:
+                        for tree in tab.tab_tree_list:
+                            if self.command_name in tree.tab_command_dict:
+                                logger.info(f'{self.command_name} is in the {tree.client_name} tab tree.')
+                                tree.tab_command_dict[self.command_name] = command_text_box
+            elif 'selected' in self.propagate_to_tab_option.state():
                 print("check!")
                 if self.tree_type == "command":
                     for tree in self.tab_tree_list:
@@ -230,7 +239,12 @@ class CommandDlg(tk.Toplevel):
                     self.command_list.append(self.command_name)
                 return self.command_name
             else:
+                # todo let user know that this will add command name but overwrite all commands with same name.
+                self.command_dict[self.command_name] = command_text_box
+                if self.tree_type == "tab":  # Tab Command Tree #todo use IsInstance function
+                    self.command_list.append(self.command_name)
                 logger.info(f'{self.command_name} is already in dictionary.')
+                return self.command_name
 
     def get_dimensions(self):
         x = self.winfo_screenwidth()

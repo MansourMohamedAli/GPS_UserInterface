@@ -379,6 +379,7 @@ class Configuration(ttk.Frame):
                        self.insert_command,
                        self.insert_another_command,
                        "command",
+                       self.tabs_list,
                        command_name=command_name)
 
     def change_tab_name(self, event):

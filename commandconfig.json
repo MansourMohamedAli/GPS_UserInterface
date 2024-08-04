@@ -23,18 +23,16 @@
         "pdf": "W2 Corys Front Side.pdf",
         "open miron": "code mirion.py",
         "list": "code list.txt",
-        "ping": "ping 10.0.0.11"
+        "ping": "change_all"
       },
       "tabs_info": {
         "local": {
           "1": {
             "client": "local",
             "tree_commands": {
-              "change dir": "L:",
-              "ping": "ping 10.0.0.11"
+              "ping": "change_all"
             },
             "command_list": [
-              "change dir",
               "ping"
             ]
           },
@@ -112,6 +110,17 @@
             "client": "badRemote",
             "tree_commands": {},
             "command_list": []
+          }
+        },
+        "sdf": {
+          "1": {
+            "client": "local",
+            "tree_commands": {
+              "ping": "change_all"
+            },
+            "command_list": [
+              "ping"
+            ]
           }
         }
       }
