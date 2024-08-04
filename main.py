@@ -7,6 +7,7 @@ import ttkbootstrap as ttk
 from logger import logger
 import os
 import sys
+import threading
 
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
@@ -330,7 +331,12 @@ class CommandButtons(ttk.Button):
         for ip, command in zip(self.client_list, self.command_list):
             if ip == "local":
                 logger.debug(id(self.cwd))
-                send_local_cmd(command, self.cwd)
+                # send_local_cmd(command, self.cwd)
+
+                t1 = threading.Thread(target=send_local_cmd,
+                                      args=[command, self.cwd])
+                t1.start()
+
                 print("sending local command:", command)
             else:
                 args = ['--host', ip, '--command', command]
@@ -343,7 +349,6 @@ class CommandButtons(ttk.Button):
 
         # change working directory back so config file can be found.
         cwd = os.path.dirname(os.path.realpath(__file__))
-        print(cwd)
         os.chdir(cwd)
 
     def create_commands_list(self):

@@ -8,6 +8,10 @@
           ""
         ],
         "remote machine": [
+          "10.0.0.132",
+          ""
+        ],
+        "badRemote": [
           "10.0.0.1",
           ""
         ]
@@ -18,7 +22,8 @@
         "open git ignore": "notepad.exe .gitignore",
         "pdf": "W2 Corys Front Side.pdf",
         "open miron": "code mirion.py",
-        "list": "code list.txt"
+        "list": "code list.txt",
+        "ping": "ping 10.0.0.11"
       },
       "tabs_info": {
         "local": {
@@ -26,11 +31,11 @@
             "client": "local",
             "tree_commands": {
               "change dir": "L:",
-              "open miron": "code list.txt"
+              "ping": "ping 10.0.0.11"
             },
             "command_list": [
               "change dir",
-              "open miron"
+              "ping"
             ]
           }
         },
@@ -39,6 +44,19 @@
             "client": "remote machine",
             "tree_commands": {
               "change dir": "L:",
+              "list": "code list.txt"
+            },
+            "command_list": [
+              "change dir",
+              "list"
+            ]
+          }
+        },
+        "bad_remote": {
+          "1": {
+            "client": "badRemote",
+            "tree_commands": {
+              "change dir": "cd C:\\markdown_notes",
               "list": "code list.txt"
             },
             "command_list": [
