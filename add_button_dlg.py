@@ -133,7 +133,7 @@ class CommandDlg(tk.Toplevel):
             self.command_name = command_name
         self.title('Command Configuration')
         x, y = self.get_dimensions()
-        self.geometry(f'{int(x * 0.30)}x{int(y * 0.20)}')
+        self.geometry(f'{int(x * 0.40)}x{int(y * 0.30)}')
         self.minsize(int(x * 0.25), int(y * 0.10))
         self.maxsize(int(x * 0.35), int(y * 0.25))
         self.resizable(False, False)
@@ -170,15 +170,21 @@ class CommandDlg(tk.Toplevel):
             self.command_text_box.insert(1.0, self.commandText)
 
             self.var1 = tk.IntVar()
-            self.propagate_option = ttk.Checkbutton(self.buttons_frame, text='Apply to All',
+            self.propagate_to_tab_option = ttk.Checkbutton(self.buttons_frame, text='Apply to All in Current Tab with Same Name.',
                                                     variable=self.var1,
                                                     onvalue=1,
                                                     offvalue=0)
-            self.propagate_option.state(["!selected"])
+            self.propagate_to_tab_option.state(["!selected"])
             self.done_button.place(relx=0.2, rely=0)
-            self.propagate_option.place(relx=0.5, rely=0)
-            self.done_button.place(relx=0.2, rely=0)
-            self.propagate_option.place(relx=0.5, rely=0)
+            self.propagate_to_tab_option.place(relx=0.4, rely=0)
+
+            self.var2 = tk.IntVar()
+            self.propagate_to_all_option = ttk.Checkbutton(self.buttons_frame, text='Apply to All with Same Name.',
+                                                    variable=self.var2,
+                                                    onvalue=1,
+                                                    offvalue=0)
+            self.propagate_to_all_option.state(["!selected"])
+            self.propagate_to_all_option.place(relx=0.4, rely=0.5)
         else:
             self.add_another_button = ttk.Button(self.buttons_frame,
                                                  text="Add Another",
@@ -208,7 +214,7 @@ class CommandDlg(tk.Toplevel):
         command_text_box = self.command_text_box.get("1.0", "end-1c")
         if self.command_name:  # edit command
             self.command_dict[self.command_name] = command_text_box
-            if 'selected' in self.propagate_option.state():
+            if 'selected' in self.propagate_to_tab_option.state():
                 print("check!")
                 if self.tree_type == "command":
                     for tree in self.tab_tree_list:

@@ -229,11 +229,12 @@ class TabTreeMouseOver(ttk.Frame):
                                              text="+",
                                              width=5,
                                              command=lambda: CommandDlg(self.client_tab_tree.tab_command_dict,
+                                                                        self.tab_tree_list,
                                                                         self.insert_command,
                                                                         self.insert_another_command,
                                                                         "tab",
                                                                         command_list=self.client_tab_tree.command_list),
-                                             bootstyle='info')
+                                                                        bootstyle='info')
 
         self.del_command_button = ttk.Button(self.buttons_frame,
                                              text=u"\U0001F5D1",
@@ -317,7 +318,10 @@ class ApplyToAllFrame(ttk.Frame):
         # self.apply_to_all_label = ttk.Label(self, text="Add to all", style="ApplyToAll.TLabel")
 
         self.apply_to_all_label = ttk.Label(self, text="Add to all",
-                                            background="blue",
+                                            # background="blue",
                                             anchor='center',
-                                            font=("Arial", 25) )
+                                            font=("Arial", 25),
+                                            bootstyle='primary',
+                                            borderwidth=1,
+                                            relief="solid")
         self.apply_to_all_label.pack(expand=True, fill="both")
