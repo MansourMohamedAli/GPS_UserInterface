@@ -18,9 +18,9 @@ class ClientListTree(ttk.Treeview):
         for new_client in client_dictionary:
             if new_client:
                 cls.insert(tree, parent='', index=tk.END, values=[new_client])
-            #  Initialize Tree Title
-            for heading in tree.headings:
-                tree.heading(heading, text=str(heading))
+        #  Initialize Tree Title
+        for heading in tree.headings:
+            tree.heading(heading, text=str(heading))
         return tree
 
     def delete_row_keyboard_button(self, event):

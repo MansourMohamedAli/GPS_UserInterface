@@ -17,7 +17,7 @@
         ]
       },
       "commands": {
-        "ipconfig": "notepad.exe",
+        "ipconfig": "ipconfig",
         "change dir": "cd C:\\markdown_notes",
         "open git ignore": "notepad.exe .gitignore",
         "pdf": "W2 Corys Front Side.pdf",
@@ -43,29 +43,24 @@
           "1": {
             "client": "remote machine",
             "tree_commands": {
-              "change dir": "L:",
-              "list": "code list.txt"
+              "ipconfig": "ipconfig"
             },
             "command_list": [
-              "change dir",
-              "list"
-            ]
-          }
-        },
-        "bad_remote": {
-          "1": {
-            "client": "badRemote",
-            "tree_commands": {
-              "change dir": "cd C:\\markdown_notes",
-              "list": "code list.txt"
-            },
-            "command_list": [
-              "change dir",
-              "list"
+              "ipconfig"
             ]
           }
         }
       }
+    },
+    "config2": {
+      "clients": {},
+      "commands": {},
+      "tabs_info": {}
+    },
+    "config3": {
+      "clients": {},
+      "commands": {},
+      "tabs_info": {}
     }
   }
 }

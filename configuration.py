@@ -335,7 +335,7 @@ class Configuration(ttk.Frame):
 
         self.button_frame.grid(row=0, column=3, sticky='ne', padx=(0, 5))
 
-        self.tab_frame.pack(side='right', expand=True, fill='both', pady=(10, 10))
+        self.tab_frame.pack(side='right', expand=True, fill='both',padx=(0, 5), pady=(10, 10))
         self.side_bar_frame.pack(side="left", expand=False, fill='both', padx=(5, 5))
 
         # Creating Tabs. Class method appends to tabs to list and returns list of tab objects

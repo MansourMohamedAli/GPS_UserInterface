@@ -1,6 +1,5 @@
 import tkinter as tk
 from configuration import ConfigurationManager
-# from send_command import main
 from send_local_command import send_local_cmd
 import json
 import ttkbootstrap as ttk
@@ -10,8 +9,8 @@ import sys
 import threading
 
 current = os.path.dirname(os.path.realpath(__file__))
-parent = os.path.dirname(current)
-remote_cmd_path = os.path.join(parent, "RemoteCMD")
+parent_dir = os.path.dirname(current)
+remote_cmd_path = os.path.join(parent_dir, "RemoteCMD")
 sys.path.append(remote_cmd_path)
 
 from RemoteCMDClient import main as send_cmd_client
@@ -31,7 +30,7 @@ class App(ttk.Window):
         self.maxsize(int(x * 0.35), int(y * 0.45))
         self.configurations = self.load_data()
         self.config_names = list(self.configurations['configurations'].keys())
-        self.active_config_name = self.configurations['active_config']
+        self.active_config_name = [self.configurations['active_config']]
 
         # Widgets
         self.main_frame = ttk.Frame(self)
@@ -55,27 +54,22 @@ class App(ttk.Window):
         self.clear_output_button = ttk.Button(self.output_frame, text="Clear Output", command=self.clear_output)
         self.clear_output_button.pack(expand=True, side='bottom', fill='x', padx=5)
 
-        # self.clear_button_frame = ttk.Frame(self.output_frame)
-        # self.clear_output_button = ttk.Button(self.clear_button_frame, width=self.output_frame.winfo_width())
-        # self.clear_output_button.pack(expand=True, fill='both')
-        # self.clear_button_frame.pack(side="bottom", fill='x', padx=5)
         try:
-            self.active_config_data = self.configurations['configurations'][self.active_config_name]
+            self.active_config_data = self.configurations['configurations'][self.active_config_name[0]]
         except KeyError:
             self.active_config_name = self.config_names[0]
-            self.active_config_data = self.configurations['configurations'][self.active_config_name]
+            self.active_config_data = self.configurations['configurations'][self.active_config_name[0]]
             self.combo.set(self.active_config_name)
 
         self.menu = Menu.from_active_config_data(self.menu_frame,
                                                  self.active_config_name,
                                                  self.active_config_data,
                                                  self.config_selected,
-                                                 self.reload_menu,
                                                  self.output_window)
 
         self.pack_widget_frames()
 
-        window_menu = WindowMenu()
+        window_menu = WindowMenu(self.active_config_name, self.reload_menu)
 
         self.configure(menu=window_menu)
         # Run
@@ -91,22 +85,21 @@ class App(ttk.Window):
         self.combo_frame = ttk.Frame(self.main_frame)
         self.configurations = self.load_data()
         self.config_names = list(self.configurations['configurations'].keys())
-        self.active_config_name = self.configurations['active_config']
+        self.active_config_name[0] = self.configurations['active_config']
         try:
-            self.active_config_data = self.configurations['configurations'][self.active_config_name]
+            self.active_config_data = self.configurations['configurations'][self.active_config_name[0]]
         except KeyError:
             self.active_config_name = self.config_names[0]
-            self.active_config_data = self.configurations['configurations'][self.active_config_name]
+            self.active_config_data = self.configurations['configurations'][self.active_config_name[0]]
         self.combo = self.create_combo(self.combo_frame)
         self.combo.pack(expand=False, fill='x', padx=5, side="top")
-        self.combo.set(self.active_config_name)
+        self.combo.set(self.active_config_name[0])
         self.menu_frame.destroy()
         self.menu_frame = ttk.Frame(self.main_frame)
         self.menu = Menu.from_active_config_data(self.menu_frame,
                                                  self.active_config_name,
                                                  self.active_config_data,
                                                  self.config_selected,
-                                                 self.reload_menu,
                                                  self.output_window)
         self.pack_widget_frames()
 
@@ -127,7 +120,7 @@ class App(ttk.Window):
 
     def create_combo(self, combo_frame):
         config_names = self.config_names
-        c = ttk.StringVar(value=self.active_config_name)
+        c = ttk.StringVar(value=self.active_config_name[0])
         combo = ttk.Combobox(combo_frame, textvariable=c)
         combo['values'] = config_names
         combo['state'] = 'readonly'
@@ -145,7 +138,7 @@ class App(ttk.Window):
             return
         else:
             # Setting new active config
-            self.active_config_name = selected_config
+            self.active_config_name[0] = selected_config
             self.write_active_config()
             # Getting Config Data
             selected_config_data = self.configurations['configurations'][selected_config]
@@ -156,12 +149,11 @@ class App(ttk.Window):
                                                      self.active_config_name,
                                                      selected_config_data,
                                                      self.config_selected,
-                                                     self.reload_menu,
                                                      self.output_window)
             self.re_load_dropdown()
 
     def write_active_config(self):
-        self.configurations['active_config'] = self.active_config_name
+        self.configurations['active_config'] = self.active_config_name[0]
         with open('commandconfig.json', 'w') as f:
             json.dump(self.configurations, f, indent=2)
 
@@ -191,18 +183,22 @@ class App(ttk.Window):
 
 
 class WindowMenu(ttk.Menu):
-    def __init__(self):
+    def __init__(self, active_config_name, reload_menu):
         super().__init__()
         # sub menu
+        self.active_config_name = active_config_name
+        self.reload_menu = reload_menu
         file_menu = ttk.Menu(self, tearoff=False)
-        file_menu.add_command(label='New', command=lambda: print('New file'))
-        file_menu.add_command(label='Open', command=lambda: print('Open file'))
+        file_menu.add_command(label='Configuration', command=lambda: self.open_configuration('commandconfig.json'))
         self.add_cascade(label='File', menu=file_menu)
 
         # another sub menu
         help_menu = ttk.Menu(self, tearoff=False)
         help_menu.add_command(label='Help entry', command=lambda: print("test"))
         self.add_cascade(label='Help', menu=help_menu)
+
+    def open_configuration(self, configuration_filename):
+        ConfigurationManager.from_json(configuration_filename, self.active_config_name[0], self.reload_menu)
 
 
 class Menu(ttk.Frame):
@@ -211,7 +207,6 @@ class Menu(ttk.Frame):
                  client_dict,
                  active_config_name,
                  m_config_selected,
-                 m_reload_menu,
                  output_window):
         super().__init__(parent)
         item_number = len(buttons_info) + 2  # Plus two for configuration button and dropdown menu
@@ -220,7 +215,6 @@ class Menu(ttk.Frame):
         self.active_config_name = active_config_name
         self.list_height = item_number * 39
         self.m_config_selected = m_config_selected
-        self.m_reload_menu = m_reload_menu
         self.output_window = output_window
         self.pack(expand=True, fill="both")
         self.config_button = ttk.Button(self, text='Configuration')
@@ -243,12 +237,10 @@ class Menu(ttk.Frame):
         self.bind('<Configure>', self.update_size)
 
     @classmethod
-    def from_active_config_data(cls, parent, active_config_name, active_config_data, m_config_selected, m_reload_menu,
-                                output_window):
+    def from_active_config_data(cls, parent, active_config_name, active_config_data, m_config_selected, output_window):
         buttons_info = active_config_data['tabs_info']
         client_dict = active_config_data["clients"]
-        return cls(parent, buttons_info, client_dict, active_config_name, m_config_selected, m_reload_menu,
-                   output_window)
+        return cls(parent, buttons_info, client_dict, active_config_name, m_config_selected, output_window)
 
     def update_size(self, event):
         if self.list_height >= self.winfo_height():
@@ -276,20 +268,7 @@ class Menu(ttk.Frame):
                                                               self.output_window)
         # self.drop_down_menu(frame)
         self.grid_button_frames(button_frames_list)
-
-        # Creating configuration button and putting at bottom.
-        self.configuration_button(frame)
         return frame
-
-    def configuration_button(self, frame):
-        config_button_frame = ttk.Frame(frame)
-        config_button = ttk.Button(config_button_frame, text='Configuration',
-                                   command=lambda: self.read_configuration('commandconfig.json'))
-        config_button.pack(expand=True, fill='both')
-        config_button_frame.grid(sticky='nsew', pady=5)
-
-    def read_configuration(self, configuration_filename):
-        ConfigurationManager.from_json(configuration_filename, self.active_config_name, self.m_reload_menu)
 
     @staticmethod
     def grid_button_frames(button_frames_list):
@@ -331,11 +310,9 @@ class CommandButtons(ttk.Button):
         for ip, command in zip(self.client_list, self.command_list):
             if ip == "local":
                 logger.debug(id(self.cwd))
-                # send_local_cmd(command, self.cwd)
-
-                t1 = threading.Thread(target=send_local_cmd,
-                                      args=[command, self.cwd])
-                t1.start()
+                connection_thread = threading.Thread(target=send_local_cmd,
+                                                     args=[command, self.cwd])
+                connection_thread.start()
 
                 print("sending local command:", command)
             else:
@@ -384,4 +361,4 @@ class CommandButtons(ttk.Button):
 
 
 if __name__ == "__main__":
-    App('Glass Panel Control', 'darkly')
+    App('Control Window', 'darkly')
