@@ -1,10 +1,19 @@
 import tkinter as tk
 from configuration import ConfigurationManager
-from send_command import send_cmd_client
+# from send_command import main
 from send_local_command import send_local_cmd
 import json
 import ttkbootstrap as ttk
 from logger import logger
+import os
+import sys
+
+current = os.path.dirname(os.path.realpath(__file__))
+parent = os.path.dirname(current)
+remote_cmd_path = os.path.join(parent, "RemoteCMD")
+sys.path.append(remote_cmd_path)
+
+from RemoteCMDClient import main as send_cmd_client
 
 
 class App(ttk.Window):
@@ -233,10 +242,12 @@ class Menu(ttk.Frame):
         self.bind('<Configure>', self.update_size)
 
     @classmethod
-    def from_active_config_data(cls, parent, active_config_name, active_config_data, m_config_selected, m_reload_menu, output_window):
+    def from_active_config_data(cls, parent, active_config_name, active_config_data, m_config_selected, m_reload_menu,
+                                output_window):
         buttons_info = active_config_data['tabs_info']
         client_dict = active_config_data["clients"]
-        return cls(parent, buttons_info, client_dict, active_config_name, m_config_selected, m_reload_menu, output_window)
+        return cls(parent, buttons_info, client_dict, active_config_name, m_config_selected, m_reload_menu,
+                   output_window)
 
     def update_size(self, event):
         if self.list_height >= self.winfo_height():
@@ -260,7 +271,8 @@ class Menu(ttk.Frame):
         frame = ttk.Frame(self.frame)
         # grid layout
         frame.columnconfigure(0, weight=1)
-        button_frames_list = CommandButtons.from_buttons_info(self.buttons_info, self.client_dict, frame, self.output_window)
+        button_frames_list = CommandButtons.from_buttons_info(self.buttons_info, self.client_dict, frame,
+                                                              self.output_window)
         # self.drop_down_menu(frame)
         self.grid_button_frames(button_frames_list)
 
@@ -276,7 +288,7 @@ class Menu(ttk.Frame):
         config_button_frame.grid(sticky='nsew', pady=5)
 
     def read_configuration(self, configuration_filename):
-        ConfigurationManager.from_json(configuration_filename,self.active_config_name, self.m_reload_menu)
+        ConfigurationManager.from_json(configuration_filename, self.active_config_name, self.m_reload_menu)
 
     @staticmethod
     def grid_button_frames(button_frames_list):
@@ -312,19 +324,27 @@ class CommandButtons(ttk.Button):
         self.client_list = list()
         self.create_commands_list()
         self.bind('<ButtonPress-1>', self.send_cmd)
+        self.cwd = [os.getcwd()]
 
     def send_cmd(self, event):
         for ip, command in zip(self.client_list, self.command_list):
             if ip == "local":
-                send_local_cmd(command)
+                logger.debug(id(self.cwd))
+                send_local_cmd(command, self.cwd)
                 print("sending local command:", command)
             else:
-                send_cmd_client(ip, command)
+                args = ['--host', ip, '--command', command]
+                send_cmd_client(args)
             output = f'{ip}: {command}\n'
             logger.info(f'{ip}: {command}')
             self.output_window.configure(state='normal')
             self.output_window.insert(tk.END, output)
             self.output_window.configure(state='disabled')
+
+        # change working directory back so config file can be found.
+        cwd = os.path.dirname(os.path.realpath(__file__))
+        print(cwd)
+        os.chdir(cwd)
 
     def create_commands_list(self):
         for index, (client, command_name_list) in enumerate(zip(self.client_ip_list, self.command_name_lists)):

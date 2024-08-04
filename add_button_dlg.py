@@ -224,7 +224,7 @@ class CommandDlg(tk.Toplevel):
                     self.command_list.append(self.command_name)
                 return self.command_name
             else:
-                print('Already in dict')
+                logger.info(f'{self.command_name} is already in dictionary.')
 
     def get_dimensions(self):
         x = self.winfo_screenwidth()

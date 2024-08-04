@@ -1,18 +1,12 @@
-from ctypes import CDLL, c_int, c_char_p
 import os
+import sys
 
-absolute_path = os.path.dirname(__file__)
-relative_path = "GlassPanel\\SendCmd\\SendCmdClient\\Debug\\SendCmdClient.dll"
-full_path = os.path.join(absolute_path, relative_path)
-clibrary = CDLL(full_path, winmode=0)
+current = os.path.dirname(os.path.realpath(__file__))
+parent = os.path.dirname(current)
+remote_cmd_path = os.path.join(parent, "RemoteCMD")
+sys.path.append(remote_cmd_path)
 
+from RemoteCMDClient import main as send_cmd_client
 
-def send_cmd_client(client_name, command):
-    send_cmd_func = clibrary.send_cmd
-    send_cmd_func.argtypes = [c_char_p]
-    send_cmd_func.restype = c_int
-    command_string = f"{client_name},{command}"
-    byte_string = command_string.encode('utf-8')  # convert to bytes
-    command = c_char_p(byte_string)
-    send_cmd_func(command)
-
+args = ['--host', '10.0.0.132', '--command', 'dir']
+send_cmd_client(args)

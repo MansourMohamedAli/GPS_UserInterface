@@ -7,36 +7,43 @@
           "local",
           ""
         ],
-        "te34tgf": [
-          "gsdfgv",
-          "sdfgv"
-        ],
-        "3432": [
-          "fvdsx",
-          "cvb"
-        ],
-        "3254r": [
-          "fsd",
-          "gvsdf"
-        ],
-        "3254rcvbdxcv": [
-          "fsd",
-          "gvsdf"
+        "remote machine": [
+          "10.0.0.1",
+          ""
         ]
       },
       "commands": {
-        "Open Notepad": "dir",
-        "ipconfig": "notepad.exe"
+        "ipconfig": "notepad.exe",
+        "change dir": "cd C:\\markdown_notes",
+        "open git ignore": "notepad.exe .gitignore",
+        "pdf": "W2 Corys Front Side.pdf",
+        "open miron": "code mirion.py",
+        "list": "code list.txt"
       },
       "tabs_info": {
-        "tab1": {
+        "local": {
           "1": {
             "client": "local",
             "tree_commands": {
-              "Open Notepad": "dir"
+              "change dir": "L:",
+              "open miron": "code list.txt"
             },
             "command_list": [
-              "Open Notepad"
+              "change dir",
+              "open miron"
+            ]
+          }
+        },
+        "remote": {
+          "1": {
+            "client": "remote machine",
+            "tree_commands": {
+              "change dir": "L:",
+              "list": "code list.txt"
+            },
+            "command_list": [
+              "change dir",
+              "list"
             ]
           }
         }

@@ -66,8 +66,8 @@ class ConfigurationManager(ttk.Toplevel):
         self.combo_frame.grid(row=0, sticky='new')
 
         # Menu
-        # menu = WindowMenu()
-        # self.configure(menu=menu)
+        menu = WindowMenu(self.write_json)
+        self.configure(menu=menu)
 
         if __name__ == "__main__":
             self.main_loop()
@@ -84,6 +84,7 @@ class ConfigurationManager(ttk.Toplevel):
         #     self.configurations['active_config'] = self.combo['values'][0]
         with open('commandconfig.json', 'w') as f:
             json.dump(self.configurations, f, indent=2)
+        logger.info("Saving to JSON")
         self.m_reload_menu()
 
     def insert_config(self, window_instance, new_config):
@@ -270,11 +271,8 @@ class Configuration(ttk.Frame):
         self.commands_tree.pack(side='top', expand=True, fill='both')
         self.command_buttons_frame.pack(side='top', fill='x')
 
-        self.save_button = ttk.Button(self.side_bar_frame, text='Save', command=self.m_write_json)
-        self.save_button.grid(row=2)
-
         # Tab Frame configuration
-        self.tab_frame.rowconfigure(0, weight=10)
+        self.tab_frame.rowconfigure(0, weight=50)
         self.tab_frame.rowconfigure(1, weight=1)
         # self.tab_frame.rowconfigure(2, weight=1)
         self.tab_frame.columnconfigure(0, weight=5, uniform='a')
@@ -306,8 +304,8 @@ class Configuration(ttk.Frame):
 
         # New and Delete Buttons for tabs.
         self.tabs_nb.grid(row=0, column=0, columnspan=4, sticky='nsew')
-        self.move_left_button.grid(row=1, column=0, columnspan=2, sticky='new')
-        self.move_right_button.grid(row=1, column=2, columnspan=2, sticky='new')
+        self.move_left_button.grid(row=1, column=0, columnspan=2, sticky='nsew')
+        self.move_right_button.grid(row=1, column=2, columnspan=2, sticky='nsew')
 
         # Packing Tab Frame Widgets
         self.button_frame = ttk.Frame(self.tab_frame)
@@ -758,12 +756,13 @@ class ScrollFrame(ttk.Frame):
 
 
 class WindowMenu(ttk.Menu):
-    def __init__(self):
+    def __init__(self, write_json):
         super().__init__()
+        self.write_json = write_json
         # sub menu
         file_menu = ttk.Menu(self, tearoff=False)
-        file_menu.add_command(label='New', command=lambda: print('New file'))
-        file_menu.add_command(label='Open', command=lambda: print('Open file'))
+        # file_menu.add_command(label='New', command=lambda: print('New file'))
+        file_menu.add_command(label='Save', command=self.write_json)
         self.add_cascade(label='File', menu=file_menu)
 
         # another sub menu
@@ -771,6 +770,3 @@ class WindowMenu(ttk.Menu):
         help_menu.add_command(label='Help entry', command=lambda: print("test"))
         self.add_cascade(label='Help', menu=help_menu)
 
-
-if __name__ == "__main__":
-    ConfigurationManager.from_json('commandconfig.json')
