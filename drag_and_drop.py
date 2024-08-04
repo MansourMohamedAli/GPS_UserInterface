@@ -105,7 +105,7 @@ class CommandDragManager:
         if isinstance(target, TabBarTree):
             for command_name in self.tree_selection:
                 self.add_command(command_name, target)
-        elif isinstance(target, ApplyToAllFrame):
+        elif isinstance(target.master, ApplyToAllFrame):
             for command_name in self.tree_selection:
                 for tree in self.client_tab_frame_list:
                     self.add_command(command_name, tree)

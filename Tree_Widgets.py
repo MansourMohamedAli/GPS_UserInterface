@@ -309,5 +309,15 @@ class TabTreeMouseOver(ttk.Frame):
 
 
 class ApplyToAllFrame(ttk.Frame):
-    def __init__(self, master, style):
-        super().__init__(master=master, style=style)
+    def __init__(self, master):
+        super().__init__(master=master)
+
+        # style = ttk.Style()
+        # style.configure("ApplyToAll.TLabel", background="blue")
+        # self.apply_to_all_label = ttk.Label(self, text="Add to all", style="ApplyToAll.TLabel")
+
+        self.apply_to_all_label = ttk.Label(self, text="Add to all",
+                                            background="blue",
+                                            anchor='center',
+                                            font=("Arial", 25) )
+        self.apply_to_all_label.pack(expand=True, fill="both")
