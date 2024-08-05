@@ -262,7 +262,8 @@ class Configuration(ttk.Frame):
                                                                             self.insert_command,
                                                                             self.insert_another_command,
                                                                             "command",
-                                                                            self.active_scroll_frame.tab_tree_list))
+                                                                            self.active_scroll_frame.tab_tree_list,
+                                                                            self.tabs_list))
         else:  # self.active_scroll_frame.tab_tree_list doesn't exist otherwise.
             self.new_command_button = ttk.Button(self.command_buttons_frame,
                                                  text="New",
@@ -390,13 +391,20 @@ class Configuration(ttk.Frame):
         tree_index = self.commands_tree.focus()
         if tree_index:
             command_name = self.commands_tree.item(tree_index)['values'][0]
-            CommandDlg(self.commands_tree.command_dictionary,
-                       self.active_scroll_frame.tab_tree_list,
-                       self.insert_command,
-                       self.insert_another_command,
-                       "command",
-                       self.tabs_list,
-                       command_name=command_name)
+            if self.active_scroll_frame:
+                CommandDlg(self.commands_tree.command_dictionary,
+                           self.insert_command,
+                           self.insert_another_command,
+                           tree_type="command",
+                           tab_tree_list=self.active_scroll_frame.tab_tree_list,
+                           tabs_list=self.tabs_list,
+                           command_name=command_name)
+            else:
+                CommandDlg(self.commands_tree.command_dictionary,
+                           self.insert_command,
+                           self.insert_another_command,
+                           tree_type="command",
+                           command_name=command_name)
 
     def change_tab_name(self, event):
         RenameTabWindow(self.tabs_nb, self.tab_id, self.tabs_info)

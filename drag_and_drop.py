@@ -109,7 +109,10 @@ class CommandDragManager:
             for command_name in self.tree_selection:
                 for tree in self.client_tab_frame_list:
                     self.add_command(command_name, tree)
-        self.apply_to_all_frame.place_forget()
+        try:
+            self.apply_to_all_frame.place_forget()
+        except tk.TclError:
+            logger.info("No frame exists.")
         self.tree_selection.clear()
 
     def add_command(self, command_name, tree):

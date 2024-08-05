@@ -2,11 +2,29 @@
   "active_config": "hbndfvgnb",
   "configurations": {
     "hbndfvgnb": {
-      "clients": {},
-      "commands": {
-        "dsfg": "sdf"
+      "clients": {
+        "local": [
+          "local",
+          ""
+        ]
       },
-      "tabs_info": {}
+      "commands": {
+        "ipconfig": "ipconfig"
+      },
+      "tabs_info": {
+        "tab1": {
+          "1": {
+            "client": "local",
+            "tree_commands": {
+              "ipconfig": "ipconfig"
+            },
+            "command_list": [
+              "ipconfig"
+            ]
+          }
+        },
+        "tab2": {}
+      }
     }
   }
 }

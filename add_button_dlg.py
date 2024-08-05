@@ -215,21 +215,20 @@ class CommandDlg(tk.Toplevel):
         command_text_box = self.command_text_box.get("1.0", "end-1c")
         if self.command_name:  # edit command
             self.command_dict[self.command_name] = command_text_box
-            if 'selected' in self.propagate_to_all_option.state():
-                print("check!")
-                if self.tree_type == "command":
+            try:
+                if 'selected' in self.propagate_to_all_option.state():
                     for tab in self.tabs_list:
                         for tree in tab.tab_tree_list:
                             if self.command_name in tree.tab_command_dict:
                                 logger.info(f'{self.command_name} is in the {tree.client_name} tab tree.')
                                 tree.tab_command_dict[self.command_name] = command_text_box
-            elif 'selected' in self.propagate_to_tab_option.state():
-                print("check!")
-                if self.tree_type == "command":
+                elif 'selected' in self.propagate_to_tab_option.state():
                     for tree in self.tab_tree_list:
                         if self.command_name in tree.tab_command_dict:
                             logger.info(f'{self.command_name} is in the {tree.client_name} tab tree.')
                             tree.tab_command_dict[self.command_name] = command_text_box
+            except AttributeError:
+                logger.debug("This is a Tab tree")
         else:  # NEW
             self.command_name = str(self.command_name_entry.get())
             # Add command to dictionary.
