@@ -170,7 +170,15 @@ class App(ttk.Window):
                 return json.load(f)
 
         except FileNotFoundError as e:
-            logger.error(f'{e}')
+            logger.info("config not found...Creating commandconfig.json")
+            new_json = dict()
+            new_json["active_config"] = "Config 1"
+            new_json["configurations"] = dict()
+            new_json["configurations"]["Config 1"] = dict()
+            new_json["configurations"]["Config 1"]['clients'] = dict()
+            new_json["configurations"]["Config 1"]['commands'] = dict()
+            new_json["configurations"]["Config 1"]['tabs_info'] = dict()
+            return new_json
         except json.decoder.JSONDecodeError as e:
             logger.error(f'{e}')
 
@@ -310,7 +318,6 @@ class CommandButtons(ttk.Button):
     def send_cmd(self, event):
         for ip, command in zip(self.client_list, self.command_list):
             if ip == "local":
-                logger.debug(id(self.cwd))
                 connection_thread = threading.Thread(target=send_local_cmd,
                                                      args=[command, self.cwd])
                 connection_thread.start()
@@ -326,8 +333,10 @@ class CommandButtons(ttk.Button):
             self.output_window.configure(state='disabled')
 
         # change working directory back so config file can be found.
-        cwd = os.path.dirname(os.path.realpath(__file__))
-        os.chdir(cwd)
+        file = sys.argv[0]
+        pathname = os.path.dirname(file)
+        logger.debug(pathname)
+        os.chdir(pathname)
 
     def create_commands_list(self):
         for index, (client, command_name_list) in enumerate(zip(self.client_ip_list, self.command_name_lists)):

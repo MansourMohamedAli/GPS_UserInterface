@@ -138,7 +138,15 @@ class ConfigurationManager(ttk.Toplevel):
             with open(json_name) as f:
                 cls(json.load(f), active_config_name, m_reload_menu)
         except FileNotFoundError as e:
-            logger.error(f'{e}')
+            logger.info("config not found...Creating commandconfig.json")
+            new_json = dict()
+            new_json["active_config"] = "Config 1"
+            new_json["configurations"] = dict()
+            new_json["configurations"]["Config 1"] = dict()
+            new_json["configurations"]["Config 1"]['clients'] = dict()
+            new_json["configurations"]["Config 1"]['commands'] = dict()
+            new_json["configurations"]["Config 1"]['tabs_info'] = dict()
+            cls(new_json, active_config_name, m_reload_menu)
         except json.decoder.JSONDecodeError as e:
             logger.error(f'{e}')
 
@@ -247,14 +255,21 @@ class Configuration(ttk.Frame):
         self.command_buttons_frame.columnconfigure(0, weight=1, uniform='a')
         self.command_buttons_frame.columnconfigure(1, weight=1, uniform='a')
         self.command_buttons_frame.columnconfigure(2, weight=1, uniform='a')
-        self.new_command_button = ttk.Button(self.command_buttons_frame,
-                                             text="New",
-                                             command=lambda: CommandDlg(self.commands_tree.command_dictionary,
-                                                                        self.active_scroll_frame.tab_tree_list,
-                                                                        self.insert_command,
-                                                                        self.insert_another_command,
-                                                                        "command"))
-
+        if self.active_scroll_frame:
+            self.new_command_button = ttk.Button(self.command_buttons_frame,
+                                                 text="New",
+                                                 command=lambda: CommandDlg(self.commands_tree.command_dictionary,
+                                                                            self.insert_command,
+                                                                            self.insert_another_command,
+                                                                            "command",
+                                                                            self.active_scroll_frame.tab_tree_list))
+        else:  # self.active_scroll_frame.tab_tree_list doesn't exist otherwise.
+            self.new_command_button = ttk.Button(self.command_buttons_frame,
+                                                 text="New",
+                                                 command=lambda: CommandDlg(self.commands_tree.command_dictionary,
+                                                                            self.insert_command,
+                                                                            self.insert_another_command,
+                                                                            "command"))
         # Edit Command Button
         self.edit_command_button = ttk.Button(self.command_buttons_frame,
                                               text="Edit",

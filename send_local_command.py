@@ -20,14 +20,12 @@ def send_local_cmd(command, cwd):
             new_dir = command[3:].strip()
             os.chdir(new_dir)
             cwd[0] = os.getcwd()  # Update the current working directory
-            logger.debug(id(cwd))
         except FileNotFoundError as e:
             logger.error(f"Error: {e}")
     elif len(command) > 1 and command[1] == ':':  # Changing Drive
         new_dir = command[:2].strip()
         os.chdir(new_dir)
         cwd[0] = os.getcwd()  # Update the current working directory
-        logger.info(command)
     else:
         # Execute the command and get the output
         execute_command(command, cwd[0])

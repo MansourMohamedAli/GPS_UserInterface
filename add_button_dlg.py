@@ -118,8 +118,8 @@ class ClientDlg(tk.Toplevel):
 
 
 class CommandDlg(tk.Toplevel):
-    def __init__(self, command_dict, tab_tree_list, m_insert_command, m_insert_another_command, tree_type,
-                 tabs_list=None, command_list=None, command_name=None):
+    def __init__(self, command_dict, m_insert_command, m_insert_another_command, tree_type,
+                 tab_tree_list=None, tabs_list=None, command_list=None, command_name=None):
         super().__init__()
         self.command_dict = command_dict
         self.tab_tree_list = tab_tree_list

@@ -2,31 +2,11 @@
   "active_config": "hbndfvgnb",
   "configurations": {
     "hbndfvgnb": {
-      "clients": {
-        "local": [
-          "local",
-          ""
-        ]
-      },
+      "clients": {},
       "commands": {
-        "1": "surestepmanual.pdf",
-        "2": "cd C:\\Projects\\Cad"
+        "dsfg": "sdf"
       },
-      "tabs_info": {
-        "local": {
-          "1": {
-            "client": "local",
-            "tree_commands": {
-              "2": "cd C:\\Projects\\Cad",
-              "1": "surestepmanual.pdf"
-            },
-            "command_list": [
-              "2",
-              "1"
-            ]
-          }
-        }
-      }
+      "tabs_info": {}
     }
   }
 }
