@@ -44,8 +44,14 @@ class App(ttk.Window):
         # Create a style object
         style = ttk.Style()
         # Configure the style for TLabel
-        style.configure("Custom.TLabel", background="#FFDDC1", foreground="black", anchor="center")
-        self.output_label = ttk.Label(self.output_frame, text="Output Window", style="Custom.TLabel")
+        # style.configure("Custom.TLabel", background="#FFDDC1", foreground="black", anchor="center")
+        # self.output_label = ttk.Label(self.output_frame, text="Output Window", style="Custom.TLabel")
+        self.output_label = ttk.Label(self.output_frame,
+                                      text="Output Window",
+                                      anchor='center',
+                                      borderwidth=1,
+                                      background="#375a7f",
+                                      relief='solid')
         self.output_label.pack(side="top", fill='x', padx=5)
         self.output_window = ttk.Text(master=self.output_frame, height=6, state='disabled')
         self.output_window.pack(expand=False, fill='x', padx=5, side="top")
@@ -89,7 +95,7 @@ class App(ttk.Window):
         try:
             self.active_config_data = self.configurations['configurations'][self.active_config_name[0]]
         except KeyError:
-            self.active_config_name = self.config_names[0]
+            self.active_config_name[0] = self.config_names[0]
             self.active_config_data = self.configurations['configurations'][self.active_config_name[0]]
         self.combo = self.create_combo(self.combo_frame)
         self.combo.pack(expand=False, fill='x', padx=5, side="top")
@@ -167,11 +173,6 @@ class App(ttk.Window):
             logger.error(f'{e}')
         except json.decoder.JSONDecodeError as e:
             logger.error(f'{e}')
-
-    @staticmethod
-    def get_active_config(data):
-        active_config_name = data['active_config']
-        return data["configurations"][active_config_name]
 
     @staticmethod
     def get_active_commands(active_config):

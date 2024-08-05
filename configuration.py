@@ -57,7 +57,8 @@ class ConfigurationManager(ttk.Toplevel):
 
         self.delete_config_button = ttk.Button(self.drop_down_frame,
                                                text=u"\U0001F5D1",
-                                               command=self.delete_config)
+                                               command=self.delete_config,
+                                               bootstyle='danger')
 
         self.delete_config_button.pack(side='left')
         self.new_config_button.pack(side='left')

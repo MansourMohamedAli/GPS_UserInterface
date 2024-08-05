@@ -1,125 +1,28 @@
 {
-  "active_config": "local",
+  "active_config": "hbndfvgnb",
   "configurations": {
-    "local": {
+    "hbndfvgnb": {
       "clients": {
         "local": [
           "local",
           ""
-        ],
-        "remote machine": [
-          "10.0.0.132",
-          ""
-        ],
-        "badRemote": [
-          "10.0.0.1",
-          ""
         ]
       },
       "commands": {
-        "ipconfig": "ipconfig",
-        "change dir": "cd C:\\markdown_notes",
-        "open git ignore": "notepad.exe .gitignore",
-        "pdf": "W2 Corys Front Side.pdf",
-        "open miron": "code mirion.py",
-        "list": "code list.txt",
-        "ping": "change_all"
+        "1": "surestepmanual.pdf",
+        "2": "cd C:\\Projects\\Cad"
       },
       "tabs_info": {
         "local": {
           "1": {
             "client": "local",
             "tree_commands": {
-              "ping": "change_all"
+              "2": "cd C:\\Projects\\Cad",
+              "1": "surestepmanual.pdf"
             },
             "command_list": [
-              "ping"
-            ]
-          },
-          "2": {
-            "client": "local",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "3": {
-            "client": "remote machine",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "4": {
-            "client": "badRemote",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "5": {
-            "client": "local",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "6": {
-            "client": "remote machine",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "7": {
-            "client": "badRemote",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "8": {
-            "client": "local",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "9": {
-            "client": "remote machine",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "10": {
-            "client": "badRemote",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "11": {
-            "client": "local",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "12": {
-            "client": "remote machine",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "13": {
-            "client": "badRemote",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "14": {
-            "client": "local",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "15": {
-            "client": "remote machine",
-            "tree_commands": {},
-            "command_list": []
-          },
-          "16": {
-            "client": "badRemote",
-            "tree_commands": {},
-            "command_list": []
-          }
-        },
-        "sdf": {
-          "1": {
-            "client": "local",
-            "tree_commands": {
-              "ping": "change_all"
-            },
-            "command_list": [
-              "ping"
+              "2",
+              "1"
             ]
           }
         }

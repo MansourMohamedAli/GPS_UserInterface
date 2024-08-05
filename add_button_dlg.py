@@ -240,6 +240,7 @@ class CommandDlg(tk.Toplevel):
                 return self.command_name
             else:
                 # todo let user know that this will add command name but overwrite all commands with same name.
+                # todo Putting redundant code here for until todo is addressed.
                 self.command_dict[self.command_name] = command_text_box
                 if self.tree_type == "tab":  # Tab Command Tree #todo use IsInstance function
                     self.command_list.append(self.command_name)
