@@ -1,26 +1,22 @@
 {
   "active_config": "trreasd",
   "configurations": {
-    "hbndfvgnb": {
+    "trreasd": {
       "clients": {
         "local": [
           "local",
           ""
+        ],
+        "remote": [
+          "10.0.0.132",
+          ""
         ]
       },
       "commands": {
-        "1": "sdf"
+        "Change to GUI directory": "cd C:\\Projects\\Python\\GPS_UserInterface",
+        "open logger.": "code logger.py",
+        "ipconfig": "ipconfig"
       },
-      "tabs_info": {}
-    },
-    "trreasd": {
-      "clients": {
-        "gsdf": [
-          "sdfg",
-          "sdfg"
-        ]
-      },
-      "commands": {},
       "tabs_info": {}
     }
   }

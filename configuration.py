@@ -370,9 +370,10 @@ class Configuration(ttk.Frame):
 
         self.no_tabs_message_frame = ttk.Frame(self.tab_frame, relief='solid', borderwidth=1)
         self.create_new_tab_label = ttk.Label(self.no_tabs_message_frame,
-                                              text='Click "New Tab" to Start',
+                                              text='Click "New Tab" to add clients and commands',
                                               anchor='center',
-                                              font=('Adobe Garamond Pro', 32))
+                                              justify="center",
+                                              font=('Adobe Garamond Pro', 26))
         self.create_new_tab_label.pack(expand=True, fill='both')
         # New and Delete Buttons for tabs.
         self.no_tab_check()
@@ -445,21 +446,24 @@ class Configuration(ttk.Frame):
         x, y = event.widget.winfo_pointerxy()
         target = event.widget.winfo_containing(x, y)
         master_target = event.widget.winfo_containing(x, y).master
-        if master_target in self.active_scroll_frame.client_tab_frame_list:
-            self.active_tab_tree_frame = master_target
-            for tree in self.active_scroll_frame.tab_tree_list:
-                if tree == target:
-                    tree.disable_scroll()
-                    self.move_left_button.configure(state='enabled')
-                    self.move_right_button.configure(state='enabled')
-                else:
-                    tree.enable_scroll()
-        elif target in self.buttons_list:
-            pass
-        else:
-            self.move_left_button.configure(state='disabled')
-            self.move_right_button.configure(state='disabled')
-            self.active_tab_tree_frame = None
+        try:
+            if master_target in self.active_scroll_frame.client_tab_frame_list:
+                self.active_tab_tree_frame = master_target
+                for tree in self.active_scroll_frame.tab_tree_list:
+                    if tree == target:
+                        tree.disable_scroll()
+                        self.move_left_button.configure(state='enabled')
+                        self.move_right_button.configure(state='enabled')
+                    else:
+                        tree.enable_scroll()
+            elif target in self.buttons_list:
+                pass
+            else:
+                self.move_left_button.configure(state='disabled')
+                self.move_right_button.configure(state='disabled')
+                self.active_tab_tree_frame = None
+        except AttributeError:
+            logger.debug('No Scroll Frame')
 
     def move_right(self):
         if self.active_tab_tree_frame:
