@@ -87,8 +87,11 @@ class CommandDragManager:
         # that represents what is being dragged.
 
         # Placing frame that allows commands to be appended to all trees.
-        self.apply_to_all_frame.place(relx=0.4, rely=0.9, relwidth=0.2, relheight=0.1)
-        self.apply_to_all_frame.lift()
+        try:
+            self.apply_to_all_frame.place(relx=0.4, rely=0.9, relwidth=0.2, relheight=0.1)
+            self.apply_to_all_frame.lift()
+        except tk.TclError:
+            logger.info("No frame exists.")
 
         # Todo
 

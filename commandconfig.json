@@ -1,5 +1,5 @@
 {
-  "active_config": "hbndfvgnb",
+  "active_config": "trreasd",
   "configurations": {
     "hbndfvgnb": {
       "clients": {
@@ -9,22 +9,19 @@
         ]
       },
       "commands": {
-        "ipconfig": "ipconfig"
+        "1": "sdf"
       },
-      "tabs_info": {
-        "tab1": {
-          "1": {
-            "client": "local",
-            "tree_commands": {
-              "ipconfig": "ipconfig"
-            },
-            "command_list": [
-              "ipconfig"
-            ]
-          }
-        },
-        "tab2": {}
-      }
+      "tabs_info": {}
+    },
+    "trreasd": {
+      "clients": {
+        "gsdf": [
+          "sdfg",
+          "sdfg"
+        ]
+      },
+      "commands": {},
+      "tabs_info": {}
     }
   }
 }

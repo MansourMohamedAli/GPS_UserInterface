@@ -215,7 +215,7 @@ class CommandDlg(tk.Toplevel):
         command_text_box = self.command_text_box.get("1.0", "end-1c")
         if self.command_name:  # edit command
             self.command_dict[self.command_name] = command_text_box
-            try:
+            if self.tree_type == "command":
                 if 'selected' in self.propagate_to_all_option.state():
                     for tab in self.tabs_list:
                         for tree in tab.tab_tree_list:
@@ -227,23 +227,20 @@ class CommandDlg(tk.Toplevel):
                         if self.command_name in tree.tab_command_dict:
                             logger.info(f'{self.command_name} is in the {tree.client_name} tab tree.')
                             tree.tab_command_dict[self.command_name] = command_text_box
-            except AttributeError:
-                logger.debug("This is a Tab tree")
         else:  # NEW
             self.command_name = str(self.command_name_entry.get())
             # Add command to dictionary.
-            if self.command_name not in self.command_dict:
-                self.command_dict[self.command_name] = command_text_box
-                if self.tree_type == "tab":  # Tab Command Tree #todo use IsInstance function
-                    self.command_list.append(self.command_name)
-                return self.command_name
-            else:
+            if self.tree_type == "command":
+                if self.command_name not in self.command_dict:
+                    self.command_dict[self.command_name] = command_text_box
+                    return self.command_name
+                else:
+                    logger.info(f'{self.command_name} is already in dictionary.')
+            elif self.tree_type == "tab":
                 # todo let user know that this will add command name but overwrite all commands with same name.
                 # todo Putting redundant code here for until todo is addressed.
                 self.command_dict[self.command_name] = command_text_box
-                if self.tree_type == "tab":  # Tab Command Tree #todo use IsInstance function
-                    self.command_list.append(self.command_name)
-                logger.info(f'{self.command_name} is already in dictionary.')
+                self.command_list.append(self.command_name)
                 return self.command_name
 
     def get_dimensions(self):

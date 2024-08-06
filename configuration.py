@@ -289,8 +289,8 @@ class Configuration(ttk.Frame):
         self.command_buttons_frame.pack(side='top', fill='x')
 
         # Tab Frame configuration
-        self.tab_frame.rowconfigure(0, weight=50)
-        self.tab_frame.rowconfigure(1, weight=1)
+        # self.tab_frame.rowconfigure(0, weight=50)
+        # self.tab_frame.rowconfigure(1, weight=1)
         # self.tab_frame.rowconfigure(2, weight=1)
         self.tab_frame.columnconfigure(0, weight=5, uniform='a')
         self.tab_frame.columnconfigure(1, weight=5, uniform='a')
@@ -319,10 +319,8 @@ class Configuration(ttk.Frame):
                                             bootstyle="outline",
                                             state="disabled")
 
-        # New and Delete Buttons for tabs.
-        self.tabs_nb.grid(row=0, column=0, columnspan=4, sticky='nsew')
-        self.move_left_button.grid(row=1, column=0, columnspan=2, sticky='nsew')
-        self.move_right_button.grid(row=1, column=2, columnspan=2, sticky='nsew')
+        # self.move_left_button.grid(row=1, column=0, columnspan=2, sticky='nsew')
+        # self.move_right_button.grid(row=1, column=2, columnspan=2, sticky='nsew')
 
         # Packing Tab Frame Widgets
         self.button_frame = ttk.Frame(self.tab_frame)
@@ -350,9 +348,7 @@ class Configuration(ttk.Frame):
         self.new_tab_button.pack(expand=True, fill='both', side='right', anchor='ne')
         self.delete_tab_button.pack(expand=True, fill='both', side='right')
 
-        self.button_frame.grid(row=0, column=3, sticky='ne', padx=(0, 5))
-
-        self.tab_frame.pack(side='right', expand=True, fill='both',padx=(0, 5), pady=(10, 10))
+        self.tab_frame.pack(side='right', expand=True, fill='both', padx=(0, 5), pady=(10, 10))
         self.side_bar_frame.pack(side="left", expand=False, fill='both', padx=(5, 5))
 
         # Creating Tabs. Class method appends to tabs to list and returns list of tab objects
@@ -371,6 +367,15 @@ class Configuration(ttk.Frame):
             scroll_frame = self.tabs_list[self.tab_id]
             self.active_scroll_frame = scroll_frame
             self.client_tab_frame_list = scroll_frame.client_tab_frame_list
+
+        self.no_tabs_message_frame = ttk.Frame(self.tab_frame, relief='solid', borderwidth=1)
+        self.create_new_tab_label = ttk.Label(self.no_tabs_message_frame,
+                                              text='Click "New Tab" to Start',
+                                              anchor='center',
+                                              font=('Adobe Garamond Pro', 32))
+        self.create_new_tab_label.pack(expand=True, fill='both')
+        # New and Delete Buttons for tabs.
+        self.no_tab_check()
 
     def edit_client_doubleclick(self, event):
         self.edit_client()
@@ -578,6 +583,45 @@ class Configuration(ttk.Frame):
                                              self.active_scroll_frame.tab_tree_list)
             command_dnd.add_dragable(self.commands_tree)
 
+    def no_tab_check(self):
+        if self.tabs_list:
+            self.no_tabs_message_frame.grid_forget()
+            self.button_frame.grid_remove()
+            self.tabs_nb.grid_remove()
+            self.move_left_button.grid_remove()
+            self.move_right_button.grid_remove()
+            self.tab_frame.rowconfigure(0, weight=50)
+            self.tab_frame.rowconfigure(1, weight=1)
+            self.button_frame.grid(row=0, column=3, sticky='ne', padx=(0, 5))
+            self.tabs_nb.grid(row=0, column=0, columnspan=4, sticky='nsew')
+            self.move_left_button.grid(row=1, column=0, columnspan=2, sticky='nsew')
+            self.move_right_button.grid(row=1, column=2, columnspan=2, sticky='nsew')
+            logger.debug("loading with scroll frame")
+        else:
+            self.tabs_nb.grid_forget()
+            self.button_frame.grid_remove()
+            self.tabs_nb.grid_remove()
+            self.move_left_button.grid_remove()
+            self.move_right_button.grid_remove()
+            logger.debug("Loading with no scroll frame")
+            self.tab_frame.rowconfigure(0, weight=1)
+            self.tab_frame.rowconfigure(1, weight=50)
+            self.tab_frame.rowconfigure(2, weight=1)
+            self.button_frame.grid(row=0, column=3, sticky='ne', padx=(0, 5))
+            self.no_tabs_message_frame.grid(row=1, column=0, columnspan=4, sticky='nsew')
+            self.move_left_button.grid(row=2, column=0, columnspan=2, sticky='nsew')
+            self.move_right_button.grid(row=2, column=2, columnspan=2, sticky='nsew')
+
+        # if self.active_scroll_frame:
+        #     print(self.active_scroll_frame)
+        #     self.no_tabs_message_frame.grid_forget()
+        #     self.tabs_nb.grid(row=0, column=0, columnspan=4, sticky='nsew')
+        #     logger.debug("Scroll Frame Active")
+        # else:
+        #     print(self.active_scroll_frame)
+        #     self.tabs_nb.grid_forget()
+        #     self.no_tabs_message_frame.grid(row=0, column=0, columnspan=4, sticky='nsew')
+
     def insert_tab(self, window_instance, new_tab):
         if new_tab:
             tab = ScrollFrame(self.tabs_nb,
@@ -585,9 +629,9 @@ class Configuration(ttk.Frame):
                               self.delete_client)
             self.tabs_list.append(tab)
             self.tabs_nb.add(tab, text=f'{new_tab}')
-            # TODO Create proper structure
             self.tabs_info[new_tab] = dict()
         window_instance.destroy()
+        self.no_tab_check()
 
     def insert_another_tab(self, new_tab):
         if new_tab:
@@ -597,6 +641,7 @@ class Configuration(ttk.Frame):
             self.tabs_list.append(tab)
             self.tabs_nb.add(tab, text=f'{new_tab}')
             self.tabs_info[new_tab] = dict()
+        self.no_tab_check()
 
     def delete_tab(self):
         # Todo Why am I looping through tabs instead of just using select?
@@ -608,6 +653,7 @@ class Configuration(ttk.Frame):
                 del self.tabs_list[self.tab_id]
                 del self.tabs_info[name]
                 logger.info(f'{name} tab deleted.')
+                self.no_tab_check()
                 return
 
     def insert_client(self, window_instance, new_client):
@@ -795,4 +841,3 @@ class WindowMenu(ttk.Menu):
         help_menu = ttk.Menu(self, tearoff=False)
         help_menu.add_command(label='Help entry', command=lambda: print("test"))
         self.add_cascade(label='Help', menu=help_menu)
-

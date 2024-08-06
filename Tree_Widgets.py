@@ -229,7 +229,6 @@ class TabTreeMouseOver(ttk.Frame):
                                              text="+",
                                              width=5,
                                              command=lambda: CommandDlg(self.client_tab_tree.tab_command_dict,
-                                                                        self.tab_tree_list,
                                                                         self.insert_command,
                                                                         self.insert_another_command,
                                                                         "tab",
@@ -286,7 +285,6 @@ class TabTreeMouseOver(ttk.Frame):
         if tree_index:
             command_name = self.client_tab_tree.item(tree_index)['values'][0]
             CommandDlg(self.client_tab_tree.tab_command_dict,
-                       self.tab_tree_list,
                        self.insert_command,
                        self.insert_another_command,
                        "tab",
