@@ -11,7 +11,6 @@ from logger import logger
 class ConfigurationManager(ttk.Toplevel):
     def __init__(self, configurations, active_config_name, m_reload_menu):
         super().__init__()
-
         self.title('Configuration')
         self.deleted_config = None
         x, y = self.get_dimensions()
@@ -22,7 +21,6 @@ class ConfigurationManager(ttk.Toplevel):
         self.configurations = configurations
         self.active_config_name = active_config_name
         self.m_reload_menu = m_reload_menu
-        # self.active_config_name = self.configurations['active_config']
         self.active_config_data = self.configurations['configurations'][
             self.active_config_name]
         self.config_names = list(self.configurations['configurations'].keys())
@@ -34,8 +32,8 @@ class ConfigurationManager(ttk.Toplevel):
         self.rowconfigure(0, weight=1)
         self.rowconfigure(1, weight=100)
         self.columnconfigure(0, weight=1)
+
         # pack
-        # self.config_frame.pack(expand=True, fill='both', side="bottom")
         self.config_frame.grid(row=1, sticky='nsew')
 
         # combo frame
@@ -81,8 +79,6 @@ class ConfigurationManager(ttk.Toplevel):
         Reset Active Config to first in list when saving in case Active Config is deleted.
         TODO: Handle this more elegantly with try/except in main.
         """
-        # if self.deleted_config == self.configurations['active_config']:
-        #     self.configurations['active_config'] = self.combo['values'][0]
         with open('commandconfig.json', 'w') as f:
             json.dump(self.configurations, f, indent=2)
         logger.info("Saving to JSON")
@@ -129,7 +125,6 @@ class ConfigurationManager(ttk.Toplevel):
                                                                  selected_config_data,
                                                                  self.write_json)
             # Repacking Configuration
-            # self.config_frame.pack(expand=True, fill='both', side="bottom")
             self.config_frame.grid(row=1, sticky='nsew')
 
     @classmethod
@@ -248,8 +243,6 @@ class Configuration(ttk.Frame):
         self.commands_tree.bind("<Double-Button-1>", self.edit_command_doubleclick)
 
         # # Making command tree items draggable.
-        # command_dnd = CommandDragManager(self.commands_tree, self.tab_frame, self.client_tab_frame_list)
-        # command_dnd.add_dragable(self.commands_tree)
         self.command_buttons_frame = ttk.Frame(self.command_frame)
         self.command_buttons_frame.rowconfigure(0, weight=1, uniform='a')
         self.command_buttons_frame.columnconfigure(0, weight=1, uniform='a')
@@ -289,9 +282,6 @@ class Configuration(ttk.Frame):
         self.command_buttons_frame.pack(side='top', fill='x')
 
         # Tab Frame configuration
-        # self.tab_frame.rowconfigure(0, weight=50)
-        # self.tab_frame.rowconfigure(1, weight=1)
-        # self.tab_frame.rowconfigure(2, weight=1)
         self.tab_frame.columnconfigure(0, weight=5, uniform='a')
         self.tab_frame.columnconfigure(1, weight=5, uniform='a')
         self.tab_frame.columnconfigure(2, weight=5, uniform='a')
@@ -301,7 +291,6 @@ class Configuration(ttk.Frame):
         self.tabs_nb.bind("<ButtonRelease-1>", self.reorder_save)
         self.tabs_nb.bind("<Double-Button-1>", self.change_tab_name)
         tab_style = ttk.Style()
-        # tab_style.configure('TNotebook', tabposition='new')
         tab_style.configure('TNotebook', tabposition='nw')
 
         self.tabs_nb.bind("<<NotebookTabChanged>>", self.on_tab_selected)
@@ -319,9 +308,6 @@ class Configuration(ttk.Frame):
                                             bootstyle="outline",
                                             state="disabled")
 
-        # self.move_left_button.grid(row=1, column=0, columnspan=2, sticky='nsew')
-        # self.move_right_button.grid(row=1, column=2, columnspan=2, sticky='nsew')
-
         # Packing Tab Frame Widgets
         self.button_frame = ttk.Frame(self.tab_frame)
         self.button_frame.columnconfigure(0, weight=1, uniform='a')
@@ -335,12 +321,10 @@ class Configuration(ttk.Frame):
         self.move_right_button.bindtags(self.tree_select)
 
         # Tab buttons
-        # self.new_tab_button_frame = ttk.Frame(self.button_frame)
         self.new_tab_button = ttk.Button(self.button_frame,
                                          text="New Tab",
                                          command=lambda: NewTabWindow(self.insert_tab, self.insert_another_tab))
 
-        # self.delete_tab_button_frame = ttk.Frame(self.button_frame)
         self.delete_tab_button = ttk.Button(self.button_frame,
                                             text="Delete Tab",
                                             command=self.delete_tab)
@@ -616,15 +600,6 @@ class Configuration(ttk.Frame):
             self.move_left_button.grid(row=2, column=0, columnspan=2, sticky='nsew')
             self.move_right_button.grid(row=2, column=2, columnspan=2, sticky='nsew')
 
-        # if self.active_scroll_frame:
-        #     print(self.active_scroll_frame)
-        #     self.no_tabs_message_frame.grid_forget()
-        #     self.tabs_nb.grid(row=0, column=0, columnspan=4, sticky='nsew')
-        #     logger.debug("Scroll Frame Active")
-        # else:
-        #     print(self.active_scroll_frame)
-        #     self.tabs_nb.grid_forget()
-        #     self.no_tabs_message_frame.grid(row=0, column=0, columnspan=4, sticky='nsew')
 
     def insert_tab(self, window_instance, new_tab):
         if new_tab:
@@ -706,10 +681,6 @@ class ScrollFrame(ttk.Frame):
         # display frame
         self.scroll_frame = ttk.Frame(self)
 
-        # style = ttk.Style()
-        # Configure the TFrame style (background color)
-        # style.configure("ApplyToAll.TFrame", background="blue")
-        # self.apply_to_all_frame = ApplyToAllFrame(self, style="ApplyToAll.TFrame")
         self.apply_to_all_frame = ApplyToAllFrame(self)
 
         # Adding new tag for frame to allow scroll on TabTree and background.
@@ -742,7 +713,6 @@ class ScrollFrame(ttk.Frame):
                                lambda event: self.canvas.yview_scroll(-int(event.delta / 60), "units"))
         self.bind('<Configure>', self.update_scroll_area_resize_event)
 
-        # self.apply_to_all_frame.lift()
 
     def update_scroll_height(self):
         self.update_idletasks()
