@@ -363,21 +363,25 @@ class Configuration(ttk.Frame):
         self.no_tab_check()
 
     def edit_client_doubleclick(self, event):
-        self.edit_client()
+        x, y = event.widget.winfo_pointerxy()
+        self.edit_client(x, y)
 
-    def edit_client(self):
+    def edit_client(self, x, y):
         tree_index = self.clients_tree.focus()
         if tree_index:
             client_name = self.clients_tree.item(tree_index)['values'][0]
             ClientDlg(self.clients_tree.client_dictionary,
                       self.insert_client,
                       self.insert_another_client,
+                      x,
+                      y,
                       client_name=client_name)
 
     def edit_command_doubleclick(self, event):
-        self.edit_command()
+        x, y = event.widget.winfo_pointerxy()
+        self.edit_command(x, y)
 
-    def edit_command(self):
+    def edit_command(self, x, y):
         tree_index = self.commands_tree.focus()
         if tree_index:
             command_name = self.commands_tree.item(tree_index)['values'][0]
@@ -385,6 +389,8 @@ class Configuration(ttk.Frame):
                 CommandDlg(self.commands_tree.command_dictionary,
                            self.insert_command,
                            self.insert_another_command,
+                           x,
+                           y,
                            tree_type="command",
                            tab_tree_list=self.active_scroll_frame.tab_tree_list,
                            tabs_list=self.tabs_list,
@@ -393,6 +399,8 @@ class Configuration(ttk.Frame):
                 CommandDlg(self.commands_tree.command_dictionary,
                            self.insert_command,
                            self.insert_another_command,
+                           x,
+                           y,
                            tree_type="command",
                            command_name=command_name)
 
@@ -600,7 +608,6 @@ class Configuration(ttk.Frame):
             self.move_left_button.grid(row=2, column=0, columnspan=2, sticky='nsew')
             self.move_right_button.grid(row=2, column=2, columnspan=2, sticky='nsew')
 
-
     def insert_tab(self, window_instance, new_tab):
         if new_tab:
             tab = ScrollFrame(self.tabs_nb,
@@ -712,7 +719,6 @@ class ScrollFrame(ttk.Frame):
         self.canvas.bind_class('scroll_frame_widgets', '<MouseWheel>',
                                lambda event: self.canvas.yview_scroll(-int(event.delta / 60), "units"))
         self.bind('<Configure>', self.update_scroll_area_resize_event)
-
 
     def update_scroll_height(self):
         self.update_idletasks()

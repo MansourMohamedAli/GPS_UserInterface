@@ -4,11 +4,12 @@ from logger import logger
 
 
 class ClientDlg(tk.Toplevel):
-    def __init__(self, client_dictionary, m_insert_client, m_insert_another_client, client_name=None):
+    def __init__(self, client_dictionary, m_insert_client, m_insert_another_client, x, y, client_name=None):
         super().__init__()
         self.client_dictionary = client_dictionary
         self.m_insert_client = m_insert_client
         self.m_insert_another_client = m_insert_another_client
+        # print(x, y)
         if client_name:
             self.client_name = str(client_name)
         else:
@@ -57,10 +58,10 @@ class ClientDlg(tk.Toplevel):
             self.add_another_button.place(relx=0.58, rely=0.25)
 
         self.title('Client Configuration')
-        x, y = self.get_dimensions()
-        self.geometry(f'{int(x * 0.30)}x{int(y * 0.15)}')
-        self.minsize(int(x * 0.25), int(y * 0.10))
-        self.maxsize(int(x * 0.35), int(y * 0.25))
+        width, height = self.get_dimensions()
+        self.geometry(f'{int(width * 0.30)}x{int(height * 0.15)}+{x}+{y}')
+        self.minsize(int(width * 0.25), int(height * 0.10))
+        self.maxsize(int(width * 0.35), int(height * 0.25))
         self.resizable(False, False)
 
         self.client_name_label = ttk.Label(self.client_frame, text="Client Name:")
@@ -112,13 +113,13 @@ class ClientDlg(tk.Toplevel):
                 return None
 
     def get_dimensions(self):
-        x = self.winfo_screenwidth()
-        y = self.winfo_screenheight()
-        return x, y
+        width = self.winfo_screenwidth()
+        height = self.winfo_screenheight()
+        return width, height
 
 
 class CommandDlg(tk.Toplevel):
-    def __init__(self, command_dict, m_insert_command, m_insert_another_command, tree_type,
+    def __init__(self, command_dict, m_insert_command, m_insert_another_command, x, y, tree_type,
                  tab_tree_list=None, tabs_list=None, command_list=None, command_name=None):
         super().__init__()
         self.command_dict = command_dict
@@ -133,10 +134,10 @@ class CommandDlg(tk.Toplevel):
         else:
             self.command_name = command_name
         self.title('Command Configuration')
-        x, y = self.get_dimensions()
-        self.geometry(f'{int(x * 0.40)}x{int(y * 0.30)}')
-        self.minsize(int(x * 0.25), int(y * 0.10))
-        self.maxsize(int(x * 0.35), int(y * 0.25))
+        width, height = self.get_dimensions()
+        self.geometry(f'{int(width * 0.40)}x{int(height * 0.30)}+{x}+{y}')
+        self.minsize(int(width * 0.25), int(height * 0.10))
+        self.maxsize(int(width * 0.35), int(height * 0.25))
         self.resizable(False, False)
 
         # Frame for left text
@@ -244,17 +245,17 @@ class CommandDlg(tk.Toplevel):
                 return self.command_name
 
     def get_dimensions(self):
-        x = self.winfo_screenwidth()
-        y = self.winfo_screenheight()
-        return x, y
+        width = self.winfo_screenwidth()
+        height = self.winfo_screenheight()
+        return width, height
 
 
 class NewTabWindow(tk.Toplevel):
     def __init__(self, m_insert_tab, m_insert_another_tab):
         super().__init__()
         self.title('New Tab Creation')
-        x, y = self.get_dimensions()
-        self.geometry(f'{int(x * 0.30)}x{int(y * 0.05)}')
+        width, height = self.get_dimensions()
+        self.geometry(f'{int(width * 0.30)}x{int(height * 0.05)}')
         self.resizable(False, False)
 
         # Frame for left text
@@ -298,17 +299,17 @@ class NewTabWindow(tk.Toplevel):
         self.buttons_frame.grid(row=1, column=1, sticky='nsew')
 
     def get_dimensions(self):
-        x = self.winfo_screenwidth()
-        y = self.winfo_screenheight()
-        return x, y
+        width = self.winfo_screenwidth()
+        height = self.winfo_screenheight()
+        return width, height
 
 
 class RenameTabWindow(tk.Toplevel):
     def __init__(self, tabs_nb, tab_id, tabs_info):
         super().__init__()
         self.title('Rename Tab')
-        x, y = self.get_dimensions()
-        self.geometry(f'{int(x * 0.30)}x{int(y * 0.05)}')
+        width, height = self.get_dimensions()
+        self.geometry(f'{int(width * 0.30)}x{int(height * 0.05)}')
         self.resizable(False, False)
         self.tabs_nb = tabs_nb
         self.tab_id = tab_id
@@ -361,17 +362,17 @@ class RenameTabWindow(tk.Toplevel):
                 self.tabs_info[tab] = temp_dict[tab]
 
     def get_dimensions(self):
-        x = self.winfo_screenwidth()
-        y = self.winfo_screenheight()
-        return x, y
+        width = self.winfo_screenwidth()
+        height = self.winfo_screenheight()
+        return width, height
 
 
 class NewConfigDlg(tk.Toplevel):
     def __init__(self, m_insert_config):
         super().__init__()
         self.title('New Configuration Creation')
-        x, y = self.get_dimensions()
-        self.geometry(f'{int(x * 0.30)}x{int(y * 0.05)}')
+        width, height = self.get_dimensions()
+        self.geometry(f'{int(width * 0.30)}x{int(height * 0.05)}')
         self.resizable(False, False)
 
         # Frame for left text
@@ -410,6 +411,6 @@ class NewConfigDlg(tk.Toplevel):
         self.buttons_frame.grid(row=1, column=1, sticky='nsew')
 
     def get_dimensions(self):
-        x = self.winfo_screenwidth()
-        y = self.winfo_screenheight()
-        return x, y
+        width = self.winfo_screenwidth()
+        height = self.winfo_screenheight()
+        return width, height

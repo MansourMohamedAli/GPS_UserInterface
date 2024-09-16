@@ -105,13 +105,17 @@ class CommandDragManager:
         # find the widget under the cursor
         x, y = event.widget.winfo_pointerxy()
         target = event.widget.winfo_containing(x, y)
-        if isinstance(target, TabBarTree):
-            for command_name in self.tree_selection:
-                self.add_command(command_name, target)
-        elif isinstance(target.master, ApplyToAllFrame):
-            for command_name in self.tree_selection:
-                for tree in self.client_tab_frame_list:
-                    self.add_command(command_name, tree)
+        try:
+            if isinstance(target, TabBarTree):
+                for command_name in self.tree_selection:
+                    self.add_command(command_name, target)
+            elif isinstance(target.master, ApplyToAllFrame):
+                for command_name in self.tree_selection:
+                    for tree in self.client_tab_frame_list:
+                        self.add_command(command_name, tree)
+        except AttributeError:
+            print('Not dropping on on Tree.')
+
         try:
             self.apply_to_all_frame.place_forget()
         except tk.TclError:

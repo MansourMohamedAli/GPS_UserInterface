@@ -278,15 +278,18 @@ class TabTreeMouseOver(ttk.Frame):
         self.client_tab_tree.update_dict()
 
     def edit_command_doubleclick(self, event):
-        self.edit_command()
+        x, y = event.widget.winfo_pointerxy()
+        self.edit_command(x, y)
 
-    def edit_command(self):
+    def edit_command(self, x, y):
         tree_index = self.client_tab_tree.focus()
         if tree_index:
             command_name = self.client_tab_tree.item(tree_index)['values'][0]
             CommandDlg(self.client_tab_tree.tab_command_dict,
                        self.insert_command,
                        self.insert_another_command,
+                       x,
+                       y,
                        "tab",
                        command_list=self.client_tab_tree.command_list,
                        command_name=command_name)
