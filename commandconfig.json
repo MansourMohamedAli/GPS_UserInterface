@@ -1,28 +1,26 @@
 {
-  "active_config": "trreasd",
+  "active_config": "asdf",
   "configurations": {
-    "trreasd": {
+    "asdf": {
       "clients": {
-        "local": [
-          "local",
-          ""
-        ],
-        "remote": [
-          "10.0.0.132",
+        "asdv": [
+          "zxcv",
           ""
         ]
       },
       "commands": {
-        "Change to GUI directory": "cd C:\\Projects\\Python\\GPS_UserInterface",
-        "open logger.": "code logger.py",
         "ipconfig": "ipconfig"
       },
       "tabs_info": {
-        "test": {
+        "vxcv": {
           "1": {
-            "client": "remote",
-            "tree_commands": {},
-            "command_list": []
+            "client": "asdv",
+            "tree_commands": {
+              "ipconfig": "ipconfig"
+            },
+            "command_list": [
+              "ipconfig"
+            ]
           }
         }
       }

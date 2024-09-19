@@ -7,12 +7,6 @@ from logger import logger
 import os
 import sys
 import threading
-
-current = os.path.dirname(os.path.realpath(__file__))
-parent_dir = os.path.dirname(current)
-remote_cmd_path = os.path.join(parent_dir, "RemoteCMD")
-sys.path.append(remote_cmd_path)
-
 from RemoteCMDClient import main as send_cmd_client
 
 
@@ -42,10 +36,6 @@ class App(ttk.Window):
         self.output_frame = ttk.Frame(self.main_frame)
 
         # Create a style object
-        style = ttk.Style()
-        # Configure the style for TLabel
-        # style.configure("Custom.TLabel", background="#FFDDC1", foreground="black", anchor="center")
-        # self.output_label = ttk.Label(self.output_frame, text="Output Window", style="Custom.TLabel")
         self.output_label = ttk.Label(self.output_frame,
                                       text="Output Window",
                                       anchor='center',
@@ -202,9 +192,9 @@ class WindowMenu(ttk.Menu):
         self.add_cascade(label='File', menu=file_menu)
 
         # another sub menu
-        help_menu = ttk.Menu(self, tearoff=False)
-        help_menu.add_command(label='Help entry', command=lambda: print("test"))
-        self.add_cascade(label='Help', menu=help_menu)
+        # help_menu = ttk.Menu(self, tearoff=False)
+        # help_menu.add_command(label='Help entry', command=lambda: print("test"))
+        # self.add_cascade(label='Help', menu=help_menu)
 
     def open_configuration(self, configuration_filename):
         ConfigurationManager.from_json(configuration_filename, self.active_config_name[0], self.reload_menu)

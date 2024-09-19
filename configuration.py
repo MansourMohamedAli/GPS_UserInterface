@@ -818,6 +818,6 @@ class WindowMenu(ttk.Menu):
         self.add_cascade(label='File', menu=file_menu)
 
         # another sub menu
-        help_menu = ttk.Menu(self, tearoff=False)
-        help_menu.add_command(label='Help entry', command=lambda: print("test"))
-        self.add_cascade(label='Help', menu=help_menu)
+        # help_menu = ttk.Menu(self, tearoff=False)
+        # help_menu.add_command(label='Help entry', command=lambda: print("test"))
+        # self.add_cascade(label='Help', menu=help_menu)
