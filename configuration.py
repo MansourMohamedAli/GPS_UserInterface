@@ -51,7 +51,8 @@ class ConfigurationManager(ttk.Toplevel):
 
         self.new_config_button = ttk.Button(self.drop_down_frame,
                                             text="+",
-                                            command=lambda: NewConfigDlg(self.insert_config))
+                                            command=lambda: NewConfigDlg(self.insert_config,
+                                                                         self.drop_down_frame.winfo_pointerxy()))
 
         self.delete_config_button = ttk.Button(self.drop_down_frame,
                                                text=u"\U0001F5D1",
@@ -212,7 +213,8 @@ class Configuration(ttk.Frame):
                                             text="New",
                                             command=lambda: ClientDlg(self.clients_tree.client_dictionary,
                                                                       self.insert_client,
-                                                                      self.insert_another_client))
+                                                                      self.insert_another_client,
+                                                                      self.client_buttons_frame.winfo_pointerxy()))
         # Edit Client Button
         self.edit_client_button = ttk.Button(self.client_buttons_frame,
                                              text="Edit",
@@ -263,6 +265,7 @@ class Configuration(ttk.Frame):
                                                  command=lambda: CommandDlg(self.commands_tree.command_dictionary,
                                                                             self.insert_command,
                                                                             self.insert_another_command,
+                                                                            self.command_buttons_frame.winfo_pointerxy(),
                                                                             "command"))
         # Edit Command Button
         self.edit_command_button = ttk.Button(self.command_buttons_frame,
@@ -323,7 +326,9 @@ class Configuration(ttk.Frame):
         # Tab buttons
         self.new_tab_button = ttk.Button(self.button_frame,
                                          text="New Tab",
-                                         command=lambda: NewTabWindow(self.insert_tab, self.insert_another_tab))
+                                         command=lambda: NewTabWindow(self.insert_tab,
+                                                                      self.insert_another_tab,
+                                                                      self.button_frame.winfo_pointerxy()))
 
         self.delete_tab_button = ttk.Button(self.button_frame,
                                             text="Delete Tab",
@@ -363,25 +368,22 @@ class Configuration(ttk.Frame):
         self.no_tab_check()
 
     def edit_client_doubleclick(self, event):
-        x, y = event.widget.winfo_pointerxy()
-        self.edit_client(x, y)
+        self.edit_client()
 
-    def edit_client(self, x, y):
+    def edit_client(self):
         tree_index = self.clients_tree.focus()
         if tree_index:
             client_name = self.clients_tree.item(tree_index)['values'][0]
             ClientDlg(self.clients_tree.client_dictionary,
                       self.insert_client,
                       self.insert_another_client,
-                      x,
-                      y,
+                      self.client_buttons_frame.winfo_pointerxy(),
                       client_name=client_name)
 
     def edit_command_doubleclick(self, event):
-        x, y = event.widget.winfo_pointerxy()
-        self.edit_command(x, y)
+        self.edit_command()
 
-    def edit_command(self, x, y):
+    def edit_command(self):
         tree_index = self.commands_tree.focus()
         if tree_index:
             command_name = self.commands_tree.item(tree_index)['values'][0]
@@ -389,8 +391,7 @@ class Configuration(ttk.Frame):
                 CommandDlg(self.commands_tree.command_dictionary,
                            self.insert_command,
                            self.insert_another_command,
-                           x,
-                           y,
+                           self.command_buttons_frame.winfo_pointerxy(),
                            tree_type="command",
                            tab_tree_list=self.active_scroll_frame.tab_tree_list,
                            tabs_list=self.tabs_list,
@@ -399,13 +400,12 @@ class Configuration(ttk.Frame):
                 CommandDlg(self.commands_tree.command_dictionary,
                            self.insert_command,
                            self.insert_another_command,
-                           x,
-                           y,
+                           self.command_buttons_frame.winfo_pointerxy(),
                            tree_type="command",
                            command_name=command_name)
 
     def change_tab_name(self, event):
-        RenameTabWindow(self.tabs_nb, self.tab_id, self.tabs_info)
+        RenameTabWindow(self.tabs_nb, self.tab_id, self.tabs_info,self.tabs_nb.winfo_pointerxy())
 
     def reorder_save(self, event):
         tab_names = [self.tabs_nb.tab(i, option="text") for i in self.tabs_nb.tabs()]

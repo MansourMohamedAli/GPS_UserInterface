@@ -4,12 +4,12 @@ from logger import logger
 
 
 class ClientDlg(tk.Toplevel):
-    def __init__(self, client_dictionary, m_insert_client, m_insert_another_client, x, y, client_name=None):
+    def __init__(self, client_dictionary, m_insert_client, m_insert_another_client, window_position, client_name=None):
         super().__init__()
         self.client_dictionary = client_dictionary
         self.m_insert_client = m_insert_client
         self.m_insert_another_client = m_insert_another_client
-        # print(x, y)
+        x, y = window_position
         if client_name:
             self.client_name = str(client_name)
         else:
@@ -59,7 +59,8 @@ class ClientDlg(tk.Toplevel):
 
         self.title('Client Configuration')
         width, height = self.get_dimensions()
-        self.geometry(f'{int(width * 0.30)}x{int(height * 0.15)}+{x}+{y}')
+        if x and y:
+            self.geometry(f'{int(width * 0.30)}x{int(height * 0.15)}+{x}+{y}')
         self.minsize(int(width * 0.25), int(height * 0.10))
         self.maxsize(int(width * 0.35), int(height * 0.25))
         self.resizable(False, False)
@@ -119,7 +120,7 @@ class ClientDlg(tk.Toplevel):
 
 
 class CommandDlg(tk.Toplevel):
-    def __init__(self, command_dict, m_insert_command, m_insert_another_command, x, y, tree_type,
+    def __init__(self, command_dict, m_insert_command, m_insert_another_command, window_position, tree_type,
                  tab_tree_list=None, tabs_list=None, command_list=None, command_name=None):
         super().__init__()
         self.command_dict = command_dict
@@ -129,6 +130,7 @@ class CommandDlg(tk.Toplevel):
         self.m_insert_command = m_insert_command
         self.m_insert_another_command = m_insert_another_command
         self.tree_type = tree_type
+        x, y = window_position
         if command_name:
             self.command_name = str(command_name)
         else:
@@ -251,11 +253,12 @@ class CommandDlg(tk.Toplevel):
 
 
 class NewTabWindow(tk.Toplevel):
-    def __init__(self, m_insert_tab, m_insert_another_tab):
+    def __init__(self, m_insert_tab, m_insert_another_tab, window_position):
         super().__init__()
         self.title('New Tab Creation')
         width, height = self.get_dimensions()
-        self.geometry(f'{int(width * 0.30)}x{int(height * 0.05)}')
+        x, y = window_position
+        self.geometry(f'{int(width * 0.30)}x{int(height * 0.05)}+{x-int(width * 0.30)}+{y}')
         self.resizable(False, False)
 
         # Frame for left text
@@ -305,11 +308,12 @@ class NewTabWindow(tk.Toplevel):
 
 
 class RenameTabWindow(tk.Toplevel):
-    def __init__(self, tabs_nb, tab_id, tabs_info):
+    def __init__(self, tabs_nb, tab_id, tabs_info, window_position):
         super().__init__()
         self.title('Rename Tab')
+        x, y = window_position
         width, height = self.get_dimensions()
-        self.geometry(f'{int(width * 0.30)}x{int(height * 0.05)}')
+        self.geometry(f'{int(width * 0.30)}x{int(height * 0.05)}+{x}+{y}')
         self.resizable(False, False)
         self.tabs_nb = tabs_nb
         self.tab_id = tab_id
@@ -368,11 +372,12 @@ class RenameTabWindow(tk.Toplevel):
 
 
 class NewConfigDlg(tk.Toplevel):
-    def __init__(self, m_insert_config):
+    def __init__(self, m_insert_config, window_position):
         super().__init__()
         self.title('New Configuration Creation')
+        x, y = window_position
         width, height = self.get_dimensions()
-        self.geometry(f'{int(width * 0.30)}x{int(height * 0.05)}')
+        self.geometry(f'{int(width * 0.30)}x{int(height * 0.05)}+{x}+{y}')
         self.resizable(False, False)
 
         # Frame for left text
