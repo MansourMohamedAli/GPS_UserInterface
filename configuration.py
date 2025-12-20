@@ -500,6 +500,8 @@ class Configuration(ttk.Frame):
 
         # drop tab tree index by one so next client dragged and dropped doesn't skip a number
         self.active_scroll_frame.client_tab_tree_index -= 1
+        if self.active_scroll_frame.client_tab_tree_index == 0:
+            self.active_scroll_frame.no_tree_label.pack(expand=True, fill='both')
 
         # Get index of last frame as that is what determines the scroll area. Or I could count items in frame list.
         self.active_scroll_frame.update_scroll_height()
@@ -704,6 +706,15 @@ class ScrollFrame(ttk.Frame):
         self.tab_tree_list = TabBarTree.from_tab_data(client_tab_frame_list, self.tab_data)
         tt_mouse_over_list = TabTreeMouseOver.from_client_tab_frame_list(client_tab_frame_list, self.tab_tree_list,
                                                                          self.m_delete_client)
+
+        self.no_tree_label = ttk.Label(self.scroll_frame,
+                                       text="Drag clients from the left and drop it here to create client trees.\n"
+                                            "Commands can be dropped onto client trees.",
+                                       anchor='center',
+                                       justify="center",
+                                       font=('Adobe Garamond Pro', 26))
+        if not self.tab_data:
+            self.no_tree_label.pack(expand=True, fill='both')
 
         # packing trees and mouse_over frame to client tab_frame
         for tree, mouse_over_frame in zip(self.tab_tree_list, tt_mouse_over_list):

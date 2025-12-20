@@ -42,6 +42,11 @@ class ClientDragManager:
         target = event.widget.winfo_containing(x, y)
         target_str = str(target)
         target_frame = str(self.target_frame) + ".!frame"
+        if target_str == target_frame + ".!label":
+            # No trees on scroll frame, removing message:
+            self.target_frame.no_tree_label.pack_forget()
+            for client in self.tree_selection:
+                self.create_new(str(client))
         if target_str == target_frame:
             for client in self.tree_selection:
                 self.create_new(str(client))
